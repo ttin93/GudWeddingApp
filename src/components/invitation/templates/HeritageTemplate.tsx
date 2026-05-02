@@ -8,109 +8,117 @@ import type { Invitation, RSVPResponse } from '@/types'
 import { SharedSections, getEffectiveLabels } from '../InvitationSections'
 import type { SectionTheme } from '../InvitationSections'
 
-const fadeUp = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }
-const C = { bg: '#F4F1EB', primary: '#B8960C', accent: '#2C4A2C', text: '#1C1C1C', muted: '#5A5A5A', border: '#DDD8CE' }
-
-const SECTION_THEME: SectionTheme = {
-  bg: '#F4F1EB', bgAlt: '#EBE6DC',
-  text: '#1C1C1C', muted: '#5A5A5A',
-  accent: '#2C4A2C', rule: '#DDD8CE', card: '#FFFFFF',
+const C = {
+  bg: '#F4F1EB', alt: '#EBE6DC', card: '#FDFBF6',
+  primary: '#B8960C', accent: '#2C4A2C',
+  text: '#1C1C1C', muted: '#5A5A5A', rule: '#DDD8CE',
 }
+const THEME: SectionTheme = { bg: C.bg, bgAlt: C.alt, text: C.text, muted: C.muted, accent: C.accent, rule: C.rule, card: C.card }
+const fade = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }
 
 export function HeritageTemplate({ invitation, onRSVPSubmit, existingRSVP }: { invitation: Invitation; onRSVPSubmit?: (data: unknown) => Promise<void>; existingRSVP?: RSVPResponse | null }) {
   const daysLeft = daysUntilWedding(invitation.wedding_date)
   const labels = getEffectiveLabels(invitation)
 
   return (
-    <div style={{ background: C.bg, fontFamily: 'var(--font-cormorant), Georgia, serif' }}>
+    <div style={{ background: C.bg, fontFamily: 'var(--font-cormorant), Georgia, serif', minHeight: '100vh' }}>
 
-      {/* Hero — classic centred with border frame */}
-      <section className="min-h-screen flex items-center justify-center px-8 py-20">
-        <motion.div
-          variants={fadeUp} initial="hidden" animate="visible" transition={{ duration: 0.8 }}
-          className="text-center max-w-xl w-full"
+      {/* ── HERO ── */}
+      <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 32px' }}>
+        <motion.div variants={fade} initial="hidden" animate="visible" transition={{ duration: 0.9 }}
+          style={{ textAlign: 'center', maxWidth: 520, width: '100%' }}
         >
-          {/* Ornamental frame */}
-          <div className="border-2 p-10 sm:p-14 relative" style={{ borderColor: C.primary }}>
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4" style={{ background: C.bg }}>
-              <span className="text-lg" style={{ color: C.primary }}>✦</span>
-            </div>
+          {/* Ornamental double border frame */}
+          <div style={{ border: `2px solid ${C.primary}`, padding: '48px 40px', position: 'relative' }}>
+            <div style={{ position: 'absolute', inset: 6, border: `1px solid ${C.primary}40`, pointerEvents: 'none' }} />
+            {/* Top ornament */}
+            <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: C.bg, padding: '0 12px', fontSize: 22, color: C.primary }}>✦</div>
+            {/* Corner ornaments */}
+            {[{top:-8,left:-8},{top:-8,right:-8},{bottom:-8,left:-8},{bottom:-8,right:-8}].map((s,i) => (
+              <div key={i} style={{ position:'absolute', width:14, height:14, background: C.bg, ...s, display:'flex', alignItems:'center', justifyContent:'center' }}>
+                <div style={{ width:6, height:6, background: C.primary, transform:'rotate(45deg)' }} />
+              </div>
+            ))}
 
-            <p className="text-xs tracking-[0.6em] uppercase mb-8" style={{ color: C.accent }}>
+            <p style={{ fontSize: 9, letterSpacing: '0.6em', textTransform: 'uppercase', color: C.accent, marginBottom: 28 }}>
               Request the honour of your presence
             </p>
 
-            <div style={{ fontFamily: 'var(--font-script)', fontSize: 'clamp(3rem,8vw,5.5rem)', color: C.accent, lineHeight: 1.1 }}>
+            <div style={{ fontFamily: 'var(--font-script)', fontSize: 'clamp(60px, 12vw, 96px)', lineHeight: 1.1, color: C.primary }}>
               {invitation.partner1_name}
             </div>
-            <p className="text-base tracking-widest my-3" style={{ color: C.muted }}>AND</p>
-            <div style={{ fontFamily: 'var(--font-script)', fontSize: 'clamp(3rem,8vw,5.5rem)', color: C.accent, lineHeight: 1.1 }}>
+            <div style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontSize: 22, color: C.muted, margin: '4px 0' }}>&amp;</div>
+            <div style={{ fontFamily: 'var(--font-script)', fontSize: 'clamp(60px, 12vw, 96px)', lineHeight: 1.1, color: C.primary }}>
               {invitation.partner2_name}
             </div>
 
-            <div className="my-6 flex items-center justify-center gap-3">
-              <div className="h-px flex-1" style={{ background: C.primary + '60' }} />
-              <span style={{ color: C.primary }}>✦</span>
-              <div className="h-px flex-1" style={{ background: C.primary + '60' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '24px 0', justifyContent: 'center' }}>
+              <div style={{ flex: 1, height: 1, background: `${C.primary}50` }} />
+              <span style={{ fontSize: 14, color: C.primary }}>✦</span>
+              <div style={{ flex: 1, height: 1, background: `${C.primary}50` }} />
             </div>
 
-            <p className="text-xl tracking-[0.15em]" style={{ color: C.text }}>
-              {formatDate(invitation.wedding_date, 'MMMM d, yyyy').toUpperCase()}
+            <p style={{ fontSize: 14, letterSpacing: '0.2em', color: C.text, marginBottom: 6 }}>
+              {formatDate(invitation.wedding_date, 'MMMM d, yyyy')}
             </p>
-
             {invitation.venue_name && (
-              <p className="mt-2 text-base" style={{ color: C.muted }}>{invitation.venue_name}</p>
+              <p style={{ fontSize: 12.5, letterSpacing: '0.1em', color: C.muted, marginBottom: 8 }}>{invitation.venue_name}</p>
             )}
 
-            {daysLeft > 0 && (
-              <p className="mt-4 text-sm" style={{ color: C.muted }}>{daysLeft} days remaining</p>
+            {invitation.show_countdown && daysLeft > 0 && (
+              <p style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontSize: 15, color: C.accent, marginTop: 12 }}>
+                {daysLeft} days remain
+              </p>
             )}
 
-            <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 px-4" style={{ background: C.bg }}>
-              <span className="text-lg" style={{ color: C.primary }}>✦</span>
-            </div>
+            {/* Bottom ornament */}
+            <div style={{ position: 'absolute', bottom: -14, left: '50%', transform: 'translateX(-50%)', background: C.bg, padding: '0 12px', fontSize: 22, color: C.primary }}>✦</div>
           </div>
         </motion.div>
       </section>
 
-      {/* Details */}
-      {(invitation.venue_address || invitation.ceremony_time) && (
-        <motion.section
-          variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
-          className="py-20 px-8"
-          style={{ borderTop: `1px solid ${C.border}` }}
+      {/* ── DETAILS ── */}
+      {(invitation.venue_name || invitation.ceremony_time) && (
+        <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+          style={{ padding: '80px 32px', background: C.alt }}
         >
-          <div className="max-w-2xl mx-auto text-center space-y-8">
-            <h2 className="text-3xl" style={{ fontFamily: 'var(--font-cormorant)', color: C.accent }}>
-              Ceremony & Celebration
-            </h2>
+          <div style={{ maxWidth: 560, margin: '0 auto', textAlign: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 40 }}>
+              <div style={{ flex: 1, height: 1, background: `${C.primary}40` }} />
+              <span style={{ fontSize: 9, letterSpacing: '0.5em', textTransform: 'uppercase', color: C.accent }}>The celebration</span>
+              <div style={{ flex: 1, height: 1, background: `${C.primary}40` }} />
+            </div>
 
-            {invitation.venue_address && (
-              <div>
-                <div className="flex items-center justify-center gap-2 mb-1">
-                  <MapPin size={16} style={{ color: C.primary }} />
-                  <span className="font-medium" style={{ color: C.text }}>{invitation.venue_name}</span>
-                </div>
-                <p className="text-sm" style={{ color: C.muted }}>{invitation.venue_address}</p>
-                <a href={`https://maps.google.com/?q=${encodeURIComponent(invitation.venue_address)}`}
-                  target="_blank" rel="noopener noreferrer"
-                  className="text-xs mt-2 inline-block" style={{ color: C.primary }}>
-                  View in Google Maps →
-                </a>
-              </div>
-            )}
-
-            <div className="flex justify-center gap-16">
-              {invitation.ceremony_time && (
-                <div>
-                  <p className="text-xs tracking-widest uppercase mb-1" style={{ color: C.primary }}>Ceremony</p>
-                  <p className="text-lg" style={{ color: C.text }}>{formatTime(invitation.ceremony_time)}</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {invitation.venue_name && (
+                <div style={{ background: C.card, border: `1px solid ${C.rule}`, padding: '20px 24px', textAlign: 'left', display: 'flex', gap: 14 }}>
+                  <MapPin size={15} style={{ color: C.primary, marginTop: 2, flexShrink: 0 }} />
+                  <div>
+                    <p style={{ fontSize: 16, color: C.text, marginBottom: 4 }}>{invitation.venue_name}</p>
+                    {invitation.venue_address && <p style={{ fontSize: 12.5, color: C.muted }}>{invitation.venue_address}</p>}
+                    {invitation.venue_address && (
+                      <a href={`https://maps.google.com/?q=${encodeURIComponent(invitation.venue_address)}`} target="_blank" rel="noopener noreferrer"
+                        style={{ fontSize: 11, color: C.accent, textDecoration: 'none', display: 'inline-block', marginTop: 6 }}>
+                        Open in Maps →
+                      </a>
+                    )}
+                  </div>
                 </div>
               )}
-              {invitation.reception_time && (
-                <div>
-                  <p className="text-xs tracking-widest uppercase mb-1" style={{ color: C.primary }}>Reception</p>
-                  <p className="text-lg" style={{ color: C.text }}>{formatTime(invitation.reception_time)}</p>
+              {(invitation.ceremony_time || invitation.reception_time) && (
+                <div style={{ display: 'grid', gridTemplateColumns: invitation.reception_time ? '1fr 1fr' : '1fr', gap: 12 }}>
+                  {invitation.ceremony_time && (
+                    <div style={{ background: C.card, border: `1px solid ${C.rule}`, padding: '20px', textAlign: 'center' }}>
+                      <p style={{ fontSize: 9, letterSpacing: '0.4em', textTransform: 'uppercase', color: C.accent, marginBottom: 8 }}>Ceremony</p>
+                      <p style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontSize: 28, color: C.primary }}>{formatTime(invitation.ceremony_time)}</p>
+                    </div>
+                  )}
+                  {invitation.reception_time && (
+                    <div style={{ background: C.card, border: `1px solid ${C.rule}`, padding: '20px', textAlign: 'center' }}>
+                      <p style={{ fontSize: 9, letterSpacing: '0.4em', textTransform: 'uppercase', color: C.accent, marginBottom: 8 }}>Reception</p>
+                      <p style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontSize: 28, color: C.primary }}>{formatTime(invitation.reception_time)}</p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -118,80 +126,77 @@ export function HeritageTemplate({ invitation, onRSVPSubmit, existingRSVP }: { i
         </motion.section>
       )}
 
-      {/* Personal message */}
+      {/* ── MESSAGE ── */}
       {invitation.personal_message && (
-        <motion.section
-          variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
-          className="py-16 px-8 text-center"
-          style={{ background: C.accent + '08' }}
+        <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+          style={{ padding: '80px 32px', background: C.bg, textAlign: 'center' }}
         >
-          <div className="max-w-xl mx-auto">
-            <span className="text-2xl" style={{ color: C.primary }}>❝</span>
-            <p className="text-lg leading-relaxed mt-2" style={{ color: C.text }}>{invitation.personal_message}</p>
-            <span className="text-2xl" style={{ color: C.primary }}>❞</span>
+          <div style={{ maxWidth: 520, margin: '0 auto', borderTop: `1px solid ${C.rule}`, borderBottom: `1px solid ${C.rule}`, padding: '40px 0' }}>
+            <p style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontSize: 20, lineHeight: 1.8, color: C.text }}>
+              "{invitation.personal_message}"
+            </p>
           </div>
         </motion.section>
       )}
 
-      {/* Timeline */}
+      {/* ── TIMELINE ── */}
       {invitation.timeline?.length > 0 && (
-        <motion.section
-          variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
-          className="py-20 px-8 max-w-2xl mx-auto"
+        <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+          style={{ padding: '80px 32px', background: C.alt }}
         >
-          <h2 className="text-3xl text-center mb-12" style={{ fontFamily: 'var(--font-cormorant)', color: C.accent }}>
-            Order of the Day
-          </h2>
-          <div className="space-y-6">
-            {invitation.timeline.map((e, i) => (
-              <div key={i} className="flex gap-6 items-start border-b pb-6" style={{ borderColor: C.border }}>
-                <span className="text-2xl shrink-0">{e.emoji ?? '✦'}</span>
-                <div className="flex-1">
-                  <div className="flex items-baseline justify-between gap-4">
-                    <p className="font-medium text-lg" style={{ color: C.text }}>{e.title}</p>
-                    <p className="text-sm shrink-0" style={{ color: C.primary }}>{e.time}</p>
+          <div style={{ maxWidth: 560, margin: '0 auto' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 48 }}>
+              <div style={{ flex: 1, height: 1, background: `${C.primary}40` }} />
+              <span style={{ fontSize: 9, letterSpacing: '0.5em', textTransform: 'uppercase', color: C.accent }}>Programme</span>
+              <div style={{ flex: 1, height: 1, background: `${C.primary}40` }} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+              {invitation.timeline.map((event, i) => (
+                <div key={i} style={{ display: 'grid', gridTemplateColumns: '80px 1fr', gap: 24, paddingBottom: 24, borderBottom: i < invitation.timeline.length - 1 ? `1px solid ${C.rule}` : 'none', marginBottom: i < invitation.timeline.length - 1 ? 24 : 0 }}>
+                  <div style={{ textAlign: 'right', paddingTop: 2 }}>
+                    <p style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontSize: 18, color: C.primary }}>{event.time}</p>
                   </div>
-                  {e.description && <p className="text-sm mt-0.5" style={{ color: C.muted }}>{e.description}</p>}
+                  <div>
+                    <p style={{ fontSize: 16, color: C.text, marginBottom: 4 }}>{event.title}</p>
+                    {event.description && <p style={{ fontSize: 12.5, color: C.muted, lineHeight: 1.5 }}>{event.description}</p>}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </motion.section>
       )}
 
-      {/* Dress code */}
       {invitation.dress_code && (
-        <motion.section
-          variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
-          className="py-12 px-8 text-center"
-          style={{ background: C.accent, color: '#F4F1EB' }}
+        <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+          style={{ padding: '64px 32px', background: C.bg, textAlign: 'center' }}
         >
-          <p className="text-xs tracking-[0.5em] uppercase mb-2 opacity-70">Dress Code</p>
-          <p className="text-xl">{invitation.dress_code}</p>
+          <p style={{ fontSize: 9.5, letterSpacing: '0.5em', textTransform: 'uppercase', color: C.accent, marginBottom: 12 }}>Dress code</p>
+          <p style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontSize: 22, color: C.text }}>{invitation.dress_code}</p>
         </motion.section>
       )}
 
-      {/* Extra sections */}
-      <SharedSections invitation={invitation} theme={SECTION_THEME} labels={labels} />
+      <SharedSections invitation={invitation} theme={THEME} labels={labels} />
 
-      {/* RSVP */}
-      <motion.section
-        variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
-        className="py-20 px-8 max-w-xl mx-auto"
+      {/* ── RSVP ── */}
+      <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+        style={{ padding: '80px 32px', background: C.alt }}
       >
-        <h2 className="text-3xl text-center mb-2" style={{ fontFamily: 'var(--font-cormorant)', color: C.accent }}>
-          {labels.rsvp_title}
-        </h2>
-        {invitation.rsvp_deadline && (
-          <p className="text-sm text-center mb-8" style={{ color: C.muted }}>
-            {labels.rsvp_deadline_prefix} {formatDate(invitation.rsvp_deadline)}
-          </p>
-        )}
-        <RSVPForm invitationId={invitation.id} packageType={invitation.package} accentColor={C.primary} onSubmit={onRSVPSubmit} existingRSVP={existingRSVP} labels={labels} />
+        <div style={{ maxWidth: 540, margin: '0 auto', textAlign: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+            <div style={{ flex: 1, height: 1, background: `${C.primary}40` }} />
+            <span style={{ fontSize: 9.5, letterSpacing: '0.5em', textTransform: 'uppercase', color: C.accent }}>{labels.rsvp_title}</span>
+            <div style={{ flex: 1, height: 1, background: `${C.primary}40` }} />
+          </div>
+          {invitation.rsvp_deadline && (
+            <p style={{ fontSize: 13, color: C.muted, marginBottom: 36 }}>{labels.rsvp_deadline_prefix} {formatDate(invitation.rsvp_deadline)}</p>
+          )}
+          <RSVPForm invitationId={invitation.id} packageType={invitation.package} onSubmit={onRSVPSubmit} existingRSVP={existingRSVP} accentColor={C.primary} labels={labels} />
+        </div>
       </motion.section>
 
-      <footer className="py-8 text-center text-xs tracking-widest" style={{ color: C.muted, borderTop: `1px solid ${C.border}` }}>
-        {invitation.partner1_name} & {invitation.partner2_name} · {new Date(invitation.wedding_date).getFullYear()}
+      <footer style={{ padding: '20px 32px', textAlign: 'center', fontSize: 10, letterSpacing: '0.28em', textTransform: 'uppercase', color: C.muted, borderTop: `1px solid ${C.rule}` }}>
+        {invitation.partner1_name} &amp; {invitation.partner2_name} · {new Date(invitation.wedding_date).getFullYear()}
       </footer>
     </div>
   )

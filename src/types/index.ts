@@ -287,4 +287,58 @@ export const TEMPLATES: TemplateConfig[] = [
     },
     previewImage: '/templates/noir.jpg',
   },
+  {
+    id: 'nocturne',
+    name: 'Nocturne',
+    category: 'contemporary',
+    colors: {
+      background: '#0E1628',
+      primary: '#C8B8A0',
+      accent: '#8AAECC',
+      text: '#F0ECE6',
+      textMuted: '#8090A8',
+    },
+    fonts: {
+      heading: 'Cormorant Garamond',
+      body: 'Instrument Sans',
+      script: 'Pinyon Script',
+    },
+    previewImage: '/templates/nocturne.jpg',
+  },
+  {
+    id: 'promesse',
+    name: 'Promesse',
+    category: 'romance',
+    colors: {
+      background: '#F9F6F8',
+      primary: '#A88BAB',
+      accent: '#C4A8C2',
+      text: '#2C2030',
+      textMuted: '#7A6880',
+    },
+    fonts: {
+      heading: 'Cormorant Garamond',
+      body: 'Instrument Sans',
+      script: 'Great Vibes',
+    },
+    previewImage: '/templates/promesse.jpg',
+  },
+  {
+    id: 'rosewood',
+    name: 'Rosewood',
+    category: 'romance',
+    colors: {
+      background: '#FBF0ED',
+      primary: '#B8735A',
+      accent: '#8B4A36',
+      text: '#2C1814',
+      textMuted: '#8C5A4A',
+    },
+    fonts: {
+      heading: 'Cormorant Garamond',
+      body: 'Instrument Sans',
+      script: 'Pinyon Script',
+    },
+    previewImage: '/templates/rosewood.jpg',
+  },
 ]

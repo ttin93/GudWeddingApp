@@ -1,14 +1,46 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { MapPin, Clock, Heart } from 'lucide-react'
+import { MapPin, Clock } from 'lucide-react'
 import { formatDate, formatTime, daysUntilWedding } from '@/lib/utils/format'
 import type { Invitation, RSVPResponse } from '@/types'
 import { RSVPForm } from '../RSVPForm'
 import { SharedSections, getEffectiveLabels } from '../InvitationSections'
 import type { SectionTheme } from '../InvitationSections'
 
-const fadeUp = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }
+export interface RSVPFormData {
+  guest_name: string; email?: string; attending: boolean
+  adults: number; children: number
+  menu_choice?: 'meat' | 'fish' | 'vegetarian' | 'vegan'
+  allergies?: string; message?: string
+}
+
+const C = {
+  bg: '#FAF8F5', alt: '#EFF4F0', card: '#FFFFFF',
+  primary: '#C4847A', accent: '#2D4A3E',
+  text: '#1C1C1C', muted: '#6B6B6B', rule: '#E2D8D0',
+}
+
+const THEME: SectionTheme = {
+  bg: C.bg, bgAlt: C.alt, text: C.text, muted: C.muted,
+  accent: C.accent, rule: C.rule, card: C.card,
+}
+
+const fade = { hidden: { opacity: 0, y: 28 }, visible: { opacity: 1, y: 0 } }
+
+function Divider() {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 14, margin: '24px 0' }}>
+      <div style={{ flex: 1, height: 1, background: C.rule }} />
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2C12 2 8 6 8 10C8 12.2 9.8 14 12 14C14.2 14 16 12.2 16 10C16 6 12 2 12 2Z" fill={C.primary} opacity=".7" />
+        <path d="M7 14C7 14 3 16 3 19C3 20.7 4.3 22 6 22C7.7 22 9 20.7 9 19C9 16 7 14 7 14Z" fill={C.accent} opacity=".5" />
+        <path d="M17 14C17 14 21 16 21 19C21 20.7 19.7 22 18 22C16.3 22 15 20.7 15 19C15 16 17 14 17 14Z" fill={C.accent} opacity=".5" />
+      </svg>
+      <div style={{ flex: 1, height: 1, background: C.rule }} />
+    </div>
+  )
+}
 
 interface Props {
   invitation: Invitation
@@ -16,199 +48,160 @@ interface Props {
   existingRSVP?: RSVPResponse | null
 }
 
-export interface RSVPFormData {
-  guest_name: string
-  email?: string
-  attending: boolean
-  adults: number
-  children: number
-  menu_choice?: 'meat' | 'fish' | 'vegetarian' | 'vegan'
-  allergies?: string
-  message?: string
-}
-
-const SECTION_THEME: SectionTheme = {
-  bg: '#FAF8F5', bgAlt: '#EFF4F0',
-  text: '#1C1C1C', muted: '#6B6B6B',
-  accent: '#2D4A3E', rule: '#C4847A30', card: '#FFFFFF',
-}
-
 export function BotanicaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props) {
   const daysLeft = daysUntilWedding(invitation.wedding_date)
-  const colors = { bg: '#FAF8F5', primary: '#C4847A', accent: '#2D4A3E', text: '#1C1C1C', muted: '#6B6B6B' }
   const labels = getEffectiveLabels(invitation)
 
   return (
-    <div className="min-h-screen" style={{ background: colors.bg, fontFamily: 'var(--font-cormorant), Georgia, serif' }}>
+    <div style={{ background: C.bg, fontFamily: 'var(--font-cormorant), Georgia, serif', minHeight: '100vh' }}>
 
-      {/* ── Hero ── */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center px-6 text-center overflow-hidden">
-        {/* Botanical SVG bg */}
-        <div className="absolute inset-0 opacity-[0.06]"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232D4A3E' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}
-        />
+      {/* ── HERO ── */}
+      <section style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 32px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+        {/* Subtle botanical pattern bg */}
+        <div style={{
+          position: 'absolute', inset: 0, opacity: 0.04,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 10 Q50 20 40 30 Q30 20 40 10Z M40 50 Q50 60 40 70 Q30 60 40 50Z M10 40 Q20 50 30 40 Q20 30 10 40Z M50 40 Q60 50 70 40 Q60 30 50 40Z' fill='%232D4A3E'/%3E%3C/svg%3E")`,
+          backgroundSize: '80px 80px',
+        }} />
 
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          transition={{ duration: 0.8 }}
-          className="relative z-10"
-        >
-          <p className="text-sm tracking-[0.4em] uppercase mb-8" style={{ color: colors.accent }}>
+        <motion.div variants={fade} initial="hidden" animate="visible" transition={{ duration: 1 }} style={{ position: 'relative', zIndex: 1, maxWidth: 560 }}>
+          <p style={{ fontSize: 9.5, letterSpacing: '0.5em', textTransform: 'uppercase', color: C.accent, marginBottom: 36 }}>
             Together with their families
           </p>
 
-          <div className="font-script text-6xl sm:text-7xl md:text-8xl mb-4" style={{ color: colors.primary, fontFamily: 'var(--font-script)' }}>
+          <div style={{ fontFamily: 'var(--font-script)', fontSize: 'clamp(72px, 14vw, 112px)', lineHeight: 1.1, color: C.primary, marginBottom: 8 }}>
             {invitation.partner1_name}
           </div>
-          <div className="text-2xl tracking-widest mb-4" style={{ color: colors.muted }}>& </div>
-          <div className="font-script text-6xl sm:text-7xl md:text-8xl" style={{ color: colors.primary, fontFamily: 'var(--font-script)' }}>
+          <div style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontSize: 28, color: C.muted, margin: '4px 0' }}>&amp;</div>
+          <div style={{ fontFamily: 'var(--font-script)', fontSize: 'clamp(72px, 14vw, 112px)', lineHeight: 1.1, color: C.primary }}>
             {invitation.partner2_name}
           </div>
 
-          <div className="my-8 flex items-center justify-center gap-4">
-            <div className="h-px w-16" style={{ background: colors.accent }} />
-            <Heart size={16} style={{ color: colors.primary }} fill={colors.primary} />
-            <div className="h-px w-16" style={{ background: colors.accent }} />
-          </div>
+          <Divider />
 
-          <p className="text-2xl tracking-[0.2em]" style={{ color: colors.text }}>
-            {formatDate(invitation.wedding_date, 'MMMM d, yyyy').toUpperCase()}
+          <p style={{ fontSize: 15, letterSpacing: '0.24em', textTransform: 'uppercase', color: C.text, marginBottom: 6 }}>
+            {formatDate(invitation.wedding_date, 'MMMM d, yyyy')}
           </p>
 
-          {daysLeft > 0 && (
-            <p className="mt-4 text-base" style={{ color: colors.muted }}>
-              {daysLeft} days to go
+          {invitation.venue_name && (
+            <p style={{ fontSize: 13, color: C.muted, letterSpacing: '0.1em' }}>
+              {invitation.venue_name}
             </p>
+          )}
+
+          {invitation.show_countdown && daysLeft > 0 && (
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}
+              style={{ marginTop: 32, display: 'inline-flex', gap: 0, border: `1px solid ${C.rule}`, overflow: 'hidden' }}
+            >
+              {[['Days', daysLeft], ['Until', 'we say'], ['I do', '♥']].map(([label, value], ci) => (
+                <div key={String(label)} style={{ padding: '12px 20px', borderRight: ci < 2 ? `1px solid ${C.rule}` : 'none', textAlign: 'center' }}>
+                  <div style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontSize: 28, lineHeight: 1, color: C.primary }}>{value}</div>
+                  <div style={{ fontSize: 8, letterSpacing: '0.28em', textTransform: 'uppercase', color: C.muted, marginTop: 4 }}>{label}</div>
+                </div>
+              ))}
+            </motion.div>
           )}
         </motion.div>
 
         {/* Scroll cue */}
         <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-          animate={{ y: [0, 8, 0] }}
-          transition={{ repeat: Infinity, duration: 2 }}
+          style={{ position: 'absolute', bottom: 32, left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}
+          animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2.4, ease: 'easeInOut' }}
         >
-          <div className="w-px h-12 mx-auto" style={{ background: `linear-gradient(to bottom, ${colors.accent}, transparent)` }} />
+          <div style={{ width: 1, height: 48, background: `linear-gradient(to bottom, ${C.accent}, transparent)` }} />
         </motion.div>
       </section>
 
-      {/* ── Details ── */}
+      {/* ── DETAILS ── */}
       {(invitation.venue_name || invitation.ceremony_time) && (
         <motion.section
-          variants={fadeUp} initial="hidden" whileInView="visible"
-          viewport={{ once: true }} transition={{ duration: 0.6 }}
-          className="py-20 px-6"
+          variants={fade} initial="hidden" whileInView="visible"
+          viewport={{ once: true }} transition={{ duration: 0.7 }}
+          style={{ padding: '80px 32px', background: C.alt }}
         >
-          <div className="max-w-lg mx-auto text-center">
-            <h2 className="text-3xl tracking-widest uppercase mb-8" style={{ color: colors.accent }}>
-              The Celebration
-            </h2>
+          <div style={{ maxWidth: 560, margin: '0 auto', textAlign: 'center' }}>
+            <p style={{ fontSize: 9.5, letterSpacing: '0.5em', textTransform: 'uppercase', color: C.accent, marginBottom: 32 }}>The celebration</p>
 
-            <div className="space-y-6">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               {invitation.venue_name && (
-                <div className="flex items-start gap-3 text-left">
-                  <MapPin size={18} style={{ color: colors.primary }} className="mt-0.5 shrink-0" />
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, textAlign: 'left', background: C.card, padding: '20px 24px', border: `1px solid ${C.rule}` }}>
+                  <MapPin size={16} style={{ color: C.primary, marginTop: 2, flexShrink: 0 }} />
                   <div>
-                    <p className="font-medium text-lg" style={{ color: colors.text }}>{invitation.venue_name}</p>
+                    <p style={{ fontSize: 16, color: C.text, marginBottom: 4 }}>{invitation.venue_name}</p>
                     {invitation.venue_address && (
-                      <p className="text-sm mt-0.5" style={{ color: colors.muted }}>{invitation.venue_address}</p>
+                      <p style={{ fontSize: 12.5, color: C.muted }}>{invitation.venue_address}</p>
+                    )}
+                    {invitation.venue_address && (
+                      <a href={`https://maps.google.com/?q=${encodeURIComponent(invitation.venue_address)}`} target="_blank" rel="noopener noreferrer"
+                        style={{ fontSize: 11.5, color: C.accent, textDecoration: 'none', letterSpacing: '0.06em', display: 'inline-block', marginTop: 8, borderBottom: `1px solid ${C.accent}40` }}>
+                        Open in Maps →
+                      </a>
                     )}
                   </div>
                 </div>
               )}
 
-              {invitation.ceremony_time && (
-                <div className="flex items-center gap-3">
-                  <Clock size={18} style={{ color: colors.primary }} />
-                  <div>
-                    <p className="font-medium" style={{ color: colors.text }}>Ceremony</p>
-                    <p style={{ color: colors.muted }}>{formatTime(invitation.ceremony_time)}</p>
-                  </div>
-                </div>
-              )}
-
-              {invitation.reception_time && (
-                <div className="flex items-center gap-3">
-                  <Clock size={18} style={{ color: colors.primary }} />
-                  <div>
-                    <p className="font-medium" style={{ color: colors.text }}>Reception</p>
-                    <p style={{ color: colors.muted }}>{formatTime(invitation.reception_time)}</p>
-                  </div>
+              {(invitation.ceremony_time || invitation.reception_time) && (
+                <div style={{ display: 'grid', gridTemplateColumns: invitation.reception_time ? '1fr 1fr' : '1fr', gap: 12 }}>
+                  {invitation.ceremony_time && (
+                    <div style={{ background: C.card, padding: '20px 24px', border: `1px solid ${C.rule}`, textAlign: 'center' }}>
+                      <Clock size={14} style={{ color: C.primary, marginBottom: 8 }} />
+                      <p style={{ fontSize: 9, letterSpacing: '0.32em', textTransform: 'uppercase', color: C.muted, marginBottom: 6 }}>Ceremony</p>
+                      <p style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontSize: 26, color: C.text }}>{formatTime(invitation.ceremony_time)}</p>
+                    </div>
+                  )}
+                  {invitation.reception_time && (
+                    <div style={{ background: C.card, padding: '20px 24px', border: `1px solid ${C.rule}`, textAlign: 'center' }}>
+                      <Clock size={14} style={{ color: C.primary, marginBottom: 8 }} />
+                      <p style={{ fontSize: 9, letterSpacing: '0.32em', textTransform: 'uppercase', color: C.muted, marginBottom: 6 }}>Reception</p>
+                      <p style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontSize: 26, color: C.text }}>{formatTime(invitation.reception_time)}</p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
-
-            {/* Maps link */}
-            {invitation.venue_address && (
-              <a
-                href={`https://maps.google.com/?q=${encodeURIComponent(invitation.venue_address)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block mt-6 text-sm underline underline-offset-4"
-                style={{ color: colors.accent }}
-              >
-                Open in Google Maps →
-              </a>
-            )}
           </div>
         </motion.section>
       )}
 
-      {/* ── Personal message ── */}
+      {/* ── PERSONAL MESSAGE ── */}
       {invitation.personal_message && (
-        <motion.section
-          variants={fadeUp} initial="hidden" whileInView="visible"
-          viewport={{ once: true }} transition={{ duration: 0.6 }}
-          className="py-16 px-6"
-          style={{ background: colors.accent + '0A' }}
+        <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+          style={{ padding: '80px 32px', background: C.bg, textAlign: 'center' }}
         >
-          <div className="max-w-lg mx-auto text-center">
-            <div className="w-px h-12 mx-auto mb-6" style={{ background: colors.primary }} />
-            <p className="text-xl leading-relaxed italic" style={{ color: colors.text }}>
+          <div style={{ maxWidth: 520, margin: '0 auto' }}>
+            <div style={{ width: 1, height: 48, background: C.primary, margin: '0 auto 32px', opacity: 0.4 }} />
+            <p style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontSize: 20, lineHeight: 1.75, color: C.text }}>
               "{invitation.personal_message}"
             </p>
-            <div className="w-px h-12 mx-auto mt-6" style={{ background: colors.primary }} />
+            <div style={{ width: 1, height: 48, background: C.primary, margin: '32px auto 0', opacity: 0.4 }} />
           </div>
         </motion.section>
       )}
 
-      {/* ── Timeline ── */}
+      {/* ── TIMELINE ── */}
       {invitation.timeline?.length > 0 && (
-        <motion.section
-          variants={fadeUp} initial="hidden" whileInView="visible"
-          viewport={{ once: true }} transition={{ duration: 0.6 }}
-          className="py-20 px-6"
+        <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+          style={{ padding: '80px 32px', background: C.alt }}
         >
-          <div className="max-w-lg mx-auto">
-            <h2 className="text-3xl tracking-widest uppercase text-center mb-12" style={{ color: colors.accent }}>
-              The Day
-            </h2>
-            <div className="relative">
-              <div className="absolute left-4 top-0 bottom-0 w-px" style={{ background: colors.primary + '40' }} />
-              <div className="space-y-8 pl-12">
+          <div style={{ maxWidth: 560, margin: '0 auto' }}>
+            <p style={{ fontSize: 9.5, letterSpacing: '0.5em', textTransform: 'uppercase', color: C.accent, textAlign: 'center', marginBottom: 48 }}>The day</p>
+            <div style={{ position: 'relative' }}>
+              <div style={{ position: 'absolute', left: 20, top: 0, bottom: 0, width: 1, background: `${C.primary}30` }} />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                 {invitation.timeline.map((event, i) => (
-                  <motion.div
-                    key={i}
-                    variants={fadeUp}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                    className="relative"
+                  <motion.div key={i} variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                    style={{ display: 'flex', gap: 28, alignItems: 'flex-start', paddingBottom: 32 }}
                   >
-                    <div className="absolute -left-12 top-1 w-8 h-8 rounded-full flex items-center justify-center text-sm"
-                      style={{ background: colors.bg, border: `1px solid ${colors.primary}` }}>
+                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: C.bg, border: `1px solid ${C.primary}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0, zIndex: 1 }}>
                       {event.emoji ?? '♥'}
                     </div>
-                    <p className="text-sm font-medium tracking-widest" style={{ color: colors.primary }}>{event.time}</p>
-                    <p className="text-lg mt-0.5" style={{ color: colors.text }}>{event.title}</p>
-                    {event.description && (
-                      <p className="text-sm mt-0.5" style={{ color: colors.muted }}>{event.description}</p>
-                    )}
+                    <div style={{ paddingTop: 8 }}>
+                      <p style={{ fontSize: 10, letterSpacing: '0.3em', textTransform: 'uppercase', color: C.primary, marginBottom: 4 }}>{event.time}</p>
+                      <p style={{ fontSize: 17, color: C.text, marginBottom: 4 }}>{event.title}</p>
+                      {event.description && <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.5 }}>{event.description}</p>}
+                    </div>
                   </motion.div>
                 ))}
               </div>
@@ -217,36 +210,35 @@ export function BotanicaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
         </motion.section>
       )}
 
-      {/* ── Dress code ── */}
+      {/* ── DRESS CODE ── */}
       {invitation.dress_code && (
-        <motion.section
-          variants={fadeUp} initial="hidden" whileInView="visible"
-          viewport={{ once: true }} transition={{ duration: 0.6 }}
-          className="py-16 px-6 text-center"
+        <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+          style={{ padding: '64px 32px', background: C.bg, textAlign: 'center' }}
         >
-          <div className="max-w-md mx-auto">
-            <h2 className="text-2xl tracking-widest uppercase mb-4" style={{ color: colors.accent }}>Dress Code</h2>
-            <p className="text-lg" style={{ color: colors.text }}>{invitation.dress_code}</p>
+          <div style={{ maxWidth: 480, margin: '0 auto', border: `1px solid ${C.rule}`, padding: '40px 32px', position: 'relative' }}>
+            {/* Corner accents */}
+            {[{top:-4,left:-4,borderRight:'none',borderBottom:'none'},{top:-4,right:-4,borderLeft:'none',borderBottom:'none'},{bottom:-4,left:-4,borderRight:'none',borderTop:'none'},{bottom:-4,right:-4,borderLeft:'none',borderTop:'none'}].map((s,i) => (
+              <div key={i} style={{ position:'absolute', width:12, height:12, border:`1px solid ${C.primary}`, ...s }} />
+            ))}
+            <p style={{ fontSize: 9.5, letterSpacing: '0.5em', textTransform: 'uppercase', color: C.accent, marginBottom: 16 }}>Dress code</p>
+            <p style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontSize: 22, color: C.text, lineHeight: 1.6 }}>{invitation.dress_code}</p>
           </div>
         </motion.section>
       )}
 
-      {/* ── Extra sections ── */}
-      <SharedSections invitation={invitation} theme={SECTION_THEME} labels={labels} />
+      {/* ── SHARED SECTIONS (transport, accommodation, gifts, etc.) ── */}
+      <SharedSections invitation={invitation} theme={THEME} labels={labels} />
 
       {/* ── RSVP ── */}
-      <motion.section
-        variants={fadeUp} initial="hidden" whileInView="visible"
-        viewport={{ once: true }} transition={{ duration: 0.6 }}
-        className="py-20 px-6"
-        style={{ background: colors.accent + '08' }}
+      <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+        style={{ padding: '80px 32px', background: `${C.accent}08` }}
       >
-        <div className="max-w-lg mx-auto">
-          <h2 className="text-3xl tracking-widest uppercase text-center mb-2" style={{ color: colors.accent }}>
+        <div style={{ maxWidth: 540, margin: '0 auto' }}>
+          <p style={{ fontSize: 9.5, letterSpacing: '0.5em', textTransform: 'uppercase', color: C.accent, textAlign: 'center', marginBottom: 8 }}>
             {labels.rsvp_title}
-          </h2>
+          </p>
           {invitation.rsvp_deadline && (
-            <p className="text-center text-sm mb-8" style={{ color: colors.muted }}>
+            <p style={{ textAlign: 'center', fontSize: 13, color: C.muted, marginBottom: 36 }}>
               {labels.rsvp_deadline_prefix} {formatDate(invitation.rsvp_deadline)}
             </p>
           )}
@@ -255,15 +247,14 @@ export function BotanicaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
             packageType={invitation.package}
             onSubmit={onRSVPSubmit}
             existingRSVP={existingRSVP}
-            accentColor={colors.primary}
+            accentColor={C.primary}
             labels={labels}
           />
         </div>
       </motion.section>
 
-      {/* Footer */}
-      <footer className="py-8 text-center text-xs tracking-widest" style={{ color: colors.muted }}>
-        {invitation.partner1_name} & {invitation.partner2_name} — {new Date(invitation.wedding_date).getFullYear()}
+      <footer style={{ padding: '24px 32px', textAlign: 'center', fontSize: 11, letterSpacing: '0.2em', color: C.muted, borderTop: `1px solid ${C.rule}` }}>
+        {invitation.partner1_name} &amp; {invitation.partner2_name} · {new Date(invitation.wedding_date).getFullYear()}
       </footer>
     </div>
   )
