@@ -5,22 +5,20 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import toast from 'react-hot-toast'
-import { CheckCircle2 } from 'lucide-react'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils/cn'
+import { Check, X, Users, UtensilsCrossed, MessageSquare, Mail, Baby } from 'lucide-react'
 import type { Package, RSVPResponse } from '@/types'
+import type { InvitationLabels } from '@/lib/utils/labels'
 
 const schema = z.object({
-  guest_name: z.string().min(1, 'Please enter your name'),
-  email: z.string().email('Invalid email').optional().or(z.literal('')),
+  guest_name: z.string().min(1),
+  email: z.string().email().optional().or(z.literal('')),
   attending: z.boolean(),
   adults: z.coerce.number().int().min(1).max(20).default(1),
   children: z.coerce.number().int().min(0).max(20).default(0),
+  children_ages: z.string().max(100).optional(),
   menu_choice: z.enum(['meat', 'fish', 'vegetarian', 'vegan']).optional(),
-  allergies: z.string().max(200).optional(),
-  message: z.string().max(500).optional(),
+  allergies: z.string().max(300).optional(),
+  message: z.string().max(600).optional(),
 })
 
 type FormData = z.infer<typeof schema>
@@ -29,22 +27,175 @@ interface Props {
   invitationId: string
   packageType: Package
   accentColor?: string
+  bgColor?: string
+  labels?: Partial<InvitationLabels>
   onSubmit?: (data: FormData) => Promise<void>
   existingRSVP?: RSVPResponse | null
 }
 
-export function RSVPForm({ invitationId, packageType, accentColor = '#8B6B4A', onSubmit, existingRSVP }: Props) {
+const MENU_ICONS: Record<string, string> = {
+  meat: '🥩',
+  fish: '🐟',
+  vegetarian: '🥗',
+  vegan: '🌱',
+}
+
+function ConfirmationCard({
+  data,
+  accentColor,
+  bgColor,
+  labels,
+}: {
+  data: FormData
+  accentColor: string
+  bgColor: string
+  labels: Partial<InvitationLabels>
+}) {
+  const totalGuests = data.adults + (data.children ?? 0)
+
+  return (
+    <div style={{ textAlign: 'center', padding: '8px 0' }}>
+      {/* Icon */}
+      <div style={{
+        width: 64, height: 64, borderRadius: '50%', margin: '0 auto 20px',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        background: data.attending ? accentColor + '18' : '#f0f0f0',
+        border: `2px solid ${data.attending ? accentColor + '40' : '#e0e0e0'}`,
+      }}>
+        {data.attending
+          ? <Check size={28} style={{ color: accentColor }} strokeWidth={2.5} />
+          : <X size={28} style={{ color: '#888' }} strokeWidth={2.5} />
+        }
+      </div>
+
+      {/* Thank you */}
+      <h3 style={{
+        fontFamily: 'var(--font-cormorant), Georgia, serif',
+        fontSize: 'clamp(1.6rem, 4vw, 2.2rem)',
+        fontWeight: 300,
+        color: '#1A1714',
+        marginBottom: 6,
+        fontStyle: 'italic',
+      }}>
+        {labels.thank_you ?? 'Hvala!'}
+      </h3>
+
+      {data.attending ? (
+        <>
+          {/* Guest info card */}
+          <div style={{
+            margin: '24px auto 0',
+            maxWidth: 340,
+            border: `1px solid ${accentColor}30`,
+            background: accentColor + '08',
+            padding: '20px 24px',
+            textAlign: 'left',
+          }}>
+            {/* Name + guest count */}
+            <div style={{
+              display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
+              marginBottom: 14, paddingBottom: 14,
+              borderBottom: `1px solid ${accentColor}20`,
+            }}>
+              <div>
+                <p style={{ fontSize: 16, fontWeight: 500, color: '#1A1714', fontFamily: 'var(--font-cormorant), Georgia, serif', fontStyle: 'italic' }}>
+                  {data.guest_name}
+                </p>
+                {data.email && (
+                  <p style={{ fontSize: 11.5, color: '#8C7B6B', marginTop: 2, display: 'flex', alignItems: 'center', gap: 5 }}>
+                    <Mail size={10} /> {data.email}
+                  </p>
+                )}
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: 5,
+                  fontSize: 13, color: accentColor, fontWeight: 500,
+                }}>
+                  <Users size={13} />
+                  {totalGuests} {totalGuests === 1 ? 'gost' : totalGuests < 5 ? 'gosti' : 'gostov'}
+                </div>
+              </div>
+            </div>
+
+            {/* Adults / children breakdown */}
+            <div style={{ display: 'flex', gap: 16, marginBottom: data.menu_choice || data.children_ages ? 14 : 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#4A3D35' }}>
+                <span style={{ fontSize: 16 }}>👤</span>
+                <span>{data.adults} {data.adults === 1 ? 'odrasli' : 'odrasli'}</span>
+              </div>
+              {(data.children ?? 0) > 0 && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#4A3D35' }}>
+                  <Baby size={14} style={{ color: accentColor }} />
+                  <span>{data.children} {data.children === 1 ? 'otrok' : 'otroci'}</span>
+                  {data.children_ages && (
+                    <span style={{ color: '#8C7B6B', fontSize: 12 }}>({data.children_ages})</span>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Menu */}
+            {data.menu_choice && (
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#4A3D35',
+                paddingTop: 14, borderTop: `1px solid ${accentColor}20`,
+              }}>
+                <UtensilsCrossed size={13} style={{ color: accentColor }} />
+                <span>{MENU_ICONS[data.menu_choice]} {data.menu_choice === 'meat' ? 'Meso' : data.menu_choice === 'fish' ? 'Riba' : data.menu_choice === 'vegetarian' ? 'Vegetarijansko' : 'Vegansko'}</span>
+              </div>
+            )}
+
+            {/* Allergies */}
+            {data.allergies && (
+              <div style={{ marginTop: 10, fontSize: 12, color: '#8C7B6B', fontStyle: 'italic' }}>
+                ⚠️ {data.allergies}
+              </div>
+            )}
+
+            {/* Message */}
+            {data.message && (
+              <div style={{
+                marginTop: 14, paddingTop: 14,
+                borderTop: `1px solid ${accentColor}20`,
+                display: 'flex', gap: 8, fontSize: 13, color: '#4A3D35',
+              }}>
+                <MessageSquare size={13} style={{ color: accentColor, marginTop: 2, flexShrink: 0 }} />
+                <span style={{ fontStyle: 'italic' }}>"{data.message}"</span>
+              </div>
+            )}
+          </div>
+
+          <p style={{ fontSize: 13, color: '#8C7B6B', marginTop: 20 }}>
+            {labels.thank_you_attending ?? 'Veselimo se vašega obiska.'}
+          </p>
+        </>
+      ) : (
+        <p style={{ fontSize: 14, color: '#8C7B6B', marginTop: 12 }}>
+          {labels.thank_you_not_attending ?? 'Žal nam je, da ne boste prisotni.'}
+        </p>
+      )}
+    </div>
+  )
+}
+
+export function RSVPForm({
+  invitationId,
+  packageType,
+  accentColor = '#8B6B4A',
+  bgColor = '#FAFAF8',
+  labels = {},
+  onSubmit,
+  existingRSVP,
+}: Props) {
   const [submitted, setSubmitted] = useState(!!existingRSVP)
   const [attending, setAttending] = useState<boolean | null>(existingRSVP?.attending ?? null)
+  const [submittedData, setSubmittedData] = useState<FormData | null>(null)
+
   const isEleganceOrAbove = packageType === 'elegance' || packageType === 'signature'
   const isSignature = packageType === 'signature'
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors, isSubmitting },
-  } = useForm<FormData>({
+  const { register, handleSubmit, setValue, watch, formState: { errors, isSubmitting } } = useForm<FormData>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(schema as any),
     defaultValues: {
@@ -53,6 +204,9 @@ export function RSVPForm({ invitationId, packageType, accentColor = '#8B6B4A', o
       children: existingRSVP?.children ?? 0,
     },
   })
+
+  const adultsVal = watch('adults') ?? 1
+  const childrenVal = watch('children') ?? 0
 
   async function submit(data: FormData) {
     try {
@@ -66,146 +220,202 @@ export function RSVPForm({ invitationId, packageType, accentColor = '#8B6B4A', o
         })
         if (!res.ok) {
           const err = await res.json()
-          throw new Error(err.error || 'Failed to submit')
+          throw new Error(err.error || 'Napaka')
         }
       }
+      setSubmittedData(data)
       setSubmitted(true)
     } catch (e) {
       toast.error((e as Error).message)
     }
   }
 
-  if (submitted) {
-    return (
-      <div className="text-center py-10 space-y-4">
-        <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto" style={{ background: accentColor + '20' }}>
-          <CheckCircle2 size={32} style={{ color: accentColor }} />
-        </div>
-        <h3 className="text-xl font-serif" style={{ color: '#1C1C1C' }}>
-          {attending ? 'See you there!' : 'Thank you for letting us know'}
-        </h3>
-        <p className="text-sm" style={{ color: '#6B6B6B' }}>
-          {attending
-            ? "We can't wait to celebrate with you."
-            : 'You will be missed. Thank you for your kind response.'}
-        </p>
-      </div>
-    )
+  if (submitted && submittedData) {
+    return <ConfirmationCard data={submittedData} accentColor={accentColor} bgColor={bgColor} labels={labels} />
+  }
+
+  const fieldStyle: React.CSSProperties = {
+    width: '100%', padding: '11px 14px',
+    border: `1px solid ${accentColor}30`,
+    background: bgColor,
+    fontSize: 14, color: '#1A1714',
+    outline: 'none', boxSizing: 'border-box',
+    fontFamily: 'inherit',
+    transition: 'border-color .15s',
+  }
+
+  const labelStyle: React.CSSProperties = {
+    display: 'block', fontSize: 10, letterSpacing: '0.25em',
+    textTransform: 'uppercase', color: '#8C7B6B', marginBottom: 6,
   }
 
   return (
-    <form onSubmit={handleSubmit(submit)} className="space-y-6">
+    <form onSubmit={handleSubmit(submit)} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+
       {/* Attending toggle */}
-      <div className="space-y-2">
-        <p className="text-sm font-medium text-[#1C1C1C]">Will you be attending?</p>
-        <div className="grid grid-cols-2 gap-3">
-          {[{ value: true, label: '✓ Joyfully accept' }, { value: false, label: '✗ Regretfully decline' }].map(({ value, label }) => (
-            <button
-              key={String(value)}
-              type="button"
-              onClick={() => {
-                setAttending(value)
-                setValue('attending', value)
-              }}
-              className={cn(
-                'py-3 px-4 rounded-sm border text-sm transition-all',
-                attending === value
-                  ? 'border-2 font-medium'
-                  : 'border-[#E8E2DA] text-[#6B6B6B] hover:border-[#C4A882]'
-              )}
-              style={attending === value ? { borderColor: accentColor, color: accentColor, background: accentColor + '10' } : {}}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+        {[
+          { value: true, label: labels.attending_yes ?? 'Pridem', icon: '✓' },
+          { value: false, label: labels.attending_no ?? 'Ne morem priti', icon: '✗' },
+        ].map(({ value, label, icon }) => (
+          <button
+            key={String(value)}
+            type="button"
+            onClick={() => { setAttending(value); setValue('attending', value) }}
+            style={{
+              padding: '14px 16px',
+              border: `2px solid ${attending === value ? accentColor : accentColor + '25'}`,
+              background: attending === value ? accentColor + '12' : 'transparent',
+              color: attending === value ? '#1A1714' : '#8C7B6B',
+              fontSize: 13, letterSpacing: '0.05em', cursor: 'pointer',
+              fontFamily: 'inherit',
+              transition: 'all .15s',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+            }}
+          >
+            <span style={{ opacity: attending === value ? 1 : 0.4 }}>{icon}</span>
+            {label}
+          </button>
+        ))}
       </div>
 
       {attending !== null && (
         <>
-          <Input
-            label="Your name"
-            id="name"
-            placeholder="Sophie Martin"
-            error={errors.guest_name?.message}
-            {...register('guest_name')}
-          />
+          {/* Name */}
+          <div>
+            <label style={labelStyle}>{labels.your_name ?? 'Ime in priimek'}</label>
+            <input
+              {...register('guest_name')}
+              placeholder="Dragovan"
+              style={{ ...fieldStyle, ...(errors.guest_name ? { borderColor: '#C05050' } : {}) }}
+            />
+            {errors.guest_name && <p style={{ fontSize: 11, color: '#C05050', marginTop: 4 }}>Obvezno polje</p>}
+          </div>
 
-          <Input
-            label="Email (optional — for confirmation)"
-            type="email"
-            id="email"
-            placeholder="sophie@example.com"
-            error={errors.email?.message}
-            {...register('email')}
-          />
+          {/* Email */}
+          <div>
+            <label style={labelStyle}>{labels.your_email ?? 'E-naslov (opcijsko)'}</label>
+            <input
+              {...register('email')}
+              type="email"
+              placeholder="dragovan@email.com"
+              style={fieldStyle}
+            />
+          </div>
 
-          {attending && isEleganceOrAbove && (
-            <div className="grid grid-cols-2 gap-4">
-              <Input
-                label="Adults"
-                type="number"
-                id="adults"
-                min={1}
-                max={20}
-                {...register('adults')}
-              />
-              {isSignature && (
-                <Input
-                  label="Children"
-                  type="number"
-                  id="children"
-                  min={0}
-                  max={20}
-                  {...register('children')}
-                />
+          {/* Guests */}
+          {attending && (
+            <div>
+              <label style={labelStyle}>{labels.adults ?? 'Število gostov'}</label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                <div>
+                  <label style={{ ...labelStyle, fontSize: 9 }}>👤 {labels.adults ?? 'Odrasli'}</label>
+                  <div style={{ display: 'flex', alignItems: 'center', border: `1px solid ${accentColor}30`, background: bgColor }}>
+                    <button type="button"
+                      onClick={() => setValue('adults', Math.max(1, adultsVal - 1))}
+                      style={{ padding: '10px 14px', background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: '#8C7B6B' }}>−</button>
+                    <span style={{ flex: 1, textAlign: 'center', fontSize: 16, color: '#1A1714' }}>{adultsVal}</span>
+                    <button type="button"
+                      onClick={() => setValue('adults', Math.min(20, adultsVal + 1))}
+                      style={{ padding: '10px 14px', background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: '#8C7B6B' }}>+</button>
+                  </div>
+                </div>
+                <div>
+                  <label style={{ ...labelStyle, fontSize: 9 }}>🧒 {labels.children ?? 'Otroci'}</label>
+                  <div style={{ display: 'flex', alignItems: 'center', border: `1px solid ${accentColor}30`, background: bgColor }}>
+                    <button type="button"
+                      onClick={() => setValue('children', Math.max(0, childrenVal - 1))}
+                      style={{ padding: '10px 14px', background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: '#8C7B6B' }}>−</button>
+                    <span style={{ flex: 1, textAlign: 'center', fontSize: 16, color: '#1A1714' }}>{childrenVal}</span>
+                    <button type="button"
+                      onClick={() => setValue('children', Math.min(20, childrenVal + 1))}
+                      style={{ padding: '10px 14px', background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: '#8C7B6B' }}>+</button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Children ages */}
+              {childrenVal > 0 && (
+                <div style={{ marginTop: 10 }}>
+                  <label style={{ ...labelStyle, fontSize: 9 }}>Starost otrok</label>
+                  <input
+                    {...register('children_ages')}
+                    placeholder="npr. 5 in 8 let"
+                    style={{ ...fieldStyle, fontSize: 13 }}
+                  />
+                </div>
               )}
             </div>
           )}
 
-          {attending && isSignature && (
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-[#1C1C1C]">Menu preference</label>
-              <div className="grid grid-cols-2 gap-2">
-                {(['meat', 'fish', 'vegetarian', 'vegan'] as const).map((opt) => (
-                  <label key={opt} className="flex items-center gap-2 cursor-pointer text-sm">
-                    <input type="radio" value={opt} {...register('menu_choice')} className="accent-[#8B6B4A]" />
-                    <span className="capitalize">{opt}</span>
+          {/* Menu */}
+          {attending && isEleganceOrAbove && (
+            <div>
+              <label style={labelStyle}>{labels.menu_choice ?? 'Izbira menija'}</label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                {([
+                  { val: 'meat', label: labels.menu_meat ?? 'Meso', emoji: '🥩' },
+                  { val: 'fish', label: labels.menu_fish ?? 'Ribe', emoji: '🐟' },
+                  { val: 'vegetarian', label: labels.menu_vegetarian ?? 'Vegetarijansko', emoji: '🥗' },
+                  { val: 'vegan', label: labels.menu_vegan ?? 'Vegansko', emoji: '🌱' },
+                ] as const).map(({ val, label, emoji }) => (
+                  <label key={val} style={{
+                    display: 'flex', alignItems: 'center', gap: 10,
+                    padding: '11px 14px', border: `1px solid ${accentColor}25`,
+                    cursor: 'pointer', fontSize: 13, color: '#1A1714',
+                    background: bgColor,
+                  }}>
+                    <input type="radio" value={val} {...register('menu_choice')}
+                      style={{ accentColor, width: 14, height: 14 }} />
+                    <span>{emoji} {label}</span>
                   </label>
                 ))}
               </div>
             </div>
           )}
 
+          {/* Allergies */}
           {isEleganceOrAbove && (
-            <Textarea
-              label={attending ? 'Allergies or dietary notes (optional)' : undefined}
-              id="allergies"
-              placeholder="Any dietary requirements..."
-              className="min-h-[70px]"
-              {...register('allergies')}
-            />
+            <div>
+              <label style={labelStyle}>{labels.allergies ?? 'Alergije / posebne zahteve (opcijsko)'}</label>
+              <textarea
+                {...register('allergies')}
+                rows={2}
+                placeholder="Laktozna intoleranca, oreški..."
+                style={{ ...fieldStyle, resize: 'none', lineHeight: 1.5 }}
+              />
+            </div>
           )}
 
+          {/* Message */}
           {isEleganceOrAbove && (
-            <Textarea
-              label="Message to the couple (optional)"
-              id="message"
-              placeholder="A warm wish or note..."
-              className="min-h-[80px]"
-              {...register('message')}
-            />
+            <div>
+              <label style={labelStyle}>{labels.message_label ?? 'Sporočilo paru (opcijsko)'}</label>
+              <textarea
+                {...register('message')}
+                rows={3}
+                placeholder="Iskrene čestitke..."
+                style={{ ...fieldStyle, resize: 'none', lineHeight: 1.5 }}
+              />
+            </div>
           )}
 
-          <Button
+          <button
             type="submit"
-            size="md"
-            className="w-full"
-            loading={isSubmitting}
-            style={{ background: accentColor, color: 'white' }}
+            disabled={isSubmitting}
+            style={{
+              padding: '14px 24px',
+              background: isSubmitting ? '#C4B8AF' : accentColor,
+              color: '#FDFCFA',
+              border: 'none', cursor: isSubmitting ? 'not-allowed' : 'pointer',
+              fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase',
+              fontFamily: 'inherit',
+              transition: 'background .2s',
+              width: '100%',
+            }}
           >
-            Send RSVP
-          </Button>
+            {isSubmitting ? '…' : (labels.submit_rsvp ?? 'Pošlji potrditev')}
+          </button>
         </>
       )}
     </form>

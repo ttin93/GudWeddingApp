@@ -1,0 +1,445 @@
+'use client'
+
+import { motion } from 'framer-motion'
+import { Car, Hotel, Gift, HelpCircle, Phone, Mail, Hash, Music2, ExternalLink, Baby, Users } from 'lucide-react'
+import type { Invitation } from '@/types'
+import type { InvitationLabels } from '@/lib/utils/labels'
+import { DEFAULT_LABELS } from '@/lib/utils/labels'
+
+// ─── Theme ───────────────────────────────────────────────────────────────────
+export interface SectionTheme {
+  bg: string      // main section background
+  bgAlt: string   // alternate section background (softer)
+  text: string    // primary text
+  muted: string   // secondary / muted text
+  accent: string  // accent colour (headings, icons, links)
+  rule: string    // border / divider colour
+  card: string    // card / input background
+}
+
+// ─── Label helper ─────────────────────────────────────────────────────────────
+export function getEffectiveLabels(invitation: Invitation): InvitationLabels {
+  const lang = invitation.languages?.[0] ?? 'sl'
+  const defaults = DEFAULT_LABELS[lang] ?? DEFAULT_LABELS['sl']
+  if (!invitation.labels) return defaults
+  return { ...defaults, ...(invitation.labels as Partial<InvitationLabels>) }
+}
+
+// ─── Shared primitives ────────────────────────────────────────────────────────
+const fade = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }
+
+function Wrap({ children, bg }: { children: React.ReactNode; bg: string }) {
+  return (
+    <motion.section
+      variants={fade} initial="hidden" whileInView="visible"
+      viewport={{ once: true }} transition={{ duration: 0.7 }}
+      style={{ padding: '72px 24px', background: bg }}
+    >
+      <div style={{ maxWidth: 600, margin: '0 auto' }}>
+        {children}
+      </div>
+    </motion.section>
+  )
+}
+
+function SLabel({ text, theme }: { text: string; theme: SectionTheme }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 40, justifyContent: 'center' }}>
+      <div style={{ height: 1, width: 48, background: theme.rule }} />
+      <p style={{ fontSize: 9, letterSpacing: '0.55em', textTransform: 'uppercase', color: theme.muted, whiteSpace: 'nowrap' }}>
+        {text}
+      </p>
+      <div style={{ height: 1, width: 48, background: theme.rule }} />
+    </div>
+  )
+}
+
+// ─── Individual sections ──────────────────────────────────────────────────────
+
+function StorySection({ invitation, theme, labels }: { invitation: Invitation; theme: SectionTheme; labels: InvitationLabels }) {
+  return (
+    <Wrap bg={theme.bg}>
+      <SLabel text={labels.story_title} theme={theme} />
+      <div style={{ textAlign: 'center', position: 'relative' }}>
+        <div style={{
+          fontFamily: 'Georgia, serif',
+          fontSize: 72,
+          lineHeight: 0.7,
+          color: theme.accent,
+          opacity: 0.12,
+          marginBottom: -16,
+          userSelect: 'none',
+        }}>
+          "
+        </div>
+        <p style={{
+          fontFamily: 'var(--font-cormorant), Georgia, serif',
+          fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
+          fontStyle: 'italic',
+          fontWeight: 300,
+          lineHeight: 1.9,
+          color: theme.text,
+          opacity: 0.85,
+          maxWidth: 520,
+          margin: '0 auto',
+        }}>
+          {invitation.story}
+        </p>
+      </div>
+    </Wrap>
+  )
+}
+
+function ChildrenPolicySection({ invitation, theme, labels }: { invitation: Invitation; theme: SectionTheme; labels: InvitationLabels }) {
+  const POLICIES = {
+    welcome:      { emoji: '👶', text: labels.children_welcome },
+    adults_only:  { emoji: '🥂', text: labels.children_adults_only },
+    infants_only: { emoji: '🍼', text: labels.children_infants_only },
+  }
+  const policy = POLICIES[invitation.children_policy as keyof typeof POLICIES]
+  if (!policy) return null
+
+  return (
+    <div style={{ padding: '28px 24px', display: 'flex', justifyContent: 'center', background: theme.bg }}>
+      <div style={{
+        display: 'inline-flex', alignItems: 'center', gap: 10,
+        padding: '12px 28px',
+        border: `1px solid ${theme.rule}`,
+        background: theme.card,
+      }}>
+        <span style={{ fontSize: 18 }}>{policy.emoji}</span>
+        <span style={{ fontSize: 13, color: theme.text, letterSpacing: '0.08em' }}>{policy.text}</span>
+      </div>
+    </div>
+  )
+}
+
+function HashtagSection({ invitation, theme, labels }: { invitation: Invitation; theme: SectionTheme; labels: InvitationLabels }) {
+  return (
+    <Wrap bg={theme.bgAlt}>
+      <SLabel text={labels.hashtag_label} theme={theme} />
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+          <Hash size={22} style={{ color: theme.accent, opacity: 0.7 }} />
+          <p style={{
+            fontFamily: 'var(--font-cormorant), Georgia, serif',
+            fontSize: 'clamp(1.8rem, 5vw, 3rem)',
+            fontWeight: 300,
+            color: theme.accent,
+            letterSpacing: '0.03em',
+          }}>
+            {invitation.hashtag?.replace(/^#/, '')}
+          </p>
+        </div>
+      </div>
+    </Wrap>
+  )
+}
+
+function MusicSection({ invitation, theme }: { invitation: Invitation; theme: SectionTheme }) {
+  return (
+    <div style={{ padding: '36px 24px', display: 'flex', justifyContent: 'center', background: theme.bg }}>
+      <a
+        href={invitation.music_playlist_url ?? '#'}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          display: 'inline-flex', alignItems: 'center', gap: 12,
+          padding: '13px 28px',
+          border: `1px solid ${theme.rule}`,
+          background: theme.card,
+          color: theme.accent,
+          textDecoration: 'none',
+          fontSize: 11,
+          letterSpacing: '0.25em',
+          textTransform: 'uppercase',
+        }}
+      >
+        <Music2 size={14} />
+        Naša glasba
+        <ExternalLink size={11} style={{ opacity: 0.5 }} />
+      </a>
+    </div>
+  )
+}
+
+function TransportSection({ invitation, theme, labels }: { invitation: Invitation; theme: SectionTheme; labels: InvitationLabels }) {
+  return (
+    <Wrap bg={theme.bgAlt}>
+      <SLabel text={labels.transport_title} theme={theme} />
+      <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
+        <div style={{
+          flexShrink: 0,
+          width: 40, height: 40,
+          borderRadius: '50%',
+          background: theme.card,
+          border: `1px solid ${theme.rule}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          marginTop: 2,
+        }}>
+          <Car size={16} style={{ color: theme.accent }} />
+        </div>
+        <p style={{
+          fontSize: 14,
+          color: theme.text,
+          lineHeight: 1.85,
+          opacity: 0.85,
+          whiteSpace: 'pre-line',
+          flex: 1,
+        }}>
+          {invitation.transport_notes}
+        </p>
+      </div>
+    </Wrap>
+  )
+}
+
+function AccommodationSection({ invitation, theme, labels }: { invitation: Invitation; theme: SectionTheme; labels: InvitationLabels }) {
+  const items = invitation.accommodation ?? []
+  return (
+    <Wrap bg={theme.bg}>
+      <SLabel text={labels.accommodation_title} theme={theme} />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        {items.map((item, i) => (
+          <motion.div
+            key={i}
+            variants={fade}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.07 }}
+            style={{ border: `1px solid ${theme.rule}`, background: theme.card, padding: '20px 24px' }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8, gap: 12 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <Hotel size={14} style={{ color: theme.accent, flexShrink: 0 }} />
+                <span style={{
+                  fontSize: 17,
+                  fontWeight: 400,
+                  color: theme.text,
+                  fontFamily: 'var(--font-cormorant), Georgia, serif',
+                }}>
+                  {item.name}
+                </span>
+              </div>
+              {item.price_range && (
+                <span style={{ fontSize: 12, color: theme.muted, whiteSpace: 'nowrap', letterSpacing: '0.05em', marginTop: 2 }}>
+                  {item.price_range}
+                </span>
+              )}
+            </div>
+
+            {item.address && (
+              <p style={{ fontSize: 13, color: theme.muted, paddingLeft: 24, marginBottom: 6 }}>
+                {item.address}
+              </p>
+            )}
+
+            {item.discount_code && (
+              <div style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                padding: '4px 12px',
+                marginLeft: 24, marginBottom: 6,
+                border: `1px dashed ${theme.rule}`,
+                background: theme.bgAlt,
+              }}>
+                <span style={{ fontSize: 9, letterSpacing: '0.25em', textTransform: 'uppercase', color: theme.accent }}>CODE</span>
+                <span style={{ fontSize: 13, color: theme.text, fontWeight: 500 }}>{item.discount_code}</span>
+              </div>
+            )}
+
+            {item.notes && (
+              <p style={{ fontSize: 12.5, color: theme.muted, paddingLeft: 24, lineHeight: 1.65, marginBottom: 6 }}>
+                {item.notes}
+              </p>
+            )}
+
+            {item.url && (
+              <a
+                href={item.url}
+                target="_blank" rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  paddingLeft: 24,
+                  fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase',
+                  color: theme.accent, textDecoration: 'none',
+                }}
+              >
+                Website
+                <ExternalLink size={10} />
+              </a>
+            )}
+          </motion.div>
+        ))}
+      </div>
+    </Wrap>
+  )
+}
+
+function GiftRegistrySection({ invitation, theme, labels }: { invitation: Invitation; theme: SectionTheme; labels: InvitationLabels }) {
+  const items = invitation.gift_registry ?? []
+  return (
+    <Wrap bg={theme.bgAlt}>
+      <SLabel text={labels.gifts_title} theme={theme} />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {items.map((item, i) => (
+          <a
+            key={i}
+            href={item.url}
+            target="_blank" rel="noopener noreferrer"
+            style={{
+              display: 'flex', alignItems: 'center', gap: 14,
+              padding: '14px 20px',
+              border: `1px solid ${theme.rule}`,
+              background: theme.card,
+              textDecoration: 'none',
+            }}
+          >
+            <Gift size={14} style={{ color: theme.accent, flexShrink: 0 }} />
+            <span style={{
+              flex: 1,
+              fontSize: 16,
+              color: theme.text,
+              fontFamily: 'var(--font-cormorant), Georgia, serif',
+            }}>
+              {item.name}
+            </span>
+            <ExternalLink size={12} style={{ color: theme.muted, flexShrink: 0 }} />
+          </a>
+        ))}
+      </div>
+    </Wrap>
+  )
+}
+
+function FAQSection({ invitation, theme, labels }: { invitation: Invitation; theme: SectionTheme; labels: InvitationLabels }) {
+  const items = invitation.faq ?? []
+  return (
+    <Wrap bg={theme.bg}>
+      <SLabel text={labels.faq_title} theme={theme} />
+      <div>
+        {items.map((item, i) => (
+          <div
+            key={i}
+            style={{
+              padding: '20px 0',
+              borderBottom: i < items.length - 1 ? `1px solid ${theme.rule}` : 'none',
+            }}
+          >
+            <p style={{
+              fontSize: 16,
+              fontWeight: 500,
+              color: theme.accent,
+              marginBottom: 8,
+              fontFamily: 'var(--font-cormorant), Georgia, serif',
+              letterSpacing: '0.02em',
+            }}>
+              {item.question}
+            </p>
+            <p style={{
+              fontSize: 14,
+              color: theme.text,
+              lineHeight: 1.75,
+              opacity: 0.82,
+            }}>
+              {item.answer}
+            </p>
+          </div>
+        ))}
+      </div>
+    </Wrap>
+  )
+}
+
+function ContactSection({ invitation, theme, labels }: { invitation: Invitation; theme: SectionTheme; labels: InvitationLabels }) {
+  return (
+    <Wrap bg={theme.bgAlt}>
+      <SLabel text={labels.contact_title} theme={theme} />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 340, margin: '0 auto' }}>
+        {invitation.contact_name && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div style={{
+              width: 34, height: 34, borderRadius: '50%',
+              background: theme.card, border: `1px solid ${theme.rule}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+            }}>
+              <Users size={13} style={{ color: theme.accent }} />
+            </div>
+            <span style={{ fontSize: 16, color: theme.text, fontFamily: 'var(--font-cormorant), Georgia, serif' }}>
+              {invitation.contact_name}
+            </span>
+          </div>
+        )}
+        {invitation.contact_phone && (
+          <a href={`tel:${invitation.contact_phone}`} style={{ display: 'flex', alignItems: 'center', gap: 14, textDecoration: 'none' }}>
+            <div style={{
+              width: 34, height: 34, borderRadius: '50%',
+              background: theme.card, border: `1px solid ${theme.rule}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+            }}>
+              <Phone size={13} style={{ color: theme.accent }} />
+            </div>
+            <span style={{ fontSize: 14, color: theme.accent, letterSpacing: '0.03em' }}>
+              {invitation.contact_phone}
+            </span>
+          </a>
+        )}
+        {invitation.contact_email && (
+          <a href={`mailto:${invitation.contact_email}`} style={{ display: 'flex', alignItems: 'center', gap: 14, textDecoration: 'none' }}>
+            <div style={{
+              width: 34, height: 34, borderRadius: '50%',
+              background: theme.card, border: `1px solid ${theme.rule}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+            }}>
+              <Mail size={13} style={{ color: theme.accent }} />
+            </div>
+            <span style={{ fontSize: 14, color: theme.accent }}>
+              {invitation.contact_email}
+            </span>
+          </a>
+        )}
+      </div>
+    </Wrap>
+  )
+}
+
+// ─── SharedSections: all extra sections in one drop-in component ──────────────
+export function SharedSections({
+  invitation, theme, labels,
+}: {
+  invitation: Invitation
+  theme: SectionTheme
+  labels: InvitationLabels
+}) {
+  return (
+    <>
+      {invitation.show_story !== false && invitation.story && (
+        <StorySection invitation={invitation} theme={theme} labels={labels} />
+      )}
+      {invitation.show_children_policy !== false && invitation.children_policy && (
+        <ChildrenPolicySection invitation={invitation} theme={theme} labels={labels} />
+      )}
+      {invitation.show_hashtag !== false && invitation.hashtag && (
+        <HashtagSection invitation={invitation} theme={theme} labels={labels} />
+      )}
+      {invitation.show_music !== false && invitation.music_playlist_url && (
+        <MusicSection invitation={invitation} theme={theme} />
+      )}
+      {invitation.show_transport !== false && invitation.transport_notes && (
+        <TransportSection invitation={invitation} theme={theme} labels={labels} />
+      )}
+      {invitation.show_accommodation !== false && invitation.accommodation && invitation.accommodation.length > 0 && (
+        <AccommodationSection invitation={invitation} theme={theme} labels={labels} />
+      )}
+      {invitation.show_gift_registry !== false && invitation.gift_registry && invitation.gift_registry.length > 0 && (
+        <GiftRegistrySection invitation={invitation} theme={theme} labels={labels} />
+      )}
+      {invitation.show_faq !== false && invitation.faq && invitation.faq.length > 0 && (
+        <FAQSection invitation={invitation} theme={theme} labels={labels} />
+      )}
+      {invitation.show_contact !== false && (invitation.contact_name || invitation.contact_phone || invitation.contact_email) && (
+        <ContactSection invitation={invitation} theme={theme} labels={labels} />
+      )}
+    </>
+  )
+}

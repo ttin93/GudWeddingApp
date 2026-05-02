@@ -8,6 +8,25 @@ export interface TimelineEvent {
   emoji?: string
 }
 
+export interface AccommodationItem {
+  name: string
+  address?: string
+  url?: string
+  discount_code?: string
+  price_range?: string
+  notes?: string
+}
+
+export interface GiftRegistryItem {
+  name: string
+  url: string
+}
+
+export interface FAQItem {
+  question: string
+  answer: string
+}
+
 export interface Invitation {
   id: string
   user_id: string
@@ -24,6 +43,7 @@ export interface Invitation {
   reception_time?: string
   dress_code?: string
   personal_message?: string
+  story?: string
   timeline: TimelineEvent[]
   languages: string[]
   rsvp_deadline?: string
@@ -34,6 +54,30 @@ export interface Invitation {
   active_until?: string
   is_active: boolean
   view_count: number
+  // Extra sections
+  hashtag?: string
+  contact_name?: string
+  contact_phone?: string
+  contact_email?: string
+  children_policy?: 'welcome' | 'adults_only' | 'infants_only'
+  transport_notes?: string
+  accommodation?: AccommodationItem[]
+  gift_registry?: GiftRegistryItem[]
+  faq?: FAQItem[]
+  music_playlist_url?: string
+  labels?: Record<string, string>
+  // Section visibility (null/undefined = visible)
+  show_story?: boolean
+  show_program?: boolean
+  show_dress_code?: boolean
+  show_children_policy?: boolean
+  show_hashtag?: boolean
+  show_music?: boolean
+  show_contact?: boolean
+  show_transport?: boolean
+  show_accommodation?: boolean
+  show_gift_registry?: boolean
+  show_faq?: boolean
   created_at: string
   updated_at: string
 }

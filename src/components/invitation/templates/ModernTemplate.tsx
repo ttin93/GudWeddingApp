@@ -4,13 +4,22 @@ import { motion } from 'framer-motion'
 import { MapPin, Clock } from 'lucide-react'
 import { formatDate, formatTime, daysUntilWedding } from '@/lib/utils/format'
 import { RSVPForm } from '../RSVPForm'
-import type { Invitation } from '@/types'
+import type { Invitation, RSVPResponse } from '@/types'
+import { SharedSections, getEffectiveLabels } from '../InvitationSections'
+import type { SectionTheme } from '../InvitationSections'
 
 const fadeUp = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }
 const C = { bg: '#F5F5F3', primary: '#7A8C7A', accent: '#2D2D2D', text: '#1C1C1C', muted: '#6B6B6B', border: '#E0E0DC' }
 
-export function ModernTemplate({ invitation }: { invitation: Invitation }) {
+const SECTION_THEME: SectionTheme = {
+  bg: '#F5F5F3', bgAlt: '#EEEEED',
+  text: '#1C1C1C', muted: '#6B6B6B',
+  accent: '#7A8C7A', rule: '#E0E0DC', card: '#FFFFFF',
+}
+
+export function ModernTemplate({ invitation, onRSVPSubmit, existingRSVP }: { invitation: Invitation; onRSVPSubmit?: (data: unknown) => Promise<void>; existingRSVP?: RSVPResponse | null }) {
   const daysLeft = daysUntilWedding(invitation.wedding_date)
+  const labels = getEffectiveLabels(invitation)
 
   return (
     <div style={{ background: C.bg, fontFamily: 'var(--font-inter), system-ui, sans-serif' }}>
@@ -139,16 +148,19 @@ export function ModernTemplate({ invitation }: { invitation: Invitation }) {
         </motion.section>
       )}
 
+      {/* Extra sections */}
+      <SharedSections invitation={invitation} theme={SECTION_THEME} labels={labels} />
+
       {/* RSVP */}
       <motion.section
         variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
         className="py-20 px-10 md:px-16 max-w-xl mx-auto"
       >
-        <p className="text-xs tracking-[0.5em] uppercase mb-2" style={{ color: C.primary }}>RSVP</p>
+        <p className="text-xs tracking-[0.5em] uppercase mb-2" style={{ color: C.primary }}>{labels.rsvp_title}</p>
         {invitation.rsvp_deadline && (
-          <p className="text-sm mb-8" style={{ color: C.muted }}>Please respond by {formatDate(invitation.rsvp_deadline)}</p>
+          <p className="text-sm mb-8" style={{ color: C.muted }}>{labels.rsvp_deadline_prefix} {formatDate(invitation.rsvp_deadline)}</p>
         )}
-        <RSVPForm invitationId={invitation.id} packageType={invitation.package} accentColor={C.primary} />
+        <RSVPForm invitationId={invitation.id} packageType={invitation.package} accentColor={C.primary} onSubmit={onRSVPSubmit} existingRSVP={existingRSVP} labels={labels} />
       </motion.section>
 
       <footer className="py-6 text-center text-xs tracking-widest" style={{ color: C.muted, borderTop: `1px solid ${C.border}` }}>

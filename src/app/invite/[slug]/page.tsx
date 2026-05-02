@@ -8,46 +8,73 @@ interface Props {
   params: Promise<{ slug: string }>
 }
 
-async function getInvitation(slug: string) {
+type FullInvitation = Invitation & {
+  custom_css?: string | null
+  custom_js?: string | null
+  custom_head_html?: string | null
+}
+
+async function getInvitationBySlug(slug: string) {
   const supabase = await createClient()
   const { data } = await supabase
     .from('invitations')
     .select('*')
     .eq('slug', slug)
-    .eq('is_active', true)
     .single()
-  return data as Invitation | null
+  return data as FullInvitation | null
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const invitation = await getInvitation(slug)
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('invitations')
+    .select('partner1_name, partner2_name, wedding_date, is_active')
+    .eq('slug', slug)
+    .single()
 
-  if (!invitation) return { title: 'Invitation not found' }
+  if (!data || !data.is_active) return { title: 'Wedding Invitation' }
 
   return {
-    title: `${invitation.partner1_name} & ${invitation.partner2_name} — Wedding Invitation`,
-    description: `You're invited to the wedding of ${invitation.partner1_name} and ${invitation.partner2_name}.`,
+    title: `${data.partner1_name} & ${data.partner2_name} — Wedding Invitation`,
+    description: `You're invited to the wedding of ${data.partner1_name} and ${data.partner2_name}.`,
     openGraph: {
-      title: `${invitation.partner1_name} & ${invitation.partner2_name}`,
-      description: `Wedding — ${invitation.wedding_date}`,
+      title: `${data.partner1_name} & ${data.partner2_name}`,
+      description: `Wedding — ${data.wedding_date}`,
     },
   }
 }
 
 export default async function InvitePage({ params }: Props) {
   const { slug } = await params
-  const invitation = await getInvitation(slug)
+  const supabase = await createClient()
 
+  const invitation = await getInvitationBySlug(slug)
+
+  // Povabilo ne obstaja
   if (!invitation) notFound()
 
   // Increment view count (fire-and-forget)
-  const supabase = await createClient()
   supabase
     .from('invitations')
     .update({ view_count: (invitation.view_count ?? 0) + 1 })
     .eq('slug', slug)
     .then(() => {})
 
-  return <TemplateRenderer invitation={invitation} />
+  return (
+    <>
+      {invitation.custom_head_html && (
+        <div dangerouslySetInnerHTML={{ __html: invitation.custom_head_html }} />
+      )}
+      {invitation.custom_css && (
+        <style dangerouslySetInnerHTML={{ __html: invitation.custom_css }} />
+      )}
+
+      <TemplateRenderer invitation={invitation} />
+
+      {invitation.custom_js && (
+        <script defer dangerouslySetInnerHTML={{ __html: invitation.custom_js }} />
+      )}
+    </>
+  )
 }

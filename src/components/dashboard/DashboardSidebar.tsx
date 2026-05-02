@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { logout } from '@/app/actions/auth'
-import { LayoutDashboard, Users, Settings, LogOut, Plus } from 'lucide-react'
+import { LayoutDashboard, Users, Settings, LogOut, Plus, Shield } from 'lucide-react'
 import type { User } from '@supabase/supabase-js'
 
 const INK   = '#1A1714'
@@ -18,7 +18,7 @@ const navItems = [
   { href: '/dashboard/settings', label: 'Settings', icon: Settings },
 ]
 
-export function DashboardSidebar({ user }: { user: User }) {
+export function DashboardSidebar({ user, isAdmin = false }: { user: User; isAdmin?: boolean }) {
   const pathname = usePathname()
 
   return (
@@ -86,6 +86,20 @@ export function DashboardSidebar({ user }: { user: User }) {
             <Plus size={13} />
             New invitation
           </Link>
+          {isAdmin && (
+            <Link href="/admin" style={{
+              display: 'flex', alignItems: 'center', gap: 8,
+              padding: '9px 12px', marginBottom: 4,
+              fontSize: 12, color: '#8C5E3A',
+              background: 'none', border: `1px solid #E8D5C8`,
+              textDecoration: 'none',
+              letterSpacing: '0.1em',
+              transition: 'color .2s',
+            }}>
+              <Shield size={13} />
+              Super Admin
+            </Link>
+          )}
           <form action={logout}>
             <button type="submit" style={{
               display: 'flex', alignItems: 'center', gap: 10,

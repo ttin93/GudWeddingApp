@@ -5,6 +5,8 @@ import { MapPin, Clock, Heart } from 'lucide-react'
 import { formatDate, formatTime, daysUntilWedding } from '@/lib/utils/format'
 import type { Invitation, RSVPResponse } from '@/types'
 import { RSVPForm } from '../RSVPForm'
+import { SharedSections, getEffectiveLabels } from '../InvitationSections'
+import type { SectionTheme } from '../InvitationSections'
 
 const fadeUp = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }
 
@@ -25,9 +27,16 @@ export interface RSVPFormData {
   message?: string
 }
 
+const SECTION_THEME: SectionTheme = {
+  bg: '#FAF8F5', bgAlt: '#EFF4F0',
+  text: '#1C1C1C', muted: '#6B6B6B',
+  accent: '#2D4A3E', rule: '#C4847A30', card: '#FFFFFF',
+}
+
 export function BotanicaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props) {
   const daysLeft = daysUntilWedding(invitation.wedding_date)
   const colors = { bg: '#FAF8F5', primary: '#C4847A', accent: '#2D4A3E', text: '#1C1C1C', muted: '#6B6B6B' }
+  const labels = getEffectiveLabels(invitation)
 
   return (
     <div className="min-h-screen" style={{ background: colors.bg, fontFamily: 'var(--font-cormorant), Georgia, serif' }}>
@@ -222,6 +231,9 @@ export function BotanicaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
         </motion.section>
       )}
 
+      {/* ── Extra sections ── */}
+      <SharedSections invitation={invitation} theme={SECTION_THEME} labels={labels} />
+
       {/* ── RSVP ── */}
       <motion.section
         variants={fadeUp} initial="hidden" whileInView="visible"
@@ -231,11 +243,11 @@ export function BotanicaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
       >
         <div className="max-w-lg mx-auto">
           <h2 className="text-3xl tracking-widest uppercase text-center mb-2" style={{ color: colors.accent }}>
-            RSVP
+            {labels.rsvp_title}
           </h2>
           {invitation.rsvp_deadline && (
             <p className="text-center text-sm mb-8" style={{ color: colors.muted }}>
-              Please respond by {formatDate(invitation.rsvp_deadline)}
+              {labels.rsvp_deadline_prefix} {formatDate(invitation.rsvp_deadline)}
             </p>
           )}
           <RSVPForm
@@ -244,6 +256,7 @@ export function BotanicaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
             onSubmit={onRSVPSubmit}
             existingRSVP={existingRSVP}
             accentColor={colors.primary}
+            labels={labels}
           />
         </div>
       </motion.section>
