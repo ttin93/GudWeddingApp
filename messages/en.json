@@ -1,0 +1,410 @@
+{
+  "nav": {
+    "designs": "Designs",
+    "pricing": "Pricing",
+    "demo": "Demo",
+    "signIn": "Sign in",
+    "createInvitation": "Create invitation"
+  },
+  "footer": {
+    "tagline": "Elegant digital wedding invitations for every love story.",
+    "product": "Product",
+    "account": "Account",
+    "legal": "Legal",
+    "templates": "Templates",
+    "pricing": "Pricing",
+    "demo": "Demo",
+    "signIn": "Sign in",
+    "createAccount": "Create account",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "madeWithCare": "Made with care ♥",
+    "featuring": "FEATURING 18 TEMPLATE DESIGNS",
+    "crafted": "CRAFTED WITH CARE",
+    "spring": "SPRING / SUMMER 2026"
+  },
+  "home": {
+    "tagline": "A Digital Invitation House · Est. 2024",
+    "headline": "One link.",
+    "subheadline": "Everything your guests need.",
+    "description": "A single, beautifully composed page for the day — schedule, registry, RSVP, dress code, directions — wrapped in your typography, sent in a sentence.",
+    "createCta": "Create your invitation",
+    "seeLive": "See a live invitation",
+    "celebrations": "Celebrations hosted",
+    "countries": "Countries",
+    "avgRating": "Average rating",
+    "figCaption": "The \"Botanica\" Template — One of Eighteen",
+    "scroll": "Scroll",
+    "howItWorks": "How it works",
+    "steps": {
+      "1": {
+        "title": "Choose your style",
+        "body": "Pick from eighteen bespoke templates — botanical, modern, noir, heritage and more."
+      },
+      "2": {
+        "title": "Add your details",
+        "body": "Venue, schedule, dress code, personal message. Our AI writes it with you."
+      },
+      "3": {
+        "title": "Share one link",
+        "body": "Send via WhatsApp, email, or print a QR code. No app. No registration for guests."
+      },
+      "4": {
+        "title": "Track RSVPs live",
+        "body": "Watch responses roll in. Export your guest list as CSV at any time."
+      }
+    },
+    "designs": "Designs",
+    "findStyle": "Find your\nperfect style",
+    "allTemplates": "All templates",
+    "pricing": "Pricing",
+    "onePayment": "One payment.\nNo subscriptions.",
+    "pricingDesc": "Pay once, your invitation stays live for the full duration. No recurring charges, no surprises.",
+    "oneTime": "one-time",
+    "months": "months",
+    "getStarted": "Get started",
+    "mostPopular": "Most popular",
+    "stories": "Stories",
+    "questions": "Questions",
+    "frequentlyAsked": "Frequently asked",
+    "faqs": {
+      "q1": "Do guests need to download an app?",
+      "a1": "No. Guests open a simple web link in any browser. No app, no account, no friction.",
+      "q2": "Can I share via WhatsApp?",
+      "a2": "Yes — just copy your unique link and send it however you like. WhatsApp, email, SMS, or print a QR code.",
+      "q3": "Can I edit the invitation after publishing?",
+      "a3": "Absolutely. You can update any detail — venue, time, personal message — at any time from your dashboard.",
+      "q4": "How long does the invitation stay online?",
+      "a4": "Essential stays active 6 months; Elegance and Signature stay active 12 months from the purchase date.",
+      "q5": "Is there a limit on RSVP responses?",
+      "a5": "No limit. As many guests as you invite can respond."
+    },
+    "beginStory": "Begin your story",
+    "invitationAway": "Your perfect invitation\nis 10 minutes away",
+    "createFrom": "Create your invitation — from €{price}",
+    "oneTimePayment": "One-time payment. No subscription.",
+    "testimonials": {
+      "1": {
+        "couple": "Sofia & Marco",
+        "loc": "Milan, Italy",
+        "quote": "Our guests couldn't stop complimenting the invitation. The Botanica template was exactly what we dreamed of."
+      },
+      "2": {
+        "couple": "Emma & James",
+        "loc": "London, UK",
+        "quote": "Setting it up took less than 20 minutes. The RSVP tracking saved us hours of chasing replies."
+      },
+      "3": {
+        "couple": "Anaïs & Pierre",
+        "loc": "Paris, France",
+        "quote": "We used the AI assistant to write our message — it was honestly better than what we would have written ourselves."
+      }
+    }
+  },
+  "pricing": {
+    "label": "Plans & Pricing",
+    "headline1": "Your story,",
+    "headline2": "your page.",
+    "headline3": "No compromises.",
+    "sub": "Choose the plan that suits your special day — from an elegant invitation to a fully personalised wedding page with RSVP, gallery and countdown.",
+    "badge1": "Instantly active",
+    "badge2": "One-time payment",
+    "badge3": "Hosting & domain included",
+    "activeFor": "Active for {n} months",
+    "oneTime": "one-time",
+    "mostPopular": "Most popular",
+    "choose": "Choose",
+    "essential": {
+      "title": "For intimate celebrations",
+      "desc": "All the essentials — elegant invitation, RSVP and countdown."
+    },
+    "elegance": {
+      "title": "The best choice",
+      "desc": "Complete page with story, programme, gallery and hashtag."
+    },
+    "signature": {
+      "title": "Fully personalised",
+      "desc": "Maximum control: guests, menus, children, priority support."
+    },
+    "whiteGlove": {
+      "label": "Bespoke · White Glove",
+      "headline1": "Completely",
+      "headline2": "personalised.",
+      "headline3": "No templates.",
+      "desc": "No plan fits your vision? Our studio builds the page from scratch — your colours, your fonts, your animations. Let's talk about your idea.",
+      "features": [
+        "Custom design studio",
+        "Animations & 3D effects",
+        "Multilingual (SL/EN/HR)",
+        "Live streaming integration"
+      ],
+      "cta": "Request a quote",
+      "contactTitle": "Direct contact",
+      "contactSub": "We reply within 24 hours.",
+      "email": "Email",
+      "phone": "Phone",
+      "studio": "Studio"
+    },
+    "compare": {
+      "label": "Comparison",
+      "headline1": "Detailed",
+      "headline2": "plan",
+      "headline3": "comparison",
+      "sub": "Everything included in each plan, in one place.",
+      "feature": "Feature",
+      "ready": "Ready to choose?"
+    },
+    "guide": {
+      "label": "Guide",
+      "headline1": "Which plan",
+      "headline2": "to choose?",
+      "sub": "Three typical scenarios for three types of couples. Find yourself.",
+      "plans": [
+        {
+          "num": "i.",
+          "plan": "Essential",
+          "title": "Less, intimate, fast.",
+          "desc": "Planning a wedding with fewer than 60 guests and want a beautiful invitation with basic RSVP? Essential is for you.",
+          "items": [
+            "30 — 60 guests",
+            "Quick date (1 — 3 mo.)",
+            "Pre-defined design",
+            "Smaller budget"
+          ]
+        },
+        {
+          "num": "ii.",
+          "plan": "Elegance",
+          "title": "The classic for most couples.",
+          "desc": "The right balance — complete page with story, programme and hashtag, with enough flexibility for personalisation.",
+          "items": [
+            "60 — 200 guests",
+            "Date 6 — 18 mo. ahead",
+            "8+ elegant templates",
+            "Best value"
+          ]
+        },
+        {
+          "num": "iii.",
+          "plan": "Signature",
+          "title": "No compromises.",
+          "desc": "Your wedding is an event — destination, multi-day, multilingual. You need a page that looks professional.",
+          "items": [
+            "200+ guests or destination",
+            "Date 12+ mo. ahead",
+            "Advanced RSVP with menus",
+            "Priority support"
+          ]
+        }
+      ]
+    },
+    "faqLabel": "Questions",
+    "faqHeadline1": "Frequently asked",
+    "faqHeadline2": "questions",
+    "faqs": {
+      "q1": "How quickly does the invitation go live?",
+      "a1": "Instantly — as soon as you complete the wizard and payment, your invitation is published and shareable immediately.",
+      "q2": "Is this a one-time payment?",
+      "a2": "Yes, a single payment covering the full active period. No subscriptions, no recurring fees, no hidden charges.",
+      "q3": "Can I edit the invitation after publishing?",
+      "a3": "Absolutely. All fields can be updated anytime from your dashboard — names, dates, venue, timeline, everything.",
+      "q4": "Can I change the template after purchase?",
+      "a4": "Signature plan includes a free template change. Essential and Elegance keep the template chosen at creation.",
+      "q5": "What happens when the active period ends?",
+      "a5": "The invitation page becomes inactive but all your data is retained. You can reactivate with a new plan at any time.",
+      "q6": "Can I upgrade my plan later?",
+      "a6": "Yes — contact us anytime before your wedding and we will credit the remaining period toward the upgrade."
+    },
+    "ctaLabel": "Ready?",
+    "ctaHeadline1": "Let's create your",
+    "ctaHeadline2": "perfect page.",
+    "ctaSub": "Launch your wedding page today — the countdown to \"yes\" starts now.",
+    "startNow": "Start now",
+    "viewDesigns": "View designs"
+  },
+  "templates": {
+    "label": "Our template collection",
+    "headline1": "{n} designs. One",
+    "headline2": "perfect day.",
+    "sub": "Carefully chosen templates — from minimalist to opulent. Every design is built around a distinct mood and typography.",
+    "templates": "Templates",
+    "customizations": "Customisations",
+    "popular": "Popular",
+    "new": "New",
+    "view": "View",
+    "edition": "Edition",
+    "comingSoon": "Coming soon",
+    "comingSoonDesc": "New collections in preparation. We'll let you know.",
+    "inPrep": "In preparation",
+    "comingSoonLabel": "Coming soon",
+    "all": "All",
+    "romance": "Romance",
+    "timeless": "Timeless",
+    "contemporary": "Contemporary",
+    "singular": "template",
+    "plural": "templates",
+    "ctaLabel": "Don't see your style?",
+    "ctaHeadline1": "Let's create something",
+    "ctaHeadline2": "just for you.",
+    "ctaSub": "Our design studio creates a fully custom template — your colours, your typography, your story. No templates, just you.",
+    "viewPackages": "View packages",
+    "requestCustom": "Request custom design"
+  },
+  "privacy": {
+    "label": "Legal",
+    "title": "Privacy Policy",
+    "updated": "Last updated: January 2025",
+    "s1title": "1. Who We Are",
+    "s1body": "Invitia (\"we\", \"us\") operates an online platform for digital wedding invitations. This Privacy Policy explains how we collect, use, and protect your personal data in compliance with the General Data Protection Regulation (GDPR).",
+    "s2title": "2. Data We Collect",
+    "s2account": "Account data:",
+    "s2accountDesc": "email address and password (hashed) when you register.",
+    "s2invitation": "Invitation data:",
+    "s2invitationDesc": "names, wedding date, venue, photos, and other details you enter while creating your invitation.",
+    "s2rsvp": "Guest RSVP data:",
+    "s2rsvpDesc": "names, attendance, menu preferences, and any optional fields filled in by your guests.",
+    "s2usage": "Usage data:",
+    "s2usageDesc": "invitation view counts, browser type, and anonymised analytics.",
+    "s2payment": "Payment data:",
+    "s2paymentDesc": "processed entirely by Stripe. We do not store card numbers.",
+    "s3title": "3. How We Use Your Data",
+    "s3list": [
+      "To operate and deliver the invitation service",
+      "To process payments via Stripe",
+      "To send transactional emails (account confirmation, RSVP notifications)",
+      "To improve the platform through anonymised analytics",
+      "To comply with legal obligations"
+    ],
+    "s4title": "4. Legal Basis for Processing",
+    "s4body": "We process your data on the basis of contract performance (to provide the Service you purchased), legitimate interests (platform security, fraud prevention), and — where required — your explicit consent.",
+    "s5title": "5. Data Sharing",
+    "s5body": "We do not sell your personal data. We share data only with:",
+    "s5list": [
+      "Supabase — database and authentication infrastructure (EU region)",
+      "Stripe — payment processing",
+      "Vercel — hosting platform"
+    ],
+    "s6title": "6. Data Retention",
+    "s6body": "Active invitation data is retained for the duration of your plan plus 12 months. After that, data is permanently deleted unless you request earlier deletion. Account data is retained until account deletion.",
+    "s7title": "7. Your Rights (GDPR)",
+    "s7body": "Under GDPR you have the right to:",
+    "s7list": [
+      "Access your personal data",
+      "Correct inaccurate data",
+      "Request deletion (\"right to be forgotten\")",
+      "Restrict or object to processing",
+      "Data portability",
+      "Withdraw consent at any time"
+    ],
+    "s7contact": "To exercise these rights, email",
+    "s8title": "8. Cookies",
+    "s8body": "We use only technically necessary cookies for authentication (session token). We do not use tracking or advertising cookies.",
+    "s9title": "9. Security",
+    "s9body": "Data is stored in Supabase with encryption at rest and in transit. Access to personal data is restricted to authorised personnel only.",
+    "s10title": "10. Contact & DPA",
+    "s10body": "For privacy enquiries or to exercise your rights, contact us at",
+    "s10body2": "You also have the right to lodge a complaint with your local data protection authority."
+  },
+  "terms": {
+    "label": "Legal",
+    "title": "Terms of Service",
+    "updated": "Last updated: January 2025",
+    "s1title": "1. Acceptance of Terms",
+    "s1body": "By accessing or using Invitia (\"Service\"), you agree to be bound by these Terms of Service. If you do not agree, do not use the Service.",
+    "s2title": "2. Description of Service",
+    "s2body": "Invitia provides a platform for creating and publishing digital wedding invitations. Users can collect RSVPs, share event details, and manage guest communication through a personalised web page.",
+    "s3title": "3. Account Registration",
+    "s3body": "You must provide accurate information when creating an account. You are responsible for maintaining the confidentiality of your login credentials and for all activity under your account.",
+    "s4title": "4. Payments & Refunds",
+    "s4body": "All payments are processed securely via Stripe. Prices are listed in euros (EUR) and are one-time fees that cover the stated active period. Due to the digital nature of the product, refunds are issued only where required by applicable law within 14 days of purchase, provided no invitation has been published (made publicly accessible).",
+    "s5title": "5. Active Period",
+    "s5body": "Your invitation remains publicly accessible for the duration of the plan you purchased (6 or 12 months from the date of activation). After expiry, the page becomes inaccessible but your data is retained for 12 months and can be reactivated.",
+    "s6title": "6. User Content",
+    "s6body": "You retain ownership of all content you upload. By publishing an invitation, you grant Invitia a non-exclusive licence to display that content to guests accessing your invitation URL. You must not upload content that is unlawful, offensive, or infringes third-party rights.",
+    "s7title": "7. Prohibited Use",
+    "s7body": "You may not use the Service for any purpose other than creating personal wedding invitations. Commercial reselling, automated scraping, or use of the Service to harm others is strictly prohibited.",
+    "s8title": "8. Limitation of Liability",
+    "s8body": "To the maximum extent permitted by law, Invitia is not liable for indirect, incidental, or consequential damages arising from your use of the Service. Our total liability shall not exceed the amount you paid for the relevant plan.",
+    "s9title": "9. Termination",
+    "s9body": "We reserve the right to suspend or terminate accounts that violate these Terms. You may delete your account at any time from the dashboard settings.",
+    "s10title": "10. Changes to Terms",
+    "s10body": "We may update these Terms from time to time. Continued use of the Service after changes constitutes acceptance of the new Terms. We will notify active users by email of material changes.",
+    "s11title": "11. Contact",
+    "s11body": "Questions about these Terms? Email us at"
+  },
+  "auth": {
+    "login": {
+      "welcomeBack": "Welcome back",
+      "title": "Sign in",
+      "subtitle": "Continue crafting your perfect invitation.",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "submitting": "Signing in…",
+      "noAccount": "Don't have an account?",
+      "createOne": "Create one",
+      "emailPlaceholder": "you@example.com",
+      "passwordPlaceholder": "••••••••",
+      "emailError": "Please enter a valid email",
+      "passwordError": "Password must be at least 6 characters"
+    },
+    "register": {
+      "newAccount": "New account",
+      "title": "Create account",
+      "subtitle": "Start building your dream invitation.",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create account",
+      "submitting": "Creating…",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "emailPlaceholder": "you@example.com",
+      "passwordPlaceholder": "••••••••",
+      "emailError": "Please enter a valid email",
+      "passwordError": "Password must be at least 6 characters",
+      "confirmPassword": "Confirm password",
+      "confirmPasswordPlaceholder": "Repeat password",
+      "passwordMin8Error": "Password must be at least 8 characters",
+      "confirmPasswordError": "Passwords do not match",
+      "termsText": "By creating an account you agree to our",
+      "termsLink": "Terms",
+      "privacyLink": "Privacy Policy",
+      "selected": "selected"
+    }
+  },
+  "dashboard": {
+    "account": "Your account",
+    "title": "Dashboard",
+    "newInvitation": "New invitation",
+    "totalViews": "Total views",
+    "attending": "Attending",
+    "declined": "Declined",
+    "responseRate": "Response rate",
+    "yourInvitations": "Your invitations",
+    "noInvitations": "No invitations yet.",
+    "noInvitationsDesc": "No invitations yet. Create your first one.",
+    "createFirst": "Create your first invitation",
+    "beginHere": "Begin here",
+    "active": "Active",
+    "draft": "Draft",
+    "views": "views",
+    "attending2": "attending",
+    "manage": "Manage",
+    "guests": "Guests",
+    "settings": "Settings",
+    "sidebar": {
+      "home": "Home",
+      "invitations": "Invitations",
+      "guests": "Guests",
+      "analytics": "Analytics",
+      "settings": "Settings"
+    }
+  },
+  "templatePreview": {
+    "back": "Back to templates",
+    "preview": "Preview",
+    "use": "Use this template",
+    "details": "Details",
+    "included": "Included"
+  }
+}

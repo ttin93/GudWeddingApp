@@ -1,0 +1,410 @@
+{
+  "nav": {
+    "designs": "Dizajni",
+    "pricing": "Cenik",
+    "demo": "Demo",
+    "signIn": "Prijava",
+    "createInvitation": "Ustvari povabilo"
+  },
+  "footer": {
+    "tagline": "Elegantna digitalna poročna povabila za vsako ljubezensko zgodbo.",
+    "product": "Produkt",
+    "account": "Račun",
+    "legal": "Pravno",
+    "templates": "Predloge",
+    "pricing": "Cenik",
+    "demo": "Demo",
+    "signIn": "Prijava",
+    "createAccount": "Ustvari račun",
+    "privacy": "Zasebnost",
+    "terms": "Pogoji uporabe",
+    "madeWithCare": "Ustvarjeno z ljubeznijo ♥",
+    "featuring": "VSEBUJE 18 DIZAJNOV PREDLOG",
+    "crafted": "NAREJENO Z SKRBNOSTJO",
+    "spring": "POMLAD / POLETJE 2026"
+  },
+  "home": {
+    "tagline": "Digitalna hiša povabil · Est. 2024",
+    "headline": "En link.",
+    "subheadline": "Vse, kar vaši gostje potrebujejo.",
+    "description": "Ena sama, lepo sestavljena stran za vaš dan — urnik, registry, RSVP, dress code, navodila — obdana z vašo tipografijo, poslana v eni povedi.",
+    "createCta": "Ustvari svoje povabilo",
+    "seeLive": "Poglej živo povabilo",
+    "celebrations": "Prireditev",
+    "countries": "Držav",
+    "avgRating": "Povprečna ocena",
+    "figCaption": "\"Botanica\" Predloga — Ena od osemnajstih",
+    "scroll": "Pomakni",
+    "howItWorks": "Kako deluje",
+    "steps": {
+      "1": {
+        "title": "Izberi slog",
+        "body": "Izberi med osemnajstimi predlogami po meri — botanična, moderna, noir, heritage in še več."
+      },
+      "2": {
+        "title": "Dodaj podrobnosti",
+        "body": "Kraj, urnik, dress code, osebno sporočilo. Naša UI piše skupaj z vami."
+      },
+      "3": {
+        "title": "Deli en link",
+        "body": "Pošlji prek WhatsAppa, e-pošte ali natisni QR kodo. Brez aplikacije. Brez registracije za goste."
+      },
+      "4": {
+        "title": "Sledi RSVP-jem v živo",
+        "body": "Opazuj, kako prihajajo odgovori. Izvozi seznam gostov kot CSV kadarkoli."
+      }
+    },
+    "designs": "Dizajni",
+    "findStyle": "Najdi svoj\npopoln slog",
+    "allTemplates": "Vse predloge",
+    "pricing": "Cenik",
+    "onePayment": "Enkratno plačilo.\nBrez naročnin.",
+    "pricingDesc": "Plačaj enkrat, tvoje povabilo ostane aktivno za celotno trajanje. Brez ponavljajočih se stroškov, brez presenečanj.",
+    "oneTime": "enkratno",
+    "months": "mesecev",
+    "getStarted": "Začni",
+    "mostPopular": "Najbolj priljubljen",
+    "stories": "Zgodbe",
+    "questions": "Vprašanja",
+    "frequentlyAsked": "Pogosto zastavljena",
+    "faqs": {
+      "q1": "Ali morajo gostje prenesti aplikacijo?",
+      "a1": "Ne. Gostje odprejo preprosto spletno povezavo v kateremkoli brskalniku. Brez aplikacije, brez računa, brez truda.",
+      "q2": "Ali lahko delim prek WhatsAppa?",
+      "a2": "Da — preprosto kopirajte svojo edinstveno povezavo in jo pošljite, kakor želite. WhatsApp, e-pošta, SMS ali natisnite QR kodo.",
+      "q3": "Ali lahko uredim povabilo po objavi?",
+      "a3": "Seveda. Kadar koli v nadzorni plošči lahko posodobite katero koli podrobnost — kraj, čas, osebno sporočilo.",
+      "q4": "Kako dolgo ostane povabilo na spletu?",
+      "a4": "Essential ostane aktivno 6 mesecev; Elegance in Signature ostaneta aktivna 12 mesecev od datuma nakupa.",
+      "q5": "Ali je omejitev na število RSVP-jev?",
+      "a5": "Brez omejitev. Kolikor gostov povabite, toliko jih lahko odgovori."
+    },
+    "beginStory": "Začni svojo zgodbo",
+    "invitationAway": "Vaše popolno povabilo\nje oddaljeno 10 minut",
+    "createFrom": "Ustvari svoje povabilo — od €{price}",
+    "oneTimePayment": "Enkratno plačilo. Brez naročnin.",
+    "testimonials": {
+      "1": {
+        "couple": "Sofia & Marco",
+        "loc": "Milan, Italija",
+        "quote": "Naši gostje niso mogli nehati hvaliti povabila. Botanica predloga je bila natanko to, kar sva sanjala."
+      },
+      "2": {
+        "couple": "Emma & James",
+        "loc": "London, VB",
+        "quote": "Nastavitev je trajala manj kot 20 minut. Sledenje RSVP-jem nam je prihranilo ure lova na odgovore."
+      },
+      "3": {
+        "couple": "Anaïs & Pierre",
+        "loc": "Pariz, Francija",
+        "quote": "Uporabili sva AI pomočnika za pisanje sporočila — bilo je iskreno boljše, kot bi jo napisala sama."
+      }
+    }
+  },
+  "pricing": {
+    "label": "Paketi & cene",
+    "headline1": "Vaša zgodba,",
+    "headline2": "vaša stran.",
+    "headline3": "Brez kompromisov.",
+    "sub": "Izberite paket, ki ustreza vašemu posebnemu dnevu — od elegantnega povabila do popolnoma personalizirane poročne strani z RSVP, galerijo in odštevalnikom.",
+    "badge1": "Takoj aktivno",
+    "badge2": "Enkratno plačilo",
+    "badge3": "Hosting in domena vključena",
+    "activeFor": "Aktivno {n} mesecev",
+    "oneTime": "enkratno",
+    "mostPopular": "Najpopularnejši",
+    "choose": "Izberi",
+    "essential": {
+      "title": "Za intimne praznike",
+      "desc": "Vse osnovno — elegantno povabilo, RSVP in odštevalnik."
+    },
+    "elegance": {
+      "title": "Najboljša izbira",
+      "desc": "Kompletna stran z zgodbo, programom, galerijo in hashtagom."
+    },
+    "signature": {
+      "title": "Popolnoma personalizirano",
+      "desc": "Maksimalen nadzor: gostje, meniji, otroci, prednostna podpora."
+    },
+    "whiteGlove": {
+      "label": "Po meri · White Glove",
+      "headline1": "Popolnoma",
+      "headline2": "personalizirano.",
+      "headline3": "Brez predlog.",
+      "desc": "Noben paket ne ustreza vaši viziji? Naš studio ustvari spletno stran od nič — vaše barve, vaše pisave, vaše animacije. Pogovorimo se o vaši ideji.",
+      "features": [
+        "Custom dizajn studio",
+        "Animacije in 3D efekti",
+        "Večjezično (SL/EN/HR)",
+        "Live streaming integracija"
+      ],
+      "cta": "Zahtevaj ponudbo",
+      "contactTitle": "Direkten kontakt",
+      "contactSub": "Odgovorimo v 24 urah.",
+      "email": "E-mail",
+      "phone": "Telefon",
+      "studio": "Studio"
+    },
+    "compare": {
+      "label": "Primerjava",
+      "headline1": "Podrobna",
+      "headline2": "primerjava",
+      "headline3": "paketov",
+      "sub": "Vse, kar je vključeno v vsakem paketu, na enem mestu.",
+      "feature": "Možnost",
+      "ready": "Pripravljeni za izbiro?"
+    },
+    "guide": {
+      "label": "Vodnik",
+      "headline1": "Kateri paket",
+      "headline2": "izbrati?",
+      "sub": "Trije tipični scenariji za tri tipe parov. Prepoznajte se.",
+      "plans": [
+        {
+          "num": "i.",
+          "plan": "Essential",
+          "title": "Manj, intimno, hitro.",
+          "desc": "Planirate poroko z manj kot 60 gosti in želite lepo povabilo z osnovnim RSVP-om? Essential je za vas.",
+          "items": [
+            "30 — 60 gostov",
+            "Hiter datum (1 — 3 mes.)",
+            "Preddefinirani dizajn",
+            "Manjši proračun"
+          ]
+        },
+        {
+          "num": "ii.",
+          "plan": "Elegance",
+          "title": "Klasika za večino parov.",
+          "desc": "Pravo ravnovesje — kompletna stran z zgodbo, programom in hashtagom, dovolj prilagodljivosti za personalizacijo.",
+          "items": [
+            "60 — 200 gostov",
+            "Datum 6 — 18 mes. vnaprej",
+            "8+ elegantnih predlog",
+            "Najboljša vrednost"
+          ]
+        },
+        {
+          "num": "iii.",
+          "plan": "Signature",
+          "title": "Brez kompromisov.",
+          "desc": "Vaša poroka je dogodek — destinacijska, večdnevna, večjezična. Potrebujete stran, ki zgleda profesionalno.",
+          "items": [
+            "200+ gostov ali destinacija",
+            "Datum 12+ mes. vnaprej",
+            "Napredni RSVP z meniji",
+            "Prednostna podpora"
+          ]
+        }
+      ]
+    },
+    "faqLabel": "Vprašanja",
+    "faqHeadline1": "Pogosto zastavljena",
+    "faqHeadline2": "vprašanja",
+    "faqs": {
+      "q1": "Kako hitro je povabilo aktivno?",
+      "a1": "Takoj — takoj ko dokončate čarovnika in plačilo, je vaše povabilo objavljeno in ga je mogoče takoj deliti.",
+      "q2": "Je to enkratno plačilo?",
+      "a2": "Da, enkratno plačilo za celotno aktivno obdobje. Brez naročnin, brez ponavljajočih se provizij, brez skritih stroškov.",
+      "q3": "Ali lahko uredim povabilo po objavi?",
+      "a3": "Seveda. Vsa polja je mogoče kadar koli posodobiti iz nadzorne plošče — imena, datumi, kraj, urnik, vse.",
+      "q4": "Ali lahko zamenjam predlogo po nakupu?",
+      "a4": "Paket Signature vključuje brezplačno zamenjavo predloge. Essential in Elegance ohranita predlogo, izbrano pri ustvarjanju.",
+      "q5": "Kaj se zgodi, ko poteče aktivno obdobje?",
+      "a5": "Stran s povabilom postane neaktivna, vendar so vsi vaši podatki shranjeni. Kadarkoli jo lahko reaktivirate z novim paketom.",
+      "q6": "Ali se lahko pozneje nadgradim na drug paket?",
+      "a6": "Da — pred poroko nas kadarkoli kontaktirajte in preostalo obdobje bomo upoštevali pri nadgradnji."
+    },
+    "ctaLabel": "Pripravljeni?",
+    "ctaHeadline1": "Ustvarimo vašo",
+    "ctaHeadline2": "popolno stran.",
+    "ctaSub": "Odprite svojo spletno stran danes — odštevalnik do \"da\" se začne zdaj.",
+    "startNow": "Začni zdaj",
+    "viewDesigns": "Poglej dizajne"
+  },
+  "templates": {
+    "label": "Naša kolekcija predlog",
+    "headline1": "{n} dizajnov. En",
+    "headline2": "popolni dan.",
+    "sub": "Skrbno izbrane predloge — od minimalističnih do razkošnih. Vsak dizajn je zgrajen okoli drugačnega razpoloženja in tipografije.",
+    "templates": "Predlog",
+    "customizations": "Personalizacij",
+    "popular": "Priljubljen",
+    "new": "Novo",
+    "view": "Pregledaj",
+    "edition": "Edition",
+    "comingSoon": "Kmalu",
+    "comingSoonDesc": "Nove kolekcije v pripravi. Javimo se.",
+    "inPrep": "V pripravi",
+    "comingSoonLabel": "Coming soon",
+    "all": "Vse",
+    "romance": "Romance",
+    "timeless": "Timeless",
+    "contemporary": "Contemporary",
+    "singular": "predloga",
+    "plural": "predlog",
+    "ctaLabel": "Ne vidite svojega stila?",
+    "ctaHeadline1": "Ustvarimo nekaj",
+    "ctaHeadline2": "samo za vas.",
+    "ctaSub": "Naš dizajn studio ustvari popolnoma custom predlogo — vaše barve, vaša tipografija, vaša zgodba. Brez predlog, samo vi.",
+    "viewPackages": "Poglej pakete",
+    "requestCustom": "Zahtevaj custom dizajn"
+  },
+  "privacy": {
+    "label": "Pravno",
+    "title": "Politika zasebnosti",
+    "updated": "Zadnja posodobitev: januar 2025",
+    "s1title": "1. Kdo smo",
+    "s1body": "Invitia (\"mi\") upravlja spletno platformo za digitalna poročna povabila. Ta Politika zasebnosti pojasnjuje, kako zbiramo, uporabljamo in varujemo vaše osebne podatke v skladu z Uredbo o splošni zaščiti podatkov (GDPR).",
+    "s2title": "2. Podatki, ki jih zbiramo",
+    "s2account": "Podatki o računu:",
+    "s2accountDesc": "e-poštni naslov in geslo (šifrirano) ob registraciji.",
+    "s2invitation": "Podatki o povabilu:",
+    "s2invitationDesc": "imena, datum poroke, kraj, fotografije in druge podrobnosti, ki jih vnesete pri ustvarjanju povabila.",
+    "s2rsvp": "RSVP podatki gostov:",
+    "s2rsvpDesc": "imena, prisotnost, menijske preference in vsa neobvezna polja, ki jih izpolnijo vaši gostje.",
+    "s2usage": "Podatki o uporabi:",
+    "s2usageDesc": "število ogledov povabila, vrsta brskalnika in anonimizirane analitike.",
+    "s2payment": "Plačilni podatki:",
+    "s2paymentDesc": "v celoti obdelani prek Stripe. Številk kartic ne hranimo.",
+    "s3title": "3. Kako uporabljamo vaše podatke",
+    "s3list": [
+      "Za delovanje in dostavo storitve povabila",
+      "Za obdelavo plačil prek Stripe",
+      "Za pošiljanje transakcijskih e-poštnih sporočil (potrditev računa, obvestila RSVP)",
+      "Za izboljšanje platforme prek anonimizirane analitike",
+      "Za izpolnjevanje zakonskih obveznosti"
+    ],
+    "s4title": "4. Pravna podlaga za obdelavo",
+    "s4body": "Vaše podatke obdelujemo na podlagi izpolnitve pogodbe (za zagotavljanje storitve, ki ste jo kupili), zakonitih interesov (varnost platforme, preprečevanje goljufij) in — kadar je to potrebno — vašega izrecnega soglasja.",
+    "s5title": "5. Deljenje podatkov",
+    "s5body": "Vaših osebnih podatkov ne prodajamo. Podatke delimo le z:",
+    "s5list": [
+      "Supabase — infrastruktura baze podatkov in avtentikacije (regija EU)",
+      "Stripe — obdelava plačil",
+      "Vercel — platforma za gostovanje"
+    ],
+    "s6title": "6. Hranjenje podatkov",
+    "s6body": "Aktivni podatki o povabilu se hranijo za čas trajanja vašega paketa plus 12 mesecev. Po tem roku se podatki trajno izbrišejo, razen če zahtevate prejšnje brisanje. Podatki računa se hranijo do brisanja računa.",
+    "s7title": "7. Vaše pravice (GDPR)",
+    "s7body": "Po GDPR imate pravico do:",
+    "s7list": [
+      "Dostopa do vaših osebnih podatkov",
+      "Popravka netočnih podatkov",
+      "Zahteve za izbris (\"pravica do pozabe\")",
+      "Omejitve ali ugovora obdelavi",
+      "Prenosljivosti podatkov",
+      "Umika soglasja kadar koli"
+    ],
+    "s7contact": "Za uveljavljanje teh pravic pišite na",
+    "s8title": "8. Piškotki",
+    "s8body": "Uporabljamo le tehnično nujne piškotke za avtentikacijo (seja token). Ne uporabljamo sledilnih ali oglaševalskih piškotkov.",
+    "s9title": "9. Varnost",
+    "s9body": "Podatki so shranjeni v Supabase s šifriranjem v mirovanju in med prenosom. Dostop do osebnih podatkov je omejen le na pooblaščeno osebje.",
+    "s10title": "10. Kontakt in DPA",
+    "s10body": "Za poizvedbe o zasebnosti ali za uveljavljanje pravic nas kontaktirajte na",
+    "s10body2": "Prav tako imate pravico vložiti pritožbo pri svojem lokalnem organu za varstvo podatkov."
+  },
+  "terms": {
+    "label": "Pravno",
+    "title": "Pogoji storitve",
+    "updated": "Zadnja posodobitev: januar 2025",
+    "s1title": "1. Sprejetje pogojev",
+    "s1body": "Z dostopom do Invitia (\"Storitev\") ali njeno uporabo se strinjate s temi Pogoji storitve. Če se ne strinjate, ne uporabljajte Storitve.",
+    "s2title": "2. Opis storitve",
+    "s2body": "Invitia zagotavlja platformo za ustvarjanje in objavljanje digitalnih poročnih povabil. Uporabniki lahko zbirajo RSVP-je, delijo podrobnosti o dogodku in upravljajo komunikacijo z gosti prek personalizirane spletne strani.",
+    "s3title": "3. Registracija računa",
+    "s3body": "Pri ustvarjanju računa morate navesti točne podatke. Odgovorni ste za ohranjanje zaupnosti svojih prijavnih podatkov in za vse dejavnosti v okviru vašega računa.",
+    "s4title": "4. Plačila in vračila",
+    "s4body": "Vsa plačila se varno obdelujejo prek Stripe. Cene so navedene v evrih (EUR) in so enkratni zneski, ki krijejo navedeno aktivno obdobje. Zaradi digitalne narave izdelka se vračila izdajo le, kadar je to zahtevano z veljavno zakonodajo v 14 dneh od nakupa, pod pogojem, da povabilo ni bilo objavljeno (javno dostopno).",
+    "s5title": "5. Aktivno obdobje",
+    "s5body": "Vaše povabilo ostane javno dostopno za čas trajanja kupljenega paketa (6 ali 12 mesecev od datuma aktivacije). Po poteku stran postane nedostopna, vaši podatki pa so 12 mesecev shranjeni in jih je mogoče reaktivirati.",
+    "s6title": "6. Vsebina uporabnika",
+    "s6body": "Ohranite lastništvo nad vso vsebino, ki jo naložite. Z objavo povabila Invitia podelite neizključno licenco za prikaz te vsebine gostom, ki dostopajo do URL-ja vašega povabila. Ne smete naložiti vsebine, ki je nezakonita, žaljiva ali krši pravice tretjih oseb.",
+    "s7title": "7. Prepovedana uporaba",
+    "s7body": "Storitve ne smete uporabljati za drug namen kot za ustvarjanje osebnih poročnih povabil. Strogo prepovedana je komercialna preprodaja, avtomatizirano strganje ali uporaba Storitve za škodovanje drugim.",
+    "s8title": "8. Omejitev odgovornosti",
+    "s8body": "V največji meri, ki jo dovoljuje zakon, Invitia ni odgovorna za posredne, naključne ali posledične škode, ki izhajajo iz vaše uporabe Storitve. Naša skupna odgovornost ne sme preseči zneska, ki ste ga plačali za zadevni paket.",
+    "s9title": "9. Prekinitev",
+    "s9body": "Pridržujemo si pravico do začasne ustavitve ali prekinitve računov, ki kršijo te Pogoje. Račun lahko kadar koli izbrišete v nastavitvah nadzorne plošče.",
+    "s10title": "10. Spremembe pogojev",
+    "s10body": "Te Pogoje lahko občasno posodobimo. Nadaljnja uporaba Storitve po spremembi pomeni sprejetje novih Pogojev. Aktivne uporabnike bomo e-poštno obvestili o bistvenih spremembah.",
+    "s11title": "11. Kontakt",
+    "s11body": "Vprašanja o teh pogojih? Pišite nam na"
+  },
+  "auth": {
+    "login": {
+      "welcomeBack": "Dobrodošli nazaj",
+      "title": "Prijava",
+      "subtitle": "Nadaljujte z ustvarjanjem vašega popolnega povabila.",
+      "email": "E-pošta",
+      "password": "Geslo",
+      "submit": "Prijava",
+      "submitting": "Prijavljam...",
+      "noAccount": "Nimate računa?",
+      "createOne": "Ustvarite ga",
+      "emailPlaceholder": "vi@primer.si",
+      "passwordPlaceholder": "••••••••",
+      "emailError": "Vnesite veljavni e-poštni naslov",
+      "passwordError": "Geslo mora imeti vsaj 6 znakov"
+    },
+    "register": {
+      "newAccount": "Nov račun",
+      "title": "Ustvari račun",
+      "subtitle": "Začnite z ustvarjanjem vašega sanjskega povabila.",
+      "email": "E-pošta",
+      "password": "Geslo",
+      "submit": "Ustvari račun",
+      "submitting": "Ustvarjam...",
+      "hasAccount": "Že imate račun?",
+      "signIn": "Prijavite se",
+      "emailPlaceholder": "vi@primer.si",
+      "passwordPlaceholder": "••••••••",
+      "emailError": "Vnesite veljavni e-poštni naslov",
+      "passwordError": "Geslo mora imeti vsaj 6 znakov",
+      "confirmPassword": "Potrdi geslo",
+      "confirmPasswordPlaceholder": "Ponovi geslo",
+      "passwordMin8Error": "Geslo mora imeti vsaj 8 znakov",
+      "confirmPasswordError": "Gesli se ne ujemata",
+      "termsText": "Z ustvarjanjem računa se strinjate z",
+      "termsLink": "Pogoji",
+      "privacyLink": "Politika zasebnosti",
+      "selected": "izbrano"
+    }
+  },
+  "dashboard": {
+    "account": "Vaš račun",
+    "title": "Nadzorna plošča",
+    "newInvitation": "Novo povabilo",
+    "totalViews": "Skupni ogledi",
+    "attending": "Prisotni",
+    "declined": "Odpovedani",
+    "responseRate": "Stopnja odgovora",
+    "yourInvitations": "Vaša povabila",
+    "noInvitations": "Ni povabil.",
+    "noInvitationsDesc": "Še nimate povabil. Ustvarite prvo.",
+    "createFirst": "Ustvari prvo povabilo",
+    "beginHere": "Začni tukaj",
+    "active": "Aktivno",
+    "draft": "Osnutek",
+    "views": "ogledov",
+    "attending2": "prisotnih",
+    "manage": "Upravljaj",
+    "guests": "Gostje",
+    "settings": "Nastavitve",
+    "sidebar": {
+      "home": "Domov",
+      "invitations": "Povabila",
+      "guests": "Gostje",
+      "analytics": "Analitika",
+      "settings": "Nastavitve"
+    }
+  },
+  "templatePreview": {
+    "back": "Nazaj na predloge",
+    "preview": "Predogled",
+    "use": "Uporabi to predlogo",
+    "details": "Podrobnosti",
+    "included": "Vključeno"
+  }
+}

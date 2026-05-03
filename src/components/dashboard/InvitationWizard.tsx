@@ -1082,9 +1082,99 @@ export function InvitationWizard() {
 
   const stepProps = { data, set }
 
+  const isTemplateStep = step === 1
+
+  const stepHeader = (
+    <div style={{ marginBottom: 28 }}>
+      <div style={{ fontSize: 10, letterSpacing: '0.3em', textTransform: 'uppercase', color: MUTE, marginBottom: 6 }}>
+        Korak {step + 1} / {STEPS.length}
+      </div>
+      <h2 style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontWeight: 400, fontSize: 34, color: INK, lineHeight: 1 }}>
+        {STEP_TITLES[step]}
+      </h2>
+    </div>
+  )
+
+  const stepContent = (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={step}
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -16 }}
+        transition={{ duration: 0.2 }}
+      >
+        {step === 0 && <Step1 {...stepProps} />}
+        {step === 1 && <Step2 {...stepProps} />}
+        {step === 2 && <Step3 {...stepProps} />}
+        {step === 3 && <Step4 {...stepProps} />}
+        {step === 4 && <Step5 {...stepProps} />}
+        {step === 5 && <Step6 {...stepProps} />}
+        {step === 6 && <Step7 {...stepProps} />}
+        {step === 7 && <Step8 {...stepProps} />}
+        {step === 8 && <Step9 data={data} />}
+      </motion.div>
+    </AnimatePresence>
+  )
+
+  const navButtons = (
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+      marginTop: 36, paddingTop: 24, borderTop: `1px solid ${RULE}`,
+    }}>
+      <button type="button" onClick={() => setStep(s => Math.max(0, s - 1))} disabled={step === 0}
+        style={{
+          display: 'flex', alignItems: 'center', gap: 8,
+          padding: '10px 20px', border: `1px solid ${RULE}`,
+          background: 'transparent', color: step === 0 ? RULE : MUTE,
+          fontSize: 12, letterSpacing: '0.15em', textTransform: 'uppercase',
+          cursor: step === 0 ? 'not-allowed' : 'pointer', fontFamily: 'inherit',
+        }}>
+        <ChevronLeft size={14} />
+        Nazaj
+      </button>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        {step >= 3 && step <= 6 && (
+          <button type="button" onClick={() => setStep(s => s + 1)}
+            style={{
+              padding: '10px 16px', border: 'none', background: 'transparent', color: MUTE,
+              fontSize: 12, letterSpacing: '0.15em', textTransform: 'uppercase', cursor: 'pointer', fontFamily: 'inherit',
+            }}>
+            Preskoči
+          </button>
+        )}
+
+        {step < STEPS.length - 1 ? (
+          <button type="button" onClick={() => canProceed() && setStep(s => s + 1)} disabled={!canProceed()}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 8, padding: '10px 24px',
+              background: canProceed() ? INK : RULE, color: canProceed() ? CREAM : MUTE,
+              border: 'none', fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase',
+              cursor: canProceed() ? 'pointer' : 'not-allowed', fontFamily: 'inherit', transition: 'background .2s',
+            }}>
+            Naprej
+            <ChevronRight size={14} />
+          </button>
+        ) : (
+          <button type="button" onClick={submit} disabled={submitting}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 8, padding: '10px 28px',
+              background: submitting ? MUTE : INK, color: CREAM,
+              border: 'none', fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase',
+              cursor: submitting ? 'not-allowed' : 'pointer', fontFamily: 'inherit',
+            }}>
+            {submitting ? 'Ustvarjam…' : 'Ustvari povabilo'}
+            {!submitting && <Check size={14} />}
+          </button>
+        )}
+      </div>
+    </div>
+  )
+
   return (
     <div style={{ minHeight: '100vh', background: SOFT, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '48px 16px 80px' }}>
-      <div style={{ width: '100%', maxWidth: 680 }}>
+      <div style={{ width: '100%', maxWidth: isTemplateStep ? 1300 : 680 }}>
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <div style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 20, color: INK, letterSpacing: '0.05em' }}>Invitia</div>
           <p style={{ fontSize: 11, color: MUTE, letterSpacing: '0.2em', textTransform: 'uppercase', marginTop: 4 }}>Ustvari povabilo</p>
@@ -1092,89 +1182,30 @@ export function InvitationWizard() {
 
         <StepIndicator current={step} total={STEPS.length} />
 
-        <div style={{ background: WHITE, border: `1px solid ${RULE}`, padding: '36px 40px' }}>
-          <div style={{ marginBottom: 28 }}>
-            <div style={{ fontSize: 10, letterSpacing: '0.3em', textTransform: 'uppercase', color: MUTE, marginBottom: 6 }}>
-              Korak {step + 1} / {STEPS.length}
+        {isTemplateStep ? (
+          /* ── Two-column layout: picker left, live preview right ── */
+          <div style={{ display: 'grid', gridTemplateColumns: '420px 1fr', background: WHITE, border: `1px solid ${RULE}` }}>
+            {/* Left panel */}
+            <div style={{ padding: '36px 40px', borderRight: `1px solid ${RULE}`, display: 'flex', flexDirection: 'column' }}>
+              {stepHeader}
+              <div style={{ flex: 1, overflowY: 'auto', maxHeight: '70vh' }}>
+                {stepContent}
+              </div>
+              {navButtons}
             </div>
-            <h2 style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontWeight: 400, fontSize: 34, color: INK, lineHeight: 1 }}>
-              {STEP_TITLES[step]}
-            </h2>
-          </div>
-
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={step}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.2 }}
-            >
-              {step === 0 && <Step1 {...stepProps} />}
-              {step === 1 && <Step2 {...stepProps} />}
-              {step === 2 && <Step3 {...stepProps} />}
-              {step === 3 && <Step4 {...stepProps} />}
-              {step === 4 && <Step5 {...stepProps} />}
-              {step === 5 && <Step6 {...stepProps} />}
-              {step === 6 && <Step7 {...stepProps} />}
-              {step === 7 && <Step8 {...stepProps} />}
-              {step === 8 && <Step9 data={data} />}
-            </motion.div>
-          </AnimatePresence>
-
-          <div style={{
-            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            marginTop: 36, paddingTop: 24, borderTop: `1px solid ${RULE}`,
-          }}>
-            <button type="button" onClick={() => setStep(s => Math.max(0, s - 1))} disabled={step === 0}
-              style={{
-                display: 'flex', alignItems: 'center', gap: 8,
-                padding: '10px 20px', border: `1px solid ${RULE}`,
-                background: 'transparent', color: step === 0 ? RULE : MUTE,
-                fontSize: 12, letterSpacing: '0.15em', textTransform: 'uppercase',
-                cursor: step === 0 ? 'not-allowed' : 'pointer', fontFamily: 'inherit',
-              }}>
-              <ChevronLeft size={14} />
-              Nazaj
-            </button>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              {step >= 3 && step <= 6 && (
-                <button type="button" onClick={() => setStep(s => s + 1)}
-                  style={{
-                    padding: '10px 16px', border: 'none', background: 'transparent', color: MUTE,
-                    fontSize: 12, letterSpacing: '0.15em', textTransform: 'uppercase', cursor: 'pointer', fontFamily: 'inherit',
-                  }}>
-                  Preskoči
-                </button>
-              )}
-
-              {step < STEPS.length - 1 ? (
-                <button type="button" onClick={() => canProceed() && setStep(s => s + 1)} disabled={!canProceed()}
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: 8, padding: '10px 24px',
-                    background: canProceed() ? INK : RULE, color: canProceed() ? CREAM : MUTE,
-                    border: 'none', fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase',
-                    cursor: canProceed() ? 'pointer' : 'not-allowed', fontFamily: 'inherit', transition: 'background .2s',
-                  }}>
-                  Naprej
-                  <ChevronRight size={14} />
-                </button>
-              ) : (
-                <button type="button" onClick={submit} disabled={submitting}
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: 8, padding: '10px 28px',
-                    background: submitting ? MUTE : INK, color: CREAM,
-                    border: 'none', fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase',
-                    cursor: submitting ? 'not-allowed' : 'pointer', fontFamily: 'inherit',
-                  }}>
-                  {submitting ? 'Ustvarjam…' : 'Ustvari povabilo'}
-                  {!submitting && <Check size={14} />}
-                </button>
-              )}
+            {/* Right panel — live preview */}
+            <div style={{ position: 'relative', minHeight: 600, background: SOFT }}>
+              <TemplatePreviewPanel data={data} />
             </div>
           </div>
-        </div>
+        ) : (
+          /* ── Single column for all other steps ── */
+          <div style={{ background: WHITE, border: `1px solid ${RULE}`, padding: '36px 40px' }}>
+            {stepHeader}
+            {stepContent}
+            {navButtons}
+          </div>
+        )}
       </div>
     </div>
   )
