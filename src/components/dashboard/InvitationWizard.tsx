@@ -8,10 +8,11 @@ import {
   ChevronLeft, ChevronRight, Check, Plus, Trash2,
   Clock, MapPin, Heart, Gift, HelpCircle,
   Hotel, Car, Hash, Phone, Users, Music,
-  ChevronDown, ChevronUp, Sparkles, Loader2,
+  ChevronDown, ChevronUp, Sparkles, Loader2, Eye,
 } from 'lucide-react'
 import { TEMPLATES } from '@/types'
-import type { TemplateId, TimelineEvent, AccommodationItem, GiftRegistryItem, FAQItem } from '@/types'
+import type { TemplateId, TimelineEvent, AccommodationItem, GiftRegistryItem, FAQItem, Invitation } from '@/types'
+import { TemplateRenderer } from '../invitation/TemplateRenderer'
 import { DEFAULT_LABELS, LANGUAGE_OPTIONS, LABEL_FIELD_GROUPS } from '@/lib/utils/labels'
 import type { InvitationLabels } from '@/lib/utils/labels'
 
@@ -366,11 +367,42 @@ function Step1({ data, set }: { data: WizardData; set: (k: keyof WizardData, v: 
   )
 }
 
+// ─── Mock invitation for preview ─────────────────────────────────────────────
+function buildMockInvitation(data: WizardData): Invitation {
+  const futureDate = new Date(Date.now() + 200 * 24 * 3600 * 1000).toISOString().split('T')[0]
+  return {
+    id: 'preview', user_id: 'preview', slug: 'preview',
+    partner1_name: data.partner1_name || 'Ana',
+    partner2_name: data.partner2_name || 'Marko',
+    wedding_date: data.wedding_date || futureDate,
+    template_id: (data.template_id || 'botanica') as TemplateId,
+    venue_name: 'Grand Hotel Portorož',
+    venue_address: 'Obala 33, 6320 Portorož',
+    ceremony_time: '14:00',
+    reception_time: '16:00',
+    personal_message: 'Z veseljem vas vabimo, da delite z nami ta posebni dan.',
+    timeline: [
+      { time: '14:00', title: 'Prihod gostov' },
+      { time: '15:00', title: 'Poročna ceremonija' },
+      { time: '16:00', title: 'Skupinska fotografija' },
+      { time: '18:00', title: 'Večerja & praznovanje' },
+    ],
+    languages: ['sl'],
+    show_gallery: false, show_countdown: true, show_story: false,
+    show_program: true, show_dress_code: false, show_children_policy: false,
+    show_hashtag: false, show_music: false, show_contact: false,
+    show_transport: false, show_accommodation: false, show_gift_registry: false, show_faq: false,
+    package: 'signature', is_active: true, view_count: 0,
+    created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+  }
+}
+
 // ─── STEP 2: Template ─────────────────────────────────────────────────────────
 function Step2({ data, set }: { data: WizardData; set: (k: keyof WizardData, v: unknown) => void }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+      <p style={{ fontSize: 12, color: MUTE, marginBottom: 4 }}>Kliknite na predlogo za predogled →</p>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
         {TEMPLATES.map(t => {
           const active = data.template_id === t.id
           return (
@@ -392,28 +424,65 @@ function Step2({ data, set }: { data: WizardData; set: (k: keyof WizardData, v: 
                 alignItems: 'center', justifyContent: 'center', gap: 6,
                 padding: 12,
               }}>
-                <div style={{ fontFamily: 'var(--font-pinyon), cursive', fontSize: 22, color: t.colors.primary, lineHeight: 1 }}>
+                <div style={{ fontFamily: 'var(--font-pinyon), cursive', fontSize: 18, color: t.colors.primary, lineHeight: 1 }}>
                   {data.partner1_name || 'Ana'} &amp; {data.partner2_name || 'Marko'}
                 </div>
-                <div style={{ height: 1, width: 40, background: t.colors.accent, opacity: 0.5 }} />
-                <div style={{ fontSize: 10, letterSpacing: '0.2em', color: t.colors.textMuted, textTransform: 'uppercase' }}>
-                  {data.wedding_date || '2025'}
+                <div style={{ height: 1, width: 32, background: t.colors.accent, opacity: 0.5 }} />
+                <div style={{ fontSize: 9, letterSpacing: '0.18em', color: t.colors.textMuted, textTransform: 'uppercase' }}>
+                  {data.wedding_date || '2026'}
                 </div>
               </div>
               <div style={{
-                padding: '10px 14px', borderTop: `1px solid ${RULE}`,
+                padding: '8px 12px', borderTop: `1px solid ${RULE}`,
                 background: active ? ACC + '10' : WHITE,
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               }}>
                 <div>
-                  <div style={{ fontSize: 13, color: INK, fontWeight: 500 }}>{t.name}</div>
-                  <div style={{ fontSize: 11, color: MUTE, textTransform: 'capitalize' }}>{t.category}</div>
+                  <div style={{ fontSize: 12, color: INK, fontWeight: 500 }}>{t.name}</div>
+                  <div style={{ fontSize: 10, color: MUTE, textTransform: 'capitalize' }}>{t.category}</div>
                 </div>
-                {active && <Check size={14} style={{ color: ACC }} />}
+                {active ? <Check size={13} style={{ color: ACC }} /> : <Eye size={12} style={{ color: MUTE, opacity: 0.5 }} />}
               </div>
             </button>
           )
         })}
+      </div>
+    </div>
+  )
+}
+
+// ─── Template preview panel (scaled) ─────────────────────────────────────────
+function TemplatePreviewPanel({ data }: { data: WizardData }) {
+  const SCALE = 0.38
+  const mock = buildMockInvitation(data)
+
+  if (!data.template_id) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: 12, color: MUTE }}>
+        <Eye size={28} style={{ opacity: 0.4 }} />
+        <p style={{ fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase', textAlign: 'center' }}>Izberite predlogo<br />za predogled</p>
+      </div>
+    )
+  }
+
+  return (
+    <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
+      <div style={{
+        position: 'absolute', top: 0, left: 0,
+        width: `${100 / SCALE}%`,
+        transformOrigin: 'top left',
+        transform: `scale(${SCALE})`,
+        pointerEvents: 'none',
+      }}>
+        <TemplateRenderer invitation={mock} />
+      </div>
+      <div style={{
+        position: 'absolute', bottom: 12, left: 0, right: 0,
+        display: 'flex', justifyContent: 'center',
+      }}>
+        <div style={{ background: 'rgba(26,23,20,0.7)', color: '#fff', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', padding: '5px 14px', backdropFilter: 'blur(6px)' }}>
+          Predogled · {TEMPLATES.find(t => t.id === data.template_id)?.name}
+        </div>
       </div>
     </div>
   )

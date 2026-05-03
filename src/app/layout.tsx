@@ -8,6 +8,13 @@ import {
   Playfair_Display,
   DM_Mono,
   Cinzel,
+  Italiana,
+  Caveat,
+  Limelight,
+  Fraunces,
+  Parisienne,
+  Archivo_Black,
+  EB_Garamond,
 } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
@@ -73,6 +80,56 @@ const cinzel = Cinzel({
   display: 'swap',
 })
 
+const italiana = Italiana({
+  variable: '--font-italiana',
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+})
+
+const caveat = Caveat({
+  variable: '--font-caveat',
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  display: 'swap',
+})
+
+const limelight = Limelight({
+  variable: '--font-limelight',
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+})
+
+const fraunces = Fraunces({
+  variable: '--font-fraunces',
+  subsets: ['latin'],
+  display: 'swap',
+  style: ['normal', 'italic'],
+})
+
+const parisienne = Parisienne({
+  variable: '--font-parisienne',
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+})
+
+const archivoBold = Archivo_Black({
+  variable: '--font-archivo',
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+})
+
+const ebGaramond = EB_Garamond({
+  variable: '--font-eb-garamond',
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+})
+
 export const metadata: Metadata = {
   title: 'Invitia — One link. Everything your guests need.',
   description:
@@ -89,7 +146,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${dmSerif.variable} ${instrumentSans.variable} ${pinyonScript.variable} ${greatVibes.variable} ${playfairDisplay.variable} ${dmMono.variable} ${cinzel.variable} h-full`}
+      className={`${cormorant.variable} ${dmSerif.variable} ${instrumentSans.variable} ${pinyonScript.variable} ${greatVibes.variable} ${playfairDisplay.variable} ${dmMono.variable} ${cinzel.variable} ${italiana.variable} ${caveat.variable} ${limelight.variable} ${fraunces.variable} ${parisienne.variable} ${archivoBold.variable} ${ebGaramond.variable} h-full`}
     >
       <body className="min-h-full flex flex-col" style={{ WebkitFontSmoothing: 'antialiased', MozOsxFontSmoothing: 'grayscale' } as React.CSSProperties}>
         {children}

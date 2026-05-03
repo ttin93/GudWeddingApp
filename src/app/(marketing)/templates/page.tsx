@@ -4,18 +4,30 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { TEMPLATES } from '@/types'
+import type { TemplateConfig } from '@/types'
+import { ArrowRight } from 'lucide-react'
 
-const INK   = '#1A1714'
-const MUTE  = '#6e6359'
-const SOFT  = '#3a342e'
-const ACC   = '#8C7B6B'
-const CREAM = '#F7F4EF'
-const DEEP  = '#EFE9DD'
-const RULE  = '#E8E2D9'
-const RULES = '#d9d2c5'
+const BG    = '#F6F1E8'
+const BG2   = '#EFE7D5'
+const PAPER = '#FBF7EE'
+const INK   = '#1C1814'
+const INK2  = '#3a342b'
+const MUTE  = '#7d7466'
+const LINE  = '#E2D7BF'
+const ACC   = '#9C6B3D'
+const ACC2  = '#C99563'
+const ACCS  = '#E8D4B8'
+const NOIR  = '#15110B'
 
-const CATEGORIES = ['all', 'timeless', 'contemporary', 'romance'] as const
-type Cat = (typeof CATEGORIES)[number]
+const fraunces = 'var(--font-fraunces), "Fraunces", Georgia, serif'
+const sans = 'var(--font-instrument), "Inter", sans-serif'
+const parisienne = 'var(--font-parisienne), "Parisienne", cursive'
+const limelight = 'var(--font-limelight), "Limelight", cursive'
+
+const GRAIN = `url("data:image/svg+xml;utf8,<svg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.12 0 0 0 0 0.10 0 0 0 0 0.08 0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")`
+
+const CATS = ['all', 'romance', 'timeless', 'contemporary'] as const
+type Cat = typeof CATS[number]
 
 function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -28,247 +40,391 @@ function Navbar() {
     <nav style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      height: 72, padding: '0 56px',
-      background: scrolled ? 'rgba(247,244,239,0.96)' : CREAM,
+      height: 68, padding: '0 48px',
+      background: scrolled ? 'rgba(246,241,232,0.96)' : BG,
       backdropFilter: scrolled ? 'blur(8px)' : 'none',
-      borderBottom: `1px solid ${RULE}`,
-      transition: 'background .4s ease',
+      borderBottom: `1px solid ${LINE}`,
+      transition: 'background .3s',
+      fontFamily: sans,
     }}>
-      <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, fontFamily: 'var(--font-dm-serif)', fontSize: 18, color: INK, textDecoration: 'none' }}>
-        <span style={{ fontSize: 9, color: ACC }}>◉</span>
-        Invitia
-      </Link>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 32, fontSize: 12, letterSpacing: '0.06em', color: SOFT }}>
-        <Link href="/templates" style={{ color: INK, fontWeight: 500, textDecoration: 'none' }}>Designs</Link>
-        <Link href="/#pricing" style={{ textDecoration: 'none', color: SOFT }}>Pricing</Link>
-        <Link href="/login" style={{ textDecoration: 'none', color: SOFT }}>Sign in</Link>
-        <Link href="/register" style={{
-          display: 'inline-flex', alignItems: 'center', gap: 8,
-          padding: '9px 18px', background: INK, color: CREAM,
-          fontSize: 10.5, letterSpacing: '0.2em', textTransform: 'uppercase', textDecoration: 'none',
-        }}>
-          Create invitation
+      <Link href="/" style={{ fontFamily: fraunces, fontSize: 22, color: INK, textDecoration: 'none', fontStyle: 'italic' }}>Invitia</Link>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 36, fontSize: 13.5, color: INK2 }}>
+        <Link href="/templates" style={{ color: ACC, fontWeight: 500, textDecoration: 'none', position: 'relative' }}>
+          Designs
+          <span style={{ position: 'absolute', left: 0, right: 0, bottom: -2, height: 1, background: ACC }} />
         </Link>
+        <Link href="/pricing" style={{ textDecoration: 'none', color: INK2 }}>Pricing</Link>
+        <Link href="/demo" style={{ textDecoration: 'none', color: INK2 }}>Demo</Link>
+        <Link href="/login" style={{ textDecoration: 'none', color: INK2 }}>Sign in</Link>
+        <Link href="/register" style={{
+          padding: '10px 22px', background: INK, color: PAPER,
+          borderRadius: 99, fontSize: 12.5, letterSpacing: '.04em', textDecoration: 'none',
+        }}>Begin →</Link>
       </div>
     </nav>
   )
 }
 
-// Mini template preview card rendered from colors + fonts
-function TemplateCard({ template, index }: { template: typeof TEMPLATES[0]; index: number }) {
+// ─── Template artwork previews ────────────────────────────────────────────────
+function TemplateArt({ id, p1 = 'Lorena', p2 = 'Viktor' }: { id: string; p1?: string; p2?: string }) {
+  switch (id) {
+    case 'riviera': return (
+      <div style={{ width: '100%', height: '100%', background: 'linear-gradient(180deg,#F0E2C7,#E8C9A4)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#5A2D1F', textAlign: 'center', fontFamily: fraunces, position: 'relative', padding: '20px' }}>
+        <div style={{ position: 'absolute', inset: 18, border: '1px solid rgba(90,45,31,.25)' }} />
+        <div style={{ fontSize: 8, letterSpacing: '.36em', textTransform: 'uppercase', marginBottom: 12, color: '#A24A2A' }}>— Wedding Invitation —</div>
+        <div style={{ fontStyle: 'italic', fontWeight: 300, fontSize: 44, lineHeight: 1.05, position: 'relative', zIndex: 2 }}>{p1}</div>
+        <div style={{ fontFamily: parisienne, fontSize: 38, color: '#A24A2A', margin: '-2px 0', position: 'relative', zIndex: 2 }}>&amp;</div>
+        <div style={{ fontStyle: 'italic', fontWeight: 300, fontSize: 44, lineHeight: 1.05, position: 'relative', zIndex: 2 }}>{p2}</div>
+        <div style={{ marginTop: 20, fontStyle: 'italic', fontSize: 10, letterSpacing: '.18em', color: '#7B3B22', position: 'relative', zIndex: 2 }}>12 · 09 · 2026 · Portorož</div>
+      </div>
+    )
+    case 'coastal': return (
+      <div style={{ width: '100%', height: '100%', background: '#EBE6DC', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', padding: '20px 18px 48px', textAlign: 'center', color: '#3F4A3A', fontFamily: fraunces, position: 'relative', overflow: 'hidden' }}>
+        <svg style={{ position: 'absolute', top: '10%', left: '50%', transform: 'translateX(-50%)', width: '38%', maxWidth: 130, color: '#7B8568', opacity: .85 }} viewBox="0 0 100 60" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round">
+          <path d="M50 58 V20"/><path d="M50 30 C40 25 30 24 25 18 C30 22 40 26 50 28"/><path d="M50 26 C60 21 70 20 75 14 C70 18 60 22 50 24"/><ellipse cx="50" cy="14" rx="6" ry="9"/><ellipse cx="46" cy="13" rx="3" ry="5" transform="rotate(-25 46 13)"/><ellipse cx="54" cy="13" rx="3" ry="5" transform="rotate(25 54 13)"/>
+        </svg>
+        <div style={{ fontStyle: 'italic', fontWeight: 300, fontSize: 32, color: '#3F4A3A', lineHeight: 1.1, position: 'relative', zIndex: 2 }}>{p1}<span style={{ display: 'block' }}>&amp; {p2}</span></div>
+        <div style={{ fontSize: 8, letterSpacing: '.32em', textTransform: 'uppercase', marginTop: 28, color: '#9B6B7A', position: 'relative', zIndex: 2 }}>— Save the Date —</div>
+        <div style={{ fontFamily: parisienne, fontSize: 18, color: '#9B6B7A', marginTop: 6, position: 'relative', zIndex: 2 }}>12 · 09 · 26</div>
+      </div>
+    )
+    case 'darkgrid': return (
+      <div style={{ width: '100%', height: '100%', background: 'linear-gradient(160deg,#0E0C09,#1B1611)', position: 'relative', overflow: 'hidden', color: '#E5D2A8', fontFamily: fraunces, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '20px 18px' }}>
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(229,210,168,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(229,210,168,.06) 1px,transparent 1px)`, backgroundSize: '32px 32px' }} />
+        <div style={{ position: 'absolute', right: -20, bottom: -40, fontStyle: 'italic', fontWeight: 300, fontSize: 160, color: 'rgba(229,210,168,.06)', lineHeight: 1 }}>G</div>
+        <div style={{ fontSize: 7.5, letterSpacing: '.36em', textTransform: 'uppercase', color: '#B89055', position: 'relative', textAlign: 'center' }}>— Wedding Invitation —</div>
+        <div style={{ textAlign: 'center', position: 'relative' }}>
+          <div style={{ fontWeight: 400, fontSize: 26, letterSpacing: '.04em', lineHeight: 1.15 }}>{p1.toUpperCase()}</div>
+          <div style={{ fontStyle: 'italic', color: '#B89055', fontSize: 22, margin: '2px 0' }}>&amp;</div>
+          <div style={{ fontWeight: 400, fontSize: 26, letterSpacing: '.04em', lineHeight: 1.15 }}>{p2.toUpperCase()}</div>
+        </div>
+        <div style={{ fontSize: 7.5, letterSpacing: '.32em', textTransform: 'uppercase', textAlign: 'center', color: '#9B7E55', position: 'relative' }}>12 · 09 · 2026 · Portorož</div>
+      </div>
+    )
+    case 'gatsby': return (
+      <div style={{ width: '100%', height: '100%', background: '#0A0805', color: '#D4AF6A', fontFamily: limelight, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 14, border: '2px double #B8924A' }} />
+        <div style={{ position: 'absolute', inset: 22, border: '1px solid #6B5430' }} />
+        <div style={{ position: 'absolute', top: 14, left: '50%', transform: 'translateX(-50%)', width: 32, height: 7, background: 'linear-gradient(90deg,transparent,#D4AF6A 30%,#D4AF6A 70%,transparent)' }} />
+        <div style={{ fontSize: 14, letterSpacing: '.18em', lineHeight: 1.3, position: 'relative', zIndex: 2, marginTop: 8 }}>{p1.toUpperCase()}</div>
+        <div style={{ fontFamily: fraunces, fontStyle: 'italic', fontWeight: 300, fontSize: 26, margin: '6px 0', color: '#E5C885', position: 'relative', zIndex: 2 }}>&amp;</div>
+        <div style={{ fontSize: 14, letterSpacing: '.18em', lineHeight: 1.3, position: 'relative', zIndex: 2 }}>{p2.toUpperCase()}</div>
+        <div style={{ fontFamily: limelight, fontSize: 26, letterSpacing: '.18em', color: '#D4AF6A', marginTop: 14, position: 'relative', zIndex: 2 }}>2026</div>
+      </div>
+    )
+    case 'scandi': return (
+      <div style={{ width: '100%', height: '100%', background: '#F8F5EE', color: '#2A2825', fontFamily: fraunces, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '28px 18px', textAlign: 'center', position: 'relative' }}>
+        <div style={{ width: 30, height: 1, background: '#8AA08A', margin: '0 auto' }} />
+        <div style={{ fontSize: 7.5, letterSpacing: '.4em', textTransform: 'uppercase', color: '#8AA08A', margin: '14px 0' }}>Save the date</div>
+        <div style={{ fontWeight: 300, fontSize: 32, lineHeight: 1.1, letterSpacing: '-.005em' }}>
+          {p1}
+          <span style={{ fontStyle: 'italic', color: '#8AA08A', display: 'block', fontSize: 20, margin: '4px 0' }}>and</span>
+          {p2}
+        </div>
+        <div style={{ fontSize: 8, letterSpacing: '.32em', textTransform: 'uppercase', color: '#8AA08A', margin: '14px 0' }}>12 · 09 · 2026</div>
+        <div style={{ width: 30, height: 1, background: '#8AA08A', margin: '0 auto' }} />
+      </div>
+    )
+    case 'watercolor': return (
+      <div style={{ width: '100%', height: '100%', background: 'radial-gradient(ellipse at 30% 20%,#F5D8D8,#EFD3DE 35%,#DCC9E0 70%,#C9BBD5)', color: '#7A4D5A', fontFamily: parisienne, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '24px', textAlign: 'center', position: 'relative' }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 70% 70%,rgba(255,255,255,.4),transparent 50%)' }} />
+        <div style={{ fontFamily: fraunces, fontStyle: 'italic', fontWeight: 300, fontSize: 9, letterSpacing: '.3em', textTransform: 'uppercase', color: '#9B6677', position: 'relative', zIndex: 2 }}>— Save the date —</div>
+        <div style={{ fontSize: 44, lineHeight: 1, color: '#5C3A4B', position: 'relative', zIndex: 2, margin: '12px 0' }}>{p1}</div>
+        <div style={{ fontFamily: fraunces, fontWeight: 300, fontStyle: 'italic', fontSize: 30, color: '#9B6677', position: 'relative', zIndex: 2 }}>&amp;</div>
+        <div style={{ fontSize: 44, lineHeight: 1, color: '#5C3A4B', position: 'relative', zIndex: 2, margin: '4px 0 12px' }}>{p2}</div>
+        <div style={{ fontFamily: fraunces, fontStyle: 'italic', fontWeight: 300, fontSize: 12, color: '#9B6677', position: 'relative', zIndex: 2 }}>12 · 09 · 2026</div>
+      </div>
+    )
+    case 'azulejo': return (
+      <div style={{ width: '100%', height: '100%', backgroundImage: 'repeating-conic-gradient(#1E3A5F 0deg 90deg,#FBF7EE 90deg 180deg)', backgroundSize: '22px 22px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '28px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 28, background: '#FBF7EE', border: '1px solid #1E3A5F' }} />
+        <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', color: '#1E3A5F', fontFamily: fraunces }}>
+          <div style={{ fontSize: 7.5, letterSpacing: '.36em', textTransform: 'uppercase', color: '#C7553D', marginBottom: 12 }}>— Wedding —</div>
+          <div style={{ fontWeight: 300, fontStyle: 'italic', fontSize: 28, lineHeight: 1.1 }}>{p1}<span style={{ fontFamily: parisienne, fontStyle: 'normal', color: '#C7553D', fontSize: 24, margin: '0 6px', display: 'inline-block' }}>&amp;</span>{p2}</div>
+          <div style={{ fontSize: 8, letterSpacing: '.28em', textTransform: 'uppercase', color: '#1E3A5F', marginTop: 12 }}>12 · 09 · 2026</div>
+        </div>
+      </div>
+    )
+    case 'industrial': return (
+      <div style={{ width: '100%', height: '100%', background: '#23231F', color: '#D9D2BD', fontFamily: fraunces, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '18px', textAlign: 'left', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(45deg,rgba(217,210,189,.04) 25%,transparent 25%),linear-gradient(-45deg,rgba(217,210,189,.04) 25%,transparent 25%)', backgroundSize: '8px 8px' }} />
+        <div style={{ fontStyle: 'italic', fontWeight: 300, fontSize: 80, lineHeight: 1, color: '#A8623A', position: 'absolute', right: 10, top: 10, letterSpacing: '-.04em' }}>12</div>
+        <div style={{ fontSize: 7.5, letterSpacing: '.36em', textTransform: 'uppercase', color: '#8A9268', position: 'relative', zIndex: 2, marginBottom: 6 }}>— Wedding · Sept 2026 —</div>
+        <div style={{ fontStyle: 'italic', fontWeight: 300, fontSize: 28, lineHeight: 1.05, color: '#D9D2BD', position: 'relative', zIndex: 2 }}>{p1}<br /><span style={{ fontStyle: 'italic' }}>&amp; {p2}</span></div>
+        <div style={{ fontSize: 7.5, letterSpacing: '.32em', textTransform: 'uppercase', color: '#A8623A', marginTop: 12, position: 'relative', zIndex: 2 }}>Portorož · Slovenia</div>
+      </div>
+    )
+    // Legacy templates with simple color art
+    default: {
+      const t = TEMPLATES.find(x => x.id === id)
+      if (!t) return null
+      const c = t.colors
+      const dark = parseInt(c.background.slice(1, 3), 16) < 80
+      return (
+        <div style={{ width: '100%', height: '100%', background: c.background, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px', textAlign: 'center', position: 'relative' }}>
+          {dark && <div style={{ position: 'absolute', inset: 0, opacity: .03, background: `repeating-linear-gradient(45deg, ${c.text} 0px, ${c.text} 1px, transparent 1px, transparent 8px)` }} />}
+          <div style={{ fontSize: 8, letterSpacing: '.3em', textTransform: 'uppercase', color: c.textMuted, marginBottom: 16 }}>Wedding Invitation</div>
+          <div style={{ fontFamily: parisienne, fontSize: 40, lineHeight: 1.1, color: c.primary }}>{p1}</div>
+          <div style={{ fontFamily: fraunces, fontStyle: 'italic', fontSize: 18, color: c.accent, margin: '4px 0', fontWeight: 300 }}>&amp;</div>
+          <div style={{ fontFamily: parisienne, fontSize: 40, lineHeight: 1.1, color: c.primary }}>{p2}</div>
+          <div style={{ width: 28, height: 1, background: c.accent, margin: '14px auto' }} />
+          <div style={{ fontSize: 8, letterSpacing: '.22em', textTransform: 'uppercase', color: c.textMuted }}>12.09.2026 · Portorož</div>
+        </div>
+      )
+    }
+  }
+}
+
+function TemplateCard({ template, index }: { template: TemplateConfig; index: number }) {
   const [hovered, setHovered] = useState(false)
-  const c = template.colors
-  const isDark = parseInt(c.background.slice(1, 3), 16) < 80
+  const isNew = ['riviera', 'coastal', 'darkgrid', 'gatsby', 'scandi', 'watercolor', 'azulejo', 'industrial'].includes(template.id)
+  const isPopular = ['watercolor', 'riviera'].includes(template.id)
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.6, delay: index * 0.07 }}
+      transition={{ duration: 0.6, delay: (index % 3) * 0.08 }}
     >
       <Link href={`/templates/${template.id}`} style={{ display: 'block', textDecoration: 'none' }}>
         <div
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
           style={{
-            aspectRatio: '3/4',
-            background: c.background,
-            border: `1px solid ${hovered ? c.primary : RULE}`,
-            display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'space-between',
-            padding: '28px 20px',
-            position: 'relative', overflow: 'hidden',
-            transition: 'transform .35s ease, box-shadow .35s ease, border-color .2s',
+            aspectRatio: '3/4', borderRadius: 4, overflow: 'hidden',
+            border: `1px solid ${LINE}`, position: 'relative',
+            transition: 'box-shadow .4s, transform .35s',
+            boxShadow: hovered ? `0 30px 60px -28px rgba(28,24,20,.32)` : 'none',
             transform: hovered ? 'translateY(-4px)' : 'none',
-            boxShadow: hovered ? `0 20px 48px -12px ${c.primary}55` : '0 1px 4px rgba(0,0,0,.06)',
           }}
         >
-          {/* Category badge */}
+          <TemplateArt id={template.id} />
+
+          {isPopular && (
+            <div style={{ position: 'absolute', top: 12, left: 12, padding: '5px 11px', background: 'rgba(251,247,238,.92)', color: ACC, borderRadius: 99, fontSize: 9, letterSpacing: '.22em', textTransform: 'uppercase', fontWeight: 600, backdropFilter: 'blur(6px)', display: 'inline-flex', gap: 4, alignItems: 'center' }}>
+              ★ Priljubljen
+            </div>
+          )}
+          {isNew && !isPopular && (
+            <div style={{ position: 'absolute', top: 12, right: 12, padding: '5px 11px', background: NOIR, color: PAPER, borderRadius: 99, fontSize: 9, letterSpacing: '.22em', textTransform: 'uppercase', fontWeight: 600 }}>
+              Novo
+            </div>
+          )}
+
           <div style={{
-            alignSelf: 'flex-start',
-            fontSize: 8.5, letterSpacing: '0.36em', textTransform: 'uppercase',
-            color: isDark ? c.textMuted : MUTE,
-            opacity: 0.8,
+            position: 'absolute', inset: 0, background: 'rgba(28,24,20,.5)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            opacity: hovered ? 1 : 0, transition: 'opacity .35s',
+            backdropFilter: 'blur(2px)',
           }}>
-            {template.category}
-          </div>
-
-          {/* Center content */}
-          <div style={{ textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 0, padding: '16px 0' }}>
-            <div style={{
-              fontFamily: 'var(--font-pinyon)',
-              fontSize: 40, lineHeight: 1.15,
-              color: c.primary,
+            <span style={{
+              padding: '14px 24px', background: PAPER, color: INK, borderRadius: 99,
+              fontSize: 12.5, letterSpacing: '.04em', fontWeight: 500,
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              transform: hovered ? 'translateY(0)' : 'translateY(8px)',
+              transition: 'transform .35s',
             }}>
-              Lorena
-            </div>
-            <div style={{
-              fontFamily: 'var(--font-cormorant)',
-              fontStyle: 'italic',
-              fontSize: 18, color: c.accent, fontWeight: 300,
-              margin: '4px 0',
-            }}>
-              &amp;
-            </div>
-            <div style={{
-              fontFamily: 'var(--font-pinyon)',
-              fontSize: 40, lineHeight: 1.15,
-              color: c.primary,
-            }}>
-              Viktor
-            </div>
-
-            <div style={{ width: 28, height: 1, background: c.accent, margin: '14px auto' }} />
-
-            <div style={{ fontSize: 9, letterSpacing: '0.28em', textTransform: 'uppercase', color: c.textMuted }}>
-              12.09.2026
-            </div>
-            <div style={{ fontSize: 9, letterSpacing: '0.2em', color: c.textMuted, marginTop: 4 }}>
-              Villa Rosa · Tuscany
-            </div>
-          </div>
-
-          {/* Bottom */}
-          <div style={{
-            alignSelf: 'stretch',
-            paddingTop: 14, borderTop: `1px solid ${isDark ? c.accent + '30' : RULES}`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-            fontSize: 8.5, letterSpacing: '0.22em', textTransform: 'uppercase',
-            color: isDark ? c.textMuted : MUTE,
-          }}>
-            View design
-            <svg width="10" height="8" viewBox="0 0 14 10" fill="none">
-              <path d="M0 5H13M13 5L9 1M13 5L9 9" stroke={isDark ? c.textMuted : MUTE} strokeWidth="1" />
-            </svg>
+              Pregledaj <ArrowRight size={13} />
+            </span>
           </div>
         </div>
 
-        <div style={{ marginTop: 12 }}>
-          <div style={{ fontSize: 14, fontWeight: 500, color: INK }}>{template.name}</div>
-          <div style={{ fontSize: 11, color: MUTE, textTransform: 'capitalize', marginTop: 2 }}>{template.category}</div>
+        <div style={{ marginTop: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
+          <div>
+            <div style={{ fontSize: 10.5, letterSpacing: '.3em', color: MUTE, textTransform: 'uppercase', marginBottom: 6, fontWeight: 500 }}>{template.category}</div>
+            <div style={{ fontFamily: fraunces, fontWeight: 400, fontSize: 21, color: INK, letterSpacing: '-.005em', lineHeight: 1.2 }}>
+              {template.name} <span style={{ fontStyle: 'italic', color: ACC }}>Edition</span>
+            </div>
+          </div>
+          <div style={{ fontFamily: fraunces, fontStyle: 'italic', fontSize: 14, color: MUTE, whiteSpace: 'nowrap', paddingTop: 18 }}>€89+</div>
         </div>
       </Link>
     </motion.div>
   )
 }
 
-// Coming soon placeholder card
 function ComingSoonCard({ index }: { index: number }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.6, delay: index * 0.07 }}
+      transition={{ duration: 0.6, delay: (index % 3) * 0.08 }}
     >
       <div style={{ aspectRatio: '3/4', position: 'relative' }}>
         <div style={{
-          width: '100%', height: '100%',
-          background: DEEP,
-          border: `1px dashed ${RULES}`,
-          display: 'flex', flexDirection: 'column',
-          alignItems: 'center', justifyContent: 'center',
-          padding: 24, textAlign: 'center',
-          opacity: 0.7,
+          width: '100%', height: '100%', background: BG2, border: `1px dashed ${LINE}`,
+          borderRadius: 4, display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center', padding: 24, textAlign: 'center', opacity: .7,
         }}>
-          <div style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontSize: 22, color: MUTE, lineHeight: 1.3, marginBottom: 12 }}>
-            New designs<br />in progress
-          </div>
-          <div style={{ width: 28, height: 1, background: RULES, marginBottom: 12 }} />
-          <div style={{ fontSize: 9.5, letterSpacing: '0.28em', textTransform: 'uppercase', color: MUTE }}>
-            Coming soon
-          </div>
+          <div style={{ width: 42, height: 42, border: `1px solid ${ACC}`, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: ACC, marginBottom: 18, fontSize: 18 }}>⏱</div>
+          <div style={{ fontFamily: fraunces, fontStyle: 'italic', fontWeight: 300, fontSize: 24, color: INK, marginBottom: 8, lineHeight: 1.3 }}>Kmalu</div>
+          <div style={{ fontSize: 12, color: MUTE, maxWidth: 180, lineHeight: 1.5, marginBottom: 14 }}>Nove kolekcije v pripravi. Javimo se.</div>
+          <div style={{ fontSize: 10.5, letterSpacing: '.24em', textTransform: 'uppercase', color: ACC, fontWeight: 600 }}>@invitia</div>
         </div>
       </div>
-      <div style={{ marginTop: 12 }}>
-        <div style={{ fontSize: 14, fontWeight: 500, color: MUTE, opacity: 0.6 }}>Untitled</div>
-        <div style={{ fontSize: 11, color: MUTE, opacity: 0.5, marginTop: 2 }}>Coming soon</div>
+      <div style={{ marginTop: 14 }}>
+        <div style={{ fontSize: 10.5, letterSpacing: '.3em', color: MUTE, textTransform: 'uppercase', marginBottom: 6 }}>V pripravi</div>
+        <div style={{ fontFamily: fraunces, fontWeight: 400, fontSize: 21, color: MUTE }}>Coming <span style={{ fontStyle: 'italic', color: ACC }}>soon</span></div>
       </div>
     </motion.div>
   )
 }
 
+const CAT_LABELS: Record<Cat, string> = {
+  all: 'Vse',
+  romance: 'Romance',
+  timeless: 'Timeless',
+  contemporary: 'Contemporary',
+}
+
 export default function TemplatesPage() {
   const [cat, setCat] = useState<Cat>('all')
   const filtered = cat === 'all' ? TEMPLATES : TEMPLATES.filter(t => t.category === cat)
+  const counts = {
+    all: TEMPLATES.length,
+    romance: TEMPLATES.filter(t => t.category === 'romance').length,
+    timeless: TEMPLATES.filter(t => t.category === 'timeless').length,
+    contemporary: TEMPLATES.filter(t => t.category === 'contemporary').length,
+  }
 
   return (
-    <div style={{ background: CREAM, minHeight: '100vh' }}>
-      <Navbar />
-      <div style={{ height: 72 }} />
+    <div style={{ background: BG, color: INK, minHeight: '100vh', fontFamily: sans, position: 'relative' }}>
+      {/* Grain */}
+      <div aria-hidden style={{ position: 'fixed', inset: 0, zIndex: 200, pointerEvents: 'none', opacity: .4, mixBlendMode: 'multiply', backgroundImage: GRAIN, backgroundSize: '240px 240px' }} />
 
-      {/* Hero strip */}
-      <div style={{ padding: '64px 56px 48px', borderBottom: `1px solid ${RULE}` }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 10.5, letterSpacing: '0.32em', color: MUTE, textTransform: 'uppercase', marginBottom: 20 }}>
-            <span style={{ width: 28, height: 1, background: MUTE, display: 'inline-block' }} />
-            Template designs
-          </div>
-          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 40 }}>
-            <h1 style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontWeight: 400, fontSize: 'clamp(48px,7vw,88px)', lineHeight: 0.93, color: INK, letterSpacing: '-0.025em' }}>
-              Find your<br />perfect style
+      <Navbar />
+      <div style={{ height: 68 }} />
+
+      {/* ── HERO ── */}
+      <section style={{ padding: '56px 48px 64px', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: 1320, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.4fr .9fr', gap: 64, alignItems: 'end' }}>
+          <div>
+            <div style={{ fontSize: 11, letterSpacing: '.32em', textTransform: 'uppercase', color: ACC, fontWeight: 500, marginBottom: 20 }}>— Naša kolekcija predlog —</div>
+            <h1 style={{ fontFamily: fraunces, fontWeight: 300, fontSize: 'clamp(52px,7.5vw,108px)', lineHeight: 1.0, letterSpacing: '-.022em', marginBottom: 24 }}>
+              {TEMPLATES.length} dizajnov. En <span style={{ fontStyle: 'italic', color: ACC }}>popolni dan.</span>
             </h1>
-            <p style={{ fontSize: 13.5, color: MUTE, maxWidth: 320, lineHeight: 1.65 }}>
-              Every template is fully customisable — your names, your date, your message. Click any design to preview it with real data.
+            <p style={{ fontFamily: fraunces, fontStyle: 'italic', fontWeight: 300, fontSize: 19, color: INK2, maxWidth: 500, lineHeight: 1.55 }}>
+              Skrbno izbrane predloge — od minimalističnih do razkošnih. Vsak dizajn je zgrajen okoli drugačnega razpoloženja in tipografije.
             </p>
           </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14, alignItems: 'flex-end' }}>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontFamily: fraunces, fontStyle: 'italic', fontWeight: 300, fontSize: 64, lineHeight: 1, color: ACC, letterSpacing: '-.02em' }}>{TEMPLATES.length}</div>
+              <div style={{ fontSize: 11, letterSpacing: '.28em', color: MUTE, textTransform: 'uppercase', marginTop: 6 }}>Predlog</div>
+            </div>
+            <div style={{ width: 80, height: 1, background: LINE, margin: '8px 0' }} />
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontFamily: fraunces, fontStyle: 'italic', fontWeight: 300, fontSize: 64, lineHeight: 1, color: ACC, letterSpacing: '-.02em' }}>∞</div>
+              <div style={{ fontSize: 11, letterSpacing: '.28em', color: MUTE, textTransform: 'uppercase', marginTop: 6 }}>Personalizacij</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FILTERS ── */}
+      <div style={{ borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`, padding: '0 48px', position: 'sticky', top: 68, background: BG, zIndex: 10 }}>
+        <div style={{ maxWidth: 1320, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0' }}>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {CATS.map(c => (
+              <button
+                key={c}
+                onClick={() => setCat(c)}
+                style={{
+                  padding: '10px 20px', border: `1px solid ${cat === c ? INK : LINE}`, borderRadius: 99,
+                  fontSize: 12, letterSpacing: '.18em', textTransform: 'uppercase',
+                  color: cat === c ? PAPER : INK2,
+                  background: cat === c ? INK : 'transparent',
+                  cursor: 'pointer', fontFamily: sans, transition: 'all .25s', fontWeight: 500,
+                }}
+              >
+                {CAT_LABELS[c]} <span style={{ opacity: cat === c ? .8 : .6, fontSize: 10, marginLeft: 6 }}>{String(counts[c]).padStart(2, '0')}</span>
+              </button>
+            ))}
+          </div>
+          <div style={{ fontSize: 12.5, color: MUTE, fontFamily: fraunces, fontStyle: 'italic' }}>
+            {filtered.length} {filtered.length === 1 ? 'predloga' : 'predlog'}
+          </div>
         </div>
       </div>
 
-      {/* Filter bar */}
-      <div style={{ borderBottom: `1px solid ${RULE}`, padding: '0 56px', background: CREAM }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', gap: 0 }}>
-          {CATEGORIES.map(c => (
-            <button key={c} onClick={() => setCat(c)} style={{
-              padding: '14px 20px',
-              fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase',
-              color: cat === c ? INK : MUTE,
-              background: 'none', border: 'none', cursor: 'pointer',
-              borderBottom: cat === c ? `2px solid ${INK}` : '2px solid transparent',
-              marginBottom: -1, transition: 'color .2s',
-            }}>
-              {c === 'all' ? `All (${TEMPLATES.length})` : c}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Grid */}
-      <div style={{ padding: '56px 56px 100px', maxWidth: 1100 + 112, margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '28px 20px' }}>
+      {/* ── GRID ── */}
+      <section style={{ padding: '56px 48px 100px', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: 1320, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '36px 28px' }}>
           {filtered.map((t, i) => (
             <TemplateCard key={t.id} template={t} index={i} />
           ))}
           {cat === 'all' && <ComingSoonCard index={filtered.length} />}
         </div>
-      </div>
+      </section>
 
-      {/* Bottom CTA */}
-      <div style={{ borderTop: `1px solid ${RULE}`, background: DEEP, padding: '64px 56px' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 48 }}>
-          <div>
-            <div style={{ fontFamily: 'var(--font-pinyon)', fontSize: 40, color: ACC, lineHeight: 1, marginBottom: 10 }}>
-              Begin your story
+      {/* ── CTA ── */}
+      <section style={{ padding: '0 48px 120px', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: 1320, margin: '0 auto' }}>
+          <div style={{ background: NOIR, color: PAPER, borderRadius: 8, padding: '80px 64px', display: 'grid', gridTemplateColumns: '1.3fr .9fr', alignItems: 'center', gap: 48, position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(80% 100% at 100% 50%,rgba(201,149,99,.16),transparent 60%)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', right: 60, bottom: -90, fontFamily: fraunces, fontStyle: 'italic', fontWeight: 300, fontSize: 320, color: 'rgba(232,212,184,.04)', lineHeight: 1, pointerEvents: 'none' }}>&amp;</div>
+            <div style={{ position: 'relative', zIndex: 2 }}>
+              <div style={{ fontSize: 11, letterSpacing: '.36em', textTransform: 'uppercase', color: ACC2, marginBottom: 18, fontWeight: 500 }}>— Ne vidite svojega stila? —</div>
+              <h3 style={{ fontFamily: fraunces, fontWeight: 300, fontSize: 'clamp(36px,4.5vw,56px)', letterSpacing: '-.015em', lineHeight: 1.05, marginBottom: 16 }}>
+                Ustvarimo nekaj <span style={{ fontStyle: 'italic', color: ACC2 }}>samo za vas.</span>
+              </h3>
+              <p style={{ fontFamily: fraunces, fontStyle: 'italic', fontSize: 17, color: ACCS, maxWidth: 460, lineHeight: 1.55 }}>
+                Naš dizajn studio ustvari popolnoma custom predlogo — vaše barve, vaša tipografija, vaša zgodba. Brez predlog, samo vi.
+              </p>
             </div>
-            <h2 style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontWeight: 400, fontSize: 'clamp(28px,4vw,44px)', color: INK, lineHeight: 1.05, letterSpacing: '-0.02em' }}>
-              Your invitation, from €69
-            </h2>
+            <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <Link href="/pricing" style={{
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'space-between', gap: 14,
+                padding: '20px 28px', background: ACC, color: PAPER, borderRadius: 99,
+                fontSize: 14, fontWeight: 500, letterSpacing: '.04em', textDecoration: 'none',
+              }}>
+                Poglej pakete <ArrowRight size={14} />
+              </Link>
+              <Link href="mailto:studio@invitia.si" style={{
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'space-between', gap: 14,
+                padding: '20px 28px', background: 'transparent', border: `1px solid rgba(232,212,184,.3)`, color: PAPER, borderRadius: 99,
+                fontSize: 14, fontWeight: 500, letterSpacing: '.04em', textDecoration: 'none',
+              }}>
+                Zahtevaj custom dizajn <ArrowRight size={14} />
+              </Link>
+            </div>
           </div>
-          <Link href="/register" style={{
-            display: 'inline-flex', alignItems: 'center', gap: 10,
-            padding: '16px 28px',
-            background: INK, color: CREAM,
-            fontFamily: 'var(--font-instrument)', fontSize: 10.5, letterSpacing: '0.2em', textTransform: 'uppercase',
-            textDecoration: 'none',
-          }}>
-            Create invitation
-            <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
-              <path d="M0 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" strokeWidth="1" />
-            </svg>
-          </Link>
         </div>
-      </div>
+      </section>
+
+      {/* ── FOOTER ── */}
+      <footer style={{ background: NOIR, color: ACCS, padding: '80px 48px 40px', position: 'relative', zIndex: 1, borderTop: `1px solid rgba(232,212,184,.06)` }}>
+        <div style={{ maxWidth: 1320, margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr', gap: 56, paddingBottom: 60, borderBottom: `1px solid rgba(232,212,184,.1)` }}>
+            <div>
+              <div style={{ fontFamily: fraunces, fontSize: 24, color: PAPER, marginBottom: 16, fontStyle: 'italic' }}>Invitia</div>
+              <p style={{ fontFamily: fraunces, fontStyle: 'italic', fontSize: 15, color: ACCS, marginBottom: 24, lineHeight: 1.55, maxWidth: 280 }}>
+                Elegantna poročna povabila za pare, ki želijo, da se njun dan zapomni — tudi online.
+              </p>
+            </div>
+            {[
+              { title: 'Produkt', links: [['Cenik', '/pricing'], ['Dizajni', '/templates'], ['Demo', '/demo']] },
+              { title: 'Studio', links: [['O nas', '#'], ['Kontakt', '#'], ['Blog', '#']] },
+              { title: 'Pravno', links: [['Pogoji', '/terms'], ['Zasebnost', '/privacy']] },
+            ].map(({ title, links }) => (
+              <div key={title}>
+                <h5 style={{ fontSize: 11, letterSpacing: '.32em', color: ACC2, textTransform: 'uppercase', marginBottom: 18, fontWeight: 600 }}>{title}</h5>
+                <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  {links.map(([label, href]) => (
+                    <li key={label}><Link href={href} style={{ fontSize: 14, color: ACCS, textDecoration: 'none' }}>{label}</Link></li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 32, fontSize: 12, color: MUTE, flexWrap: 'wrap', gap: 16 }}>
+            <span>© 2026 Invitia · Made with care in Ljubljana, SI</span>
+            <Link href="mailto:studio@invitia.si" style={{ color: MUTE, textDecoration: 'none' }}>studio@invitia.si</Link>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }

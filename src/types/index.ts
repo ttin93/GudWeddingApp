@@ -1,5 +1,5 @@
 export type Package = 'essential' | 'elegance' | 'signature'
-export type TemplateId = 'botanica' | 'modern' | 'heritage' | 'eliarose' | 'noir' | 'nocturne' | 'promesse' | 'rosewood' | 'editorial' | 'venezia'
+export type TemplateId = 'riviera' | 'coastal' | 'darkgrid' | 'gatsby' | 'scandi' | 'watercolor' | 'azulejo' | 'industrial' | 'botanica' | 'modern' | 'heritage' | 'eliarose' | 'noir' | 'nocturne' | 'promesse' | 'rosewood' | 'editorial' | 'venezia'
 
 export interface TimelineEvent {
   time: string
@@ -201,6 +201,150 @@ export const PACKAGES = {
 } as const
 
 export const TEMPLATES: TemplateConfig[] = [
+  {
+    id: 'riviera',
+    name: 'Riviera',
+    category: 'romance',
+    colors: {
+      background: '#F5EFE2',
+      primary: '#9C6644',
+      accent: '#9C6644',
+      text: '#2C1F14',
+      textMuted: '#7A6352',
+    },
+    fonts: {
+      heading: 'Pinyon Script',
+      body: 'Cormorant Garamond',
+      script: 'Pinyon Script',
+    },
+    previewImage: '/templates/riviera.jpg',
+  },
+  {
+    id: 'coastal',
+    name: 'Coastal',
+    category: 'romance',
+    colors: {
+      background: '#F4EFE6',
+      primary: '#C9876D',
+      accent: '#8A9A7B',
+      text: '#2C2218',
+      textMuted: '#7A6B58',
+    },
+    fonts: {
+      heading: 'Italiana',
+      body: 'Cormorant Garamond',
+      script: 'Caveat',
+    },
+    previewImage: '/templates/coastal.jpg',
+  },
+  {
+    id: 'darkgrid',
+    name: 'Dark Grid',
+    category: 'contemporary',
+    colors: {
+      background: '#0B0E14',
+      primary: '#C9A45C',
+      accent: '#C9A45C',
+      text: '#F0ECE0',
+      textMuted: '#8A8478',
+    },
+    fonts: {
+      heading: 'Playfair Display',
+      body: 'DM Mono',
+      script: 'Playfair Display',
+    },
+    previewImage: '/templates/darkgrid.jpg',
+  },
+  {
+    id: 'gatsby',
+    name: 'Gatsby',
+    category: 'timeless',
+    colors: {
+      background: '#0A0908',
+      primary: '#D4AF37',
+      accent: '#D4AF37',
+      text: '#F4ECD8',
+      textMuted: '#A89060',
+    },
+    fonts: {
+      heading: 'Limelight',
+      body: 'Cormorant Garamond',
+      script: 'Cormorant Garamond',
+    },
+    previewImage: '/templates/gatsby.jpg',
+  },
+  {
+    id: 'scandi',
+    name: 'Scandi',
+    category: 'contemporary',
+    colors: {
+      background: '#FAFAF7',
+      primary: '#7C8C6F',
+      accent: '#7C8C6F',
+      text: '#1A1A18',
+      textMuted: '#90908A',
+    },
+    fonts: {
+      heading: 'Fraunces',
+      body: 'Instrument Sans',
+      script: 'Fraunces',
+    },
+    previewImage: '/templates/scandi.jpg',
+  },
+  {
+    id: 'watercolor',
+    name: 'Watercolor',
+    category: 'romance',
+    colors: {
+      background: '#FBF6F4',
+      primary: '#C58B97',
+      accent: '#C58B97',
+      text: '#5C4750',
+      textMuted: '#8C7681',
+    },
+    fonts: {
+      heading: 'Parisienne',
+      body: 'Cormorant Garamond',
+      script: 'Parisienne',
+    },
+    previewImage: '/templates/watercolor.jpg',
+  },
+  {
+    id: 'azulejo',
+    name: 'Azulejo',
+    category: 'timeless',
+    colors: {
+      background: '#F5F0E8',
+      primary: '#1E4D8B',
+      accent: '#C5644E',
+      text: '#1A2840',
+      textMuted: '#5A6070',
+    },
+    fonts: {
+      heading: 'DM Serif Display',
+      body: 'Cormorant Garamond',
+      script: 'DM Serif Display',
+    },
+    previewImage: '/templates/azulejo.jpg',
+  },
+  {
+    id: 'industrial',
+    name: 'Industrial',
+    category: 'contemporary',
+    colors: {
+      background: '#1A1A17',
+      primary: '#5C6B3A',
+      accent: '#A8542B',
+      text: '#E8E5DC',
+      textMuted: '#A0A090',
+    },
+    fonts: {
+      heading: 'Archivo Black',
+      body: 'EB Garamond',
+      script: 'EB Garamond',
+    },
+    previewImage: '/templates/industrial.jpg',
+  },
   {
     id: 'botanica',
     name: 'Botanica',
