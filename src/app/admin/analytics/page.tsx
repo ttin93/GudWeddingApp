@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { Eye, Users, TrendingUp, Calendar } from 'lucide-react'
 import { formatDate } from '@/lib/utils/format'
 
@@ -9,7 +9,7 @@ const CREAM = '#F7F4EF'
 const RULE  = '#E2DDD5'
 
 async function getAnalyticsData() {
-  const supabase = await createClient()
+  const supabase = await createServiceClient()
 
   const [
     { data: invitations },

@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { TemplateRenderer } from '@/components/invitation/TemplateRenderer'
 import type { Metadata } from 'next'
 import type { Invitation } from '@/types'
@@ -51,14 +51,15 @@ export default async function InvitePage({ params }: Props) {
 
   const invitation = await getInvitationBySlug(slug)
 
-  // Povabilo ne obstaja
   if (!invitation) notFound()
+  if (!invitation.is_active) notFound()
+  // Enforce subscription expiry
+  if (invitation.active_until && new Date(invitation.active_until) < new Date()) notFound()
 
-  // Increment view count (fire-and-forget)
-  supabase
-    .from('invitations')
-    .update({ view_count: (invitation.view_count ?? 0) + 1 })
-    .eq('slug', slug)
+  // Atomic increment via service client to avoid race conditions
+  const serviceClient = await createServiceClient()
+  serviceClient
+    .rpc('increment_view_count', { inv_slug: slug })
     .then(() => {})
 
   return (

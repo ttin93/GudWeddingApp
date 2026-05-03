@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import toast from 'react-hot-toast'
@@ -8,8 +8,9 @@ import {
   ChevronLeft, ChevronRight, Check, Plus, Trash2,
   Clock, MapPin, Heart, Gift, HelpCircle, Hotel,
   Car, Hash, Phone, Users, Music, ChevronDown, ChevronUp,
+  Upload, X, ImageIcon,
 } from 'lucide-react'
-import type { Invitation, TimelineEvent, AccommodationItem, GiftRegistryItem, FAQItem } from '@/types'
+import type { Invitation, TimelineEvent, AccommodationItem, GiftRegistryItem, FAQItem, InvitationPhoto, Package } from '@/types'
 import { DEFAULT_LABELS, LANGUAGE_OPTIONS, LABEL_FIELD_GROUPS } from '@/lib/utils/labels'
 import type { InvitationLabels } from '@/lib/utils/labels'
 
@@ -155,6 +156,7 @@ const TABS = [
   { key: 'podrobnosti',label: 'Podrobnosti' },
   { key: 'extras',     label: 'Extras' },
   { key: 'rsvp',       label: 'RSVP' },
+  { key: 'galerija',   label: '📸 Galerija' },
   { key: 'jezik',      label: 'Jezik' },
 ]
 
@@ -216,6 +218,123 @@ function TimelineEditor({ events, onChange }: { events: TimelineEvent[]; onChang
         </div>
       ))}
       <AddButton onClick={add} label="Dodaj event v program" />
+    </div>
+  )
+}
+
+// ─── Gallery tab ─────────────────────────────────────────────────────────────
+const GALLERY_LIMITS: Record<string, number> = { essential: 0, elegance: 10, signature: 20 }
+
+function GalleryTab({ invitationId, pkg }: { invitationId: string; pkg: Package }) {
+  const [photos, setPhotos] = useState<(InvitationPhoto & { url: string })[]>([])
+  const [uploading, setUploading] = useState(false)
+  const fileRef = useRef<HTMLInputElement>(null)
+  const limit = GALLERY_LIMITS[pkg] ?? 0
+
+  useEffect(() => {
+    fetch(`/api/photos?invitationId=${invitationId}`)
+      .then(r => r.json())
+      .then(data => { if (Array.isArray(data)) setPhotos(data) })
+      .catch(() => {})
+  }, [invitationId])
+
+  async function handleFiles(files: FileList | null) {
+    if (!files || files.length === 0) return
+    setUploading(true)
+    for (const file of Array.from(files)) {
+      const fd = new FormData()
+      fd.append('file', file)
+      fd.append('invitationId', invitationId)
+      const res = await fetch('/api/photos', { method: 'POST', body: fd })
+      const json = await res.json()
+      if (!res.ok) { toast.error(json.error ?? 'Upload failed'); break }
+      setPhotos(prev => [...prev, json])
+    }
+    setUploading(false)
+  }
+
+  async function deletePhoto(id: string, storagePath: string) {
+    const res = await fetch(`/api/photos/${id}`, { method: 'DELETE' })
+    if (res.ok) setPhotos(prev => prev.filter(p => p.id !== id))
+    else toast.error('Could not delete photo')
+  }
+
+  if (limit === 0) {
+    return (
+      <div style={{ border: `1px solid ${RULE}`, background: SOFT, padding: '32px 24px', textAlign: 'center' }}>
+        <ImageIcon size={32} style={{ color: MUTE, marginBottom: 12 }} />
+        <p style={{ fontSize: 14, color: INK, fontWeight: 500, marginBottom: 8 }}>Photo gallery not available</p>
+        <p style={{ fontSize: 13, color: MUTE }}>Upgrade to Elegance or Signature to add photos to your invitation.</p>
+      </div>
+    )
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <p style={{ fontSize: 13, color: MUTE }}>{photos.length} / {limit} photos</p>
+        {photos.length < limit && (
+          <button
+            onClick={() => fileRef.current?.click()}
+            disabled={uploading}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '10px 18px', background: INK, color: CREAM,
+              border: 'none', cursor: uploading ? 'not-allowed' : 'pointer',
+              fontFamily: 'inherit', fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase',
+              opacity: uploading ? 0.7 : 1,
+            }}
+          >
+            <Upload size={13} />
+            {uploading ? 'Uploading…' : 'Add photos'}
+          </button>
+        )}
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          multiple
+          style={{ display: 'none' }}
+          onChange={e => handleFiles(e.target.files)}
+        />
+      </div>
+
+      {photos.length > 0 ? (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 8 }}>
+          {photos.map(photo => (
+            <div key={photo.id} style={{ position: 'relative', aspectRatio: '1', overflow: 'hidden', border: `1px solid ${RULE}` }}>
+              <img src={photo.url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <button
+                onClick={() => deletePhoto(photo.id, photo.storage_path)}
+                style={{
+                  position: 'absolute', top: 6, right: 6,
+                  background: 'rgba(0,0,0,0.55)', border: 'none',
+                  borderRadius: '50%', width: 26, height: 26,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: 'pointer', color: 'white',
+                }}
+              >
+                <X size={12} />
+              </button>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div
+          onClick={() => fileRef.current?.click()}
+          style={{
+            border: `2px dashed ${RULE}`, padding: '48px 24px',
+            textAlign: 'center', cursor: 'pointer', background: SOFT,
+            transition: 'border-color .2s',
+          }}
+          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = ACC }}
+          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = RULE }}
+        >
+          <ImageIcon size={32} style={{ color: MUTE, marginBottom: 12 }} />
+          <p style={{ fontSize: 14, color: INK, marginBottom: 4 }}>Drop photos here or click to upload</p>
+          <p style={{ fontSize: 12, color: MUTE }}>JPEG, PNG, WebP · max 5MB per photo</p>
+        </div>
+      )}
     </div>
   )
 }
@@ -581,8 +700,13 @@ export function InvitationEditor({ invitation }: { invitation: Invitation }) {
             </>
           )}
 
-          {/* ── Jezik ── */}
+          {/* ── Galerija ── */}
           {tab === 6 && (
+            <GalleryTab invitationId={invitation.id} pkg={invitation.package} />
+          )}
+
+          {/* ── Jezik ── */}
+          {tab === 7 && (
             <>
               <Field label="Jezik povabila">
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>

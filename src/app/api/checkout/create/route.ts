@@ -1,10 +1,17 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { getStripe, STRIPE_PRICES } from '@/lib/stripe'
+import { rateLimit } from '@/lib/utils/ratelimit'
 import type { Package } from '@/types'
 
 export async function POST(req: Request) {
   try {
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
+    const { allowed } = rateLimit(`checkout:${ip}`, 10, 60_000)
+    if (!allowed) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+    }
+
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 

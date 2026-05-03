@@ -87,7 +87,7 @@ export default async function DashboardPage({
           { label: t('totalViews'), value: totalViews, icon: Eye },
           { label: t('attending'), value: totalYes, icon: Users },
           { label: t('declined'), value: totalNo, icon: Users },
-          { label: t('responseRate'), value: rsvps.length > 0 ? `${Math.round((rsvps.length / (rsvps.length + 10)) * 100)}%` : '—', icon: TrendingUp },
+          { label: t('responseRate'), value: (totalYes + totalNo) > 0 ? `${Math.round((totalYes / (totalYes + totalNo)) * 100)}%` : '—', icon: TrendingUp },
         ].map(({ label, value, icon: Icon }) => (
           <div key={label} style={{ background: CREAM, padding: '28px 24px', display: 'flex', flexDirection: 'column', gap: 8 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { Users, FileText, Eye, TrendingUp, CreditCard, CheckCircle, Clock, Package } from 'lucide-react'
 import { formatDate } from '@/lib/utils/format'
 
@@ -9,7 +9,7 @@ const CREAM = '#F7F4EF'
 const RULE  = '#E2DDD5'
 
 async function getPlatformStats() {
-  const supabase = await createClient()
+  const supabase = await createServiceClient()
 
   const [
     { count: totalUsers },

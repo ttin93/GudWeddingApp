@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { Resend } from 'resend'
 import { z } from 'zod'
+import { rateLimit } from '@/lib/utils/ratelimit'
 
 const schema = z.object({
   invitation_id: z.string().uuid(),
@@ -19,6 +20,12 @@ const schema = z.object({
 
 export async function POST(req: Request) {
   try {
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
+    const { allowed } = rateLimit(`rsvp:${ip}`, 5, 60_000)
+    if (!allowed) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+    }
+
     const body = await req.json()
     const parsed = schema.safeParse(body)
 
@@ -32,12 +39,16 @@ export async function POST(req: Request) {
     // Verify invitation exists and is active
     const { data: invitation, error: invErr } = await supabase
       .from('invitations')
-      .select('id, partner1_name, partner2_name, wedding_date, user_id')
+      .select('id, partner1_name, partner2_name, wedding_date, user_id, is_active')
       .eq('id', data.invitation_id)
       .single()
 
     if (invErr || !invitation) {
       return NextResponse.json({ error: 'Invitation not found' }, { status: 404 })
+    }
+
+    if (!invitation.is_active) {
+      return NextResponse.json({ error: 'This invitation is no longer accepting RSVPs' }, { status: 403 })
     }
 
     // Save RSVP

@@ -26,9 +26,27 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
 
   const body = await req.json()
 
+  // Allowlist — users must never set is_active, user_id, or payment fields
+  const ALLOWED = [
+    'partner1_name', 'partner2_name', 'wedding_date', 'wedding_time',
+    'venue_name', 'venue_address', 'venue_city', 'venue_country',
+    'ceremony_time', 'ceremony_venue', 'reception_time', 'reception_venue',
+    'rsvp_deadline', 'rsvp_email', 'template_id', 'language',
+    'dress_code', 'custom_message', 'additional_info',
+    'show_gallery', 'show_rsvp', 'show_schedule', 'show_accommodation',
+    'accommodation_info', 'transport_info',
+  ] as const
+  type AllowedField = (typeof ALLOWED)[number]
+  const patch: Partial<Record<AllowedField, unknown>> & { updated_at: string } = {
+    updated_at: new Date().toISOString(),
+  }
+  for (const key of ALLOWED) {
+    if (key in body) patch[key] = body[key]
+  }
+
   const { data, error } = await supabase
     .from('invitations')
-    .update({ ...body, updated_at: new Date().toISOString() })
+    .update(patch)
     .eq('id', id)
     .eq('user_id', user.id)
     .select()

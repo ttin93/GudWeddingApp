@@ -45,6 +45,6 @@ export function TemplateRenderer({ invitation, existingRSVP }: Props) {
     case 'editorial':  return <EditorialTemplate {...props} />
     case 'venezia':    return <VeneziaTemplate {...props} />
     case 'botanica':
-    default:           return <BotanicaTemplate invitation={invitation} />
+    default:           return <BotanicaTemplate {...props} />
   }
 }

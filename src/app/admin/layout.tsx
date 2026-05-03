@@ -8,8 +8,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   if (!user) redirect('/login')
 
-  // Admin check via user metadata set in Supabase dashboard
-  const isAdmin = user.user_metadata?.is_admin === true
+  // app_metadata is server-only (user_metadata is user-writeable, so never use it for auth)
+  const isAdmin = user.app_metadata?.is_admin === true
   if (!isAdmin) redirect('/dashboard')
 
   return (

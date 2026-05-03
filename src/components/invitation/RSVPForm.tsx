@@ -39,7 +39,14 @@ interface Props {
 }
 
 const MENU_ICONS: Record<string, string> = { meat: '🥩', fish: '🐟', vegetarian: '🥗', vegan: '🌱' }
-const MENU_SL: Record<string, string> = { meat: 'Meso', fish: 'Ribe', vegetarian: 'Vegetarijansko', vegan: 'Vegansko' }
+
+function menuLabel(key: string, labels: Partial<InvitationLabels>): string {
+  const map: Record<string, keyof InvitationLabels> = {
+    meat: 'menu_meat', fish: 'menu_fish', vegetarian: 'menu_vegetarian', vegan: 'menu_vegan',
+  }
+  const field = map[key]
+  return (field && labels[field]) ? String(labels[field]) : key
+}
 
 function ConfirmationCard({
   data,
@@ -84,7 +91,7 @@ function ConfirmationCard({
         marginBottom: 6,
         fontStyle: 'italic',
       }}>
-        {labels.thank_you ?? 'Hvala!'}
+        {labels.thank_you}
       </h3>
 
       {data.attending ? (
@@ -151,14 +158,14 @@ function ConfirmationCard({
                       <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: textColor }}>
                         <UtensilsCrossed size={12} style={{ color: accentColor, flexShrink: 0 }} />
                         <span style={{ color: mutedColor, minWidth: 60 }}>{gm.label}:</span>
-                        <span>{MENU_ICONS[gm.menu] ?? ''} {MENU_SL[gm.menu] ?? gm.menu}</span>
+                        <span>{MENU_ICONS[gm.menu] ?? ''} {menuLabel(gm.menu, labels)}</span>
                       </div>
                     ))}
                   </div>
                 ) : data.menu_choice ? (
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: textColor }}>
                     <UtensilsCrossed size={13} style={{ color: accentColor }} />
-                    <span>{MENU_ICONS[data.menu_choice]} {MENU_SL[data.menu_choice]}</span>
+                    <span>{MENU_ICONS[data.menu_choice]} {menuLabel(data.menu_choice, labels)}</span>
                   </div>
                 ) : null}
               </div>
@@ -327,7 +334,7 @@ export function RSVPForm({
         <>
           {/* Name */}
           <div>
-            <label style={labelStyle}>{labels.your_name ?? 'Ime in priimek'}</label>
+            <label style={labelStyle}>{labels.your_name}</label>
             <input
               {...register('guest_name')}
               placeholder="Dragovan"
@@ -338,7 +345,7 @@ export function RSVPForm({
 
           {/* Email */}
           <div>
-            <label style={labelStyle}>{labels.your_email ?? 'E-naslov (opcijsko)'}</label>
+            <label style={labelStyle}>{labels.your_email}</label>
             <input
               {...register('email')}
               type="email"
@@ -461,7 +468,7 @@ export function RSVPForm({
           {/* Allergies */}
           {isEleganceOrAbove && (
             <div>
-              <label style={labelStyle}>{labels.allergies ?? 'Alergije / posebne zahteve (opcijsko)'}</label>
+              <label style={labelStyle}>{labels.allergies}</label>
               <textarea
                 {...register('allergies')}
                 rows={2}
@@ -474,7 +481,7 @@ export function RSVPForm({
           {/* Message */}
           {isEleganceOrAbove && (
             <div>
-              <label style={labelStyle}>{labels.message_label ?? 'Sporočilo paru (opcijsko)'}</label>
+              <label style={labelStyle}>{labels.message_label}</label>
               <textarea
                 {...register('message')}
                 rows={3}

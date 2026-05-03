@@ -2,7 +2,8 @@
 
 import { motion } from 'framer-motion'
 import { Car, Hotel, Gift, HelpCircle, Phone, Mail, Hash, Music2, ExternalLink, Baby, Users } from 'lucide-react'
-import type { Invitation } from '@/types'
+import { useEffect, useState } from 'react'
+import type { Invitation, InvitationPhoto } from '@/types'
 import type { InvitationLabels } from '@/lib/utils/labels'
 import { DEFAULT_LABELS } from '@/lib/utils/labels'
 
@@ -512,6 +513,90 @@ export function SharedSections({
       {invitation.show_contact !== false && (invitation.contact_name || invitation.contact_phone || invitation.contact_email) && (
         <ContactSection invitation={invitation} theme={theme} labels={labels} />
       )}
+      {invitation.show_gallery && invitation.package !== 'essential' && (
+        <GallerySection invitation={invitation} theme={theme} />
+      )}
     </>
+  )
+}
+
+// ─── Gallery section ──────────────────────────────────────────────────────────
+function GallerySection({ invitation, theme }: { invitation: Invitation; theme: SectionTheme }) {
+  const [photos, setPhotos] = useState<(InvitationPhoto & { url: string })[]>([])
+  const [lightbox, setLightbox] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch(`/api/photos?invitationId=${invitation.id}`)
+      .then(r => r.json())
+      .then(data => { if (Array.isArray(data)) setPhotos(data) })
+      .catch(() => {})
+  }, [invitation.id])
+
+  if (photos.length === 0) return null
+
+  return (
+    <motion.section
+      variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }}
+      initial="hidden" whileInView="visible"
+      viewport={{ once: true }} transition={{ duration: 0.7 }}
+      style={{ padding: '72px 24px', background: theme.bgAlt }}
+    >
+      <div style={{ maxWidth: 800, margin: '0 auto' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 40, justifyContent: 'center' }}>
+          <div style={{ height: 1, width: 48, background: theme.rule }} />
+          <p style={{ fontSize: 9, letterSpacing: '0.55em', textTransform: 'uppercase', color: theme.muted }}>
+            Gallery
+          </p>
+          <div style={{ height: 1, width: 48, background: theme.rule }} />
+        </div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+          gap: 8,
+        }}>
+          {photos.map(photo => (
+            <div
+              key={photo.id}
+              onClick={() => setLightbox(photo.url)}
+              style={{
+                aspectRatio: '1',
+                overflow: 'hidden',
+                cursor: 'pointer',
+                background: theme.bg,
+              }}
+            >
+              <img
+                src={photo.url}
+                alt=""
+                loading="lazy"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform .4s ease' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1.05)' }}
+                onMouseLeave={e => { (e.currentTarget as HTMLImageElement).style.transform = '' }}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Lightbox */}
+      {lightbox && (
+        <div
+          onClick={() => setLightbox(null)}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 9999,
+            background: 'rgba(0,0,0,0.92)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'zoom-out',
+          }}
+        >
+          <img
+            src={lightbox}
+            alt=""
+            style={{ maxWidth: '92vw', maxHeight: '92vh', objectFit: 'contain' }}
+          />
+        </div>
+      )}
+    </motion.section>
   )
 }

@@ -45,14 +45,18 @@ const fontVars = [
 ].join(' ')
 
 export const metadata: Metadata = {
-  title: 'Invitia — One link. Everything your guests need.',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'https://invitia.app'),
+  title: { default: 'Invitia — One link. Everything your guests need.', template: '%s — Invitia' },
   description: 'A single, beautifully composed page for the day — schedule, registry, RSVP, dress code, directions — wrapped in your typography, sent in a sentence.',
   keywords: 'digital wedding invitation, online wedding invite, RSVP, wedding website',
   openGraph: {
     title: 'Invitia — One link. Everything your guests need.',
     description: 'Elegant digital wedding invitations. Create yours in minutes.',
     type: 'website',
+    siteName: 'Invitia',
   },
+  twitter: { card: 'summary_large_image' },
+  robots: { index: true, follow: true },
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ExternalLink, Trash2, Clock } from 'lucide-react'
+import { ExternalLink, Trash2, Clock, ToggleLeft, ToggleRight } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
@@ -30,6 +30,24 @@ export function InvitationActions({ invId, slug, activeUntil, isActive, partnerN
   const router = useRouter()
   const [loading, setLoading] = useState<string | null>(null)
   const remaining = daysRemaining(activeUntil)
+
+  async function toggleActive() {
+    setLoading('toggle')
+    try {
+      const res = await fetch(`/api/admin/invitations/${invId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ is_active: !isActive }),
+      })
+      if (!res.ok) throw new Error('Failed')
+      toast.success(isActive ? 'Invitation deactivated' : 'Invitation activated')
+      router.refresh()
+    } catch {
+      toast.error('Could not update status')
+    } finally {
+      setLoading(null)
+    }
+  }
 
   async function extend(months: number) {
     setLoading(`extend-${months}`)
@@ -79,6 +97,24 @@ export function InvitationActions({ invId, slug, activeUntil, isActive, partnerN
           {remaining.expired ? 'Expired' : `${remaining.days}d left`}
         </span>
       )}
+
+      {/* Active toggle */}
+      <button
+        onClick={toggleActive}
+        disabled={loading !== null}
+        style={{
+          display: 'flex', alignItems: 'center', gap: 4,
+          fontSize: 9.5, letterSpacing: '0.1em', padding: '4px 8px',
+          border: `1px solid ${isActive ? '#a5d6a7' : RULE}`,
+          background: isActive ? '#e8f5e9' : 'white',
+          color: isActive ? '#2e7d32' : MUTE,
+          cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.6 : 1,
+        }}
+        title={isActive ? 'Deactivate invitation' : 'Activate invitation'}
+      >
+        {isActive ? <ToggleRight size={11} /> : <ToggleLeft size={11} />}
+        {isActive ? 'Active' : 'Inactive'}
+      </button>
 
       {/* Extend buttons */}
       {[3, 6, 12].map(m => (

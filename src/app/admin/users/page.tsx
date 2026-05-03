@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { Eye, Users, Crown } from 'lucide-react'
 import { formatDate } from '@/lib/utils/format'
 import { InvitationActions } from '@/components/admin/InvitationActions'
@@ -12,7 +12,7 @@ const RULE  = '#E2DDD5'
 const SOFT  = '#F4F1EC'
 
 async function getAllUsersData() {
-  const supabase = await createClient()
+  const supabase = await createServiceClient()
 
   const [{ data: invitations }, { data: rsvps }, { data: payments }] = await Promise.all([
     supabase.from('invitations').select('*').order('created_at', { ascending: false }),

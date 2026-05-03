@@ -1,8 +1,8 @@
-import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { CustomCodeEditor } from '@/components/admin/CustomCodeEditor'
 
 async function getSignatureInvitations(filterUserId?: string) {
-  const supabase = await createClient()
+  const supabase = await createServiceClient()
 
   let query = supabase
     .from('invitations')

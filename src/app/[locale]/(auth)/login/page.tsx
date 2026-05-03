@@ -130,7 +130,13 @@ export default function LoginPage() {
         </form>
       </div>
 
-      <div style={{ marginTop: 24, textAlign: 'center', fontSize: 13, color: MUTE }}>
+      <div style={{ marginTop: 20, textAlign: 'center' }}>
+        <Link href="/forgot-password" style={{ fontSize: 12.5, color: MUTE, borderBottom: `1px solid ${RULE}`, paddingBottom: 1, textDecoration: 'none' }}>
+          Forgot password?
+        </Link>
+      </div>
+
+      <div style={{ marginTop: 16, textAlign: 'center', fontSize: 13, color: MUTE }}>
         {t('noAccount')}{' '}
         <Link href="/register" style={{ color: INK, borderBottom: `1px solid ${RULE}`, paddingBottom: 1 }}>
           {t('createOne')}
