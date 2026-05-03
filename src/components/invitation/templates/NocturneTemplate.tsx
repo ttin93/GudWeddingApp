@@ -6,7 +6,7 @@ import { MapPin, Clock, Star } from 'lucide-react'
 import { formatDate, formatTime, daysUntilWedding } from '@/lib/utils/format'
 import { RSVPForm } from '../RSVPForm'
 import type { Invitation, RSVPResponse } from '@/types'
-import { SharedSections, getEffectiveLabels } from '../InvitationSections'
+import { SharedSections, DirectContactCard, getEffectiveLabels } from '../InvitationSections'
 import type { SectionTheme } from '../InvitationSections'
 
 const fade = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }
@@ -43,13 +43,19 @@ export interface RSVPFormData {
 }
 
 function Stars() {
-  const stars = Array.from({ length: 40 }, (_, i) => ({
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 1.5 + 0.5,
-    opacity: Math.random() * 0.4 + 0.1,
-    delay: Math.random() * 3,
-  }))
+  const [stars, setStars] = useState<Array<{ x: number; y: number; size: number; opacity: number; delay: number }>>([])
+
+  useEffect(() => {
+    setStars(Array.from({ length: 40 }, () => ({
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 1.5 + 0.5,
+      opacity: Math.random() * 0.4 + 0.1,
+      delay: Math.random() * 3,
+    })))
+  }, [])
+
+  if (stars.length === 0) return null
 
   return (
     <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
@@ -405,14 +411,14 @@ export function NocturneTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
               </p>
             )}
           </div>
-          <RSVPForm
-            invitationId={invitation.id}
-            packageType={invitation.package}
-            onSubmit={onRSVPSubmit}
-            existingRSVP={existingRSVP}
-            accentColor={C.accent}
-            labels={labels}
-          />
+          {invitation.rsvp_mode !== 'contact' && (
+            <RSVPForm invitationId={invitation.id} packageType={invitation.package} onSubmit={onRSVPSubmit} existingRSVP={existingRSVP} accentColor={C.accent} bgColor={C.card} textColor={C.text} mutedColor={C.muted} labels={labels} />
+          )}
+          {(invitation.rsvp_mode === 'contact' || invitation.rsvp_mode === 'both') && (
+            <div style={{ marginTop: invitation.rsvp_mode === 'both' ? 32 : 0 }}>
+              <DirectContactCard invitation={invitation} theme={SECTION_THEME} labels={labels} />
+            </div>
+          )}
         </div>
       </motion.section>
 

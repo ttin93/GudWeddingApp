@@ -6,7 +6,7 @@ import { MapPin, Clock, Flower2 } from 'lucide-react'
 import { formatDate, formatTime, daysUntilWedding } from '@/lib/utils/format'
 import { RSVPForm } from '../RSVPForm'
 import type { Invitation, RSVPResponse } from '@/types'
-import { SharedSections, getEffectiveLabels } from '../InvitationSections'
+import { SharedSections, DirectContactCard, getEffectiveLabels } from '../InvitationSections'
 import type { SectionTheme } from '../InvitationSections'
 
 const fade = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }
@@ -356,14 +356,14 @@ export function PromesseTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
               </p>
             )}
           </div>
-          <RSVPForm
-            invitationId={invitation.id}
-            packageType={invitation.package}
-            onSubmit={onRSVPSubmit}
-            existingRSVP={existingRSVP}
-            accentColor={C.sage}
-            labels={labels}
-          />
+          {invitation.rsvp_mode !== 'contact' && (
+            <RSVPForm invitationId={invitation.id} packageType={invitation.package} onSubmit={onRSVPSubmit} existingRSVP={existingRSVP} accentColor={C.sage} labels={labels} />
+          )}
+          {(invitation.rsvp_mode === 'contact' || invitation.rsvp_mode === 'both') && (
+            <div style={{ marginTop: invitation.rsvp_mode === 'both' ? 32 : 0 }}>
+              <DirectContactCard invitation={invitation} theme={SECTION_THEME} labels={labels} />
+            </div>
+          )}
         </div>
       </motion.section>
 

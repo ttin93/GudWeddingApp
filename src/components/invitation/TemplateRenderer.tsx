@@ -7,6 +7,8 @@ import { NoirTemplate } from './templates/NoirTemplate'
 import { NocturneTemplate } from './templates/NocturneTemplate'
 import { PromesseTemplate } from './templates/PromesseTemplate'
 import { RosewoodTemplate } from './templates/RosewoodTemplate'
+import { EditorialTemplate } from './templates/EditorialTemplate'
+import { VeneziaTemplate } from './templates/VeneziaTemplate'
 
 interface Props {
   invitation: Invitation
@@ -24,6 +26,8 @@ export function TemplateRenderer({ invitation, existingRSVP }: Props) {
     case 'nocturne':   return <NocturneTemplate {...props} />
     case 'promesse':   return <PromesseTemplate {...props} />
     case 'rosewood':   return <RosewoodTemplate {...props} />
+    case 'editorial':   return <EditorialTemplate {...props} />
+    case 'venezia':     return <VeneziaTemplate {...props} />
     case 'botanica':
     default:           return <BotanicaTemplate invitation={invitation} />
   }

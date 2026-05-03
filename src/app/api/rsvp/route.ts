@@ -10,7 +10,9 @@ const schema = z.object({
   attending: z.boolean(),
   adults: z.number().int().min(1).max(20).default(1),
   children: z.number().int().min(0).max(20).default(0),
+  children_ages: z.string().max(200).optional(),
   menu_choice: z.enum(['meat', 'fish', 'vegetarian', 'vegan']).optional(),
+  guest_menus: z.array(z.object({ label: z.string().max(50), menu: z.string().max(50) })).max(20).optional(),
   allergies: z.string().max(500).optional(),
   message: z.string().max(1000).optional(),
 })
@@ -32,7 +34,6 @@ export async function POST(req: Request) {
       .from('invitations')
       .select('id, partner1_name, partner2_name, wedding_date, user_id')
       .eq('id', data.invitation_id)
-      .eq('is_active', true)
       .single()
 
     if (invErr || !invitation) {
@@ -47,7 +48,9 @@ export async function POST(req: Request) {
       attending: data.attending,
       adults: data.adults,
       children: data.children,
+      children_ages: data.children_ages || null,
       menu_choice: data.menu_choice || null,
+      guest_menus: data.guest_menus?.length ? data.guest_menus : null,
       allergies: data.allergies || null,
       message: data.message || null,
     })
@@ -79,6 +82,7 @@ export async function POST(req: Request) {
               ${data.attending ? `<tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Adults:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${data.adults}</td></tr>` : ''}
               ${data.attending && data.children > 0 ? `<tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Children:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${data.children}</td></tr>` : ''}
               ${data.menu_choice ? `<tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Menu:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${data.menu_choice}</td></tr>` : ''}
+              ${data.guest_menus?.length ? `<tr><td style="padding: 8px; border-bottom: 1px solid #eee; vertical-align: top;"><strong>Menus:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee;">${data.guest_menus.map(gm => `${gm.label}: ${gm.menu}`).join('<br>')}</td></tr>` : ''}
               ${data.message ? `<tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Message:</strong></td><td style="padding: 8px; border-bottom: 1px solid #eee; font-style: italic;">"${data.message}"</td></tr>` : ''}
             </table>
             <p style="margin-top: 24px; color: #6B6B6B; font-size: 14px;">View all responses in your <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard" style="color: #8B6B4A;">Invitia dashboard</a>.</p>

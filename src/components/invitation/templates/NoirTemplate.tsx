@@ -5,7 +5,7 @@ import { MapPin, Clock } from 'lucide-react'
 import { formatDate, formatTime, daysUntilWedding } from '@/lib/utils/format'
 import { RSVPForm } from '../RSVPForm'
 import type { Invitation, RSVPResponse } from '@/types'
-import { SharedSections, getEffectiveLabels } from '../InvitationSections'
+import { SharedSections, DirectContactCard, getEffectiveLabels } from '../InvitationSections'
 import type { SectionTheme } from '../InvitationSections'
 
 export interface RSVPFormData {
@@ -217,7 +217,14 @@ export function NoirTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props) 
           {invitation.rsvp_deadline && (
             <p style={{ textAlign: 'center', fontSize: 13, color: C.muted, marginBottom: 32 }}>{labels.rsvp_deadline_prefix} {formatDate(invitation.rsvp_deadline)}</p>
           )}
-          <RSVPForm invitationId={invitation.id} packageType={invitation.package} onSubmit={onRSVPSubmit} existingRSVP={existingRSVP} accentColor={C.gold} labels={labels} />
+          {invitation.rsvp_mode !== 'contact' && (
+            <RSVPForm invitationId={invitation.id} packageType={invitation.package} onSubmit={onRSVPSubmit} existingRSVP={existingRSVP} accentColor={C.gold} bgColor={C.card} textColor={C.text} mutedColor={C.muted} labels={labels} />
+          )}
+          {(invitation.rsvp_mode === 'contact' || invitation.rsvp_mode === 'both') && (
+            <div style={{ marginTop: invitation.rsvp_mode === 'both' ? 32 : 0 }}>
+              <DirectContactCard invitation={invitation} theme={THEME} labels={labels} />
+            </div>
+          )}
         </div>
       </motion.section>
 

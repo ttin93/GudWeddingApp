@@ -109,8 +109,21 @@ export function GuestList({ responses, invitationId }: Props) {
                 {r.email && <p style={{ fontSize: 11.5, color: MUTE }}>{r.email}</p>}
                 <div style={{ display: 'flex', gap: 16, marginTop: 4, fontSize: 11.5, color: MUTE }}>
                   {r.attending && <span>{r.adults} adult{r.adults > 1 ? 's' : ''}{r.children > 0 ? `, ${r.children} child${r.children > 1 ? 'ren' : ''}` : ''}</span>}
-                  {r.menu_choice && <span>{r.menu_choice}</span>}
+                  {r.menu_choice && !r.guest_menus?.length && <span>🍽 {r.menu_choice}</span>}
                 </div>
+                {r.guest_menus && r.guest_menus.length > 0 && (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 6 }}>
+                    {r.guest_menus.map((gm, gi) => (
+                      <span key={gi} style={{
+                        fontSize: 11, padding: '2px 8px',
+                        border: `1px solid ${RULE}`, color: MUTE,
+                        background: '#FDFCFA',
+                      }}>
+                        {gm.label}: {gm.menu}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 {r.message && (
                   <p style={{ fontSize: 12, color: ACC, marginTop: 6, fontFamily: 'var(--font-cormorant)', fontStyle: 'italic' }}>"{r.message}"</p>
                 )}

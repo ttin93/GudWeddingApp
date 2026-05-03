@@ -66,6 +66,7 @@ interface WizardData {
   faq: FAQItem[]
   show_faq: boolean
   // Step 7 — RSVP
+  rsvp_mode: 'form' | 'contact' | 'both'
   rsvp_deadline: string
   max_guests: string
   show_countdown: boolean
@@ -89,7 +90,7 @@ const DEFAULT: WizardData = {
   accommodation: [], show_accommodation: true,
   gift_registry: [], show_gift_registry: true,
   faq: [], show_faq: true,
-  rsvp_deadline: '', max_guests: '', show_countdown: true, show_gallery: true,
+  rsvp_mode: 'form', rsvp_deadline: '', max_guests: '', show_countdown: true, show_gallery: true,
   language: 'sl',
   labels: DEFAULT_LABELS['sl'],
 }
@@ -669,10 +670,62 @@ function Step6({ data, set }: { data: WizardData; set: (k: keyof WizardData, v: 
 }
 
 // ─── STEP 7: RSVP ─────────────────────────────────────────────────────────────
+const RSVP_MODE_OPTIONS = [
+  { value: 'form', label: 'RSVP obrazec', desc: 'Gostje izpolnijo obrazec na povabilu', icon: '📝' },
+  { value: 'contact', label: 'Direkten kontakt', desc: 'Gostje vas pokličejo ali pišejo', icon: '📱' },
+  { value: 'both', label: 'Oboje', desc: 'Obrazec in kontaktni podatki', icon: '✦' },
+] as const
+
 function Step7({ data, set }: { data: WizardData; set: (k: keyof WizardData, v: unknown) => void }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       <SectionLabel icon={Users}>RSVP nastavitve</SectionLabel>
+
+      {/* RSVP mode */}
+      <Field label="Način prijave">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {RSVP_MODE_OPTIONS.map(opt => {
+            const active = data.rsvp_mode === opt.value
+            return (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => set('rsvp_mode', opt.value)}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 14,
+                  padding: '13px 16px',
+                  border: `2px solid ${active ? ACC : RULE}`,
+                  background: active ? ACC + '0D' : WHITE,
+                  cursor: 'pointer', textAlign: 'left', fontFamily: 'inherit',
+                  transition: 'all .15s',
+                }}
+              >
+                <span style={{ fontSize: 18, flexShrink: 0 }}>{opt.icon}</span>
+                <div style={{ flex: 1 }}>
+                  <p style={{ fontSize: 13.5, color: active ? INK : MUTE, fontWeight: active ? 500 : 400 }}>{opt.label}</p>
+                  <p style={{ fontSize: 11.5, color: MUTE, marginTop: 2 }}>{opt.desc}</p>
+                </div>
+                <div style={{
+                  width: 18, height: 18, borderRadius: '50%', flexShrink: 0,
+                  border: `2px solid ${active ? ACC : RULE}`,
+                  background: active ? ACC : 'transparent',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  {active && <div style={{ width: 6, height: 6, borderRadius: '50%', background: WHITE }} />}
+                </div>
+              </button>
+            )
+          })}
+        </div>
+      </Field>
+
+      {/* Contact info reminder */}
+      {(data.rsvp_mode === 'contact' || data.rsvp_mode === 'both') && !data.contact_phone && (
+        <div style={{ padding: '12px 16px', border: `1px solid ${ACC}30`, background: ACC + '08', fontSize: 12.5, color: MUTE }}>
+          💡 Ne pozabi dodati kontaktnih podatkov v koraku "Podrobnosti" (telefon/WhatsApp).
+        </div>
+      )}
+
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
         <Field label="Rok za RSVP">
           <TextInput type="date" value={data.rsvp_deadline} onChange={v => set('rsvp_deadline', v)} />

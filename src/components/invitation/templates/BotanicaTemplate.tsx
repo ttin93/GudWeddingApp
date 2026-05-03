@@ -5,7 +5,7 @@ import { MapPin, Clock } from 'lucide-react'
 import { formatDate, formatTime, daysUntilWedding } from '@/lib/utils/format'
 import type { Invitation, RSVPResponse } from '@/types'
 import { RSVPForm } from '../RSVPForm'
-import { SharedSections, getEffectiveLabels } from '../InvitationSections'
+import { SharedSections, DirectContactCard, getEffectiveLabels } from '../InvitationSections'
 import type { SectionTheme } from '../InvitationSections'
 
 export interface RSVPFormData {
@@ -242,14 +242,21 @@ export function BotanicaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
               {labels.rsvp_deadline_prefix} {formatDate(invitation.rsvp_deadline)}
             </p>
           )}
-          <RSVPForm
-            invitationId={invitation.id}
-            packageType={invitation.package}
-            onSubmit={onRSVPSubmit}
-            existingRSVP={existingRSVP}
-            accentColor={C.primary}
-            labels={labels}
-          />
+          {invitation.rsvp_mode !== 'contact' && (
+            <RSVPForm
+              invitationId={invitation.id}
+              packageType={invitation.package}
+              onSubmit={onRSVPSubmit}
+              existingRSVP={existingRSVP}
+              accentColor={C.primary}
+              labels={labels}
+            />
+          )}
+          {(invitation.rsvp_mode === 'contact' || invitation.rsvp_mode === 'both') && (
+            <div style={{ marginTop: invitation.rsvp_mode === 'both' ? 32 : 0 }}>
+              <DirectContactCard invitation={invitation} theme={THEME} labels={labels} />
+            </div>
+          )}
         </div>
       </motion.section>
 

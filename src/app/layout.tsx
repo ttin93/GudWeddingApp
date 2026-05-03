@@ -5,6 +5,9 @@ import {
   Instrument_Sans,
   Pinyon_Script,
   Great_Vibes,
+  Playfair_Display,
+  DM_Mono,
+  Cinzel,
 } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
@@ -47,6 +50,29 @@ const greatVibes = Great_Vibes({
   display: 'swap',
 })
 
+const playfairDisplay = Playfair_Display({
+  variable: '--font-playfair',
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+})
+
+const dmMono = DM_Mono({
+  variable: '--font-mono-dm',
+  subsets: ['latin'],
+  weight: ['300', '400'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+})
+
+const cinzel = Cinzel({
+  variable: '--font-cinzel',
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  display: 'swap',
+})
+
 export const metadata: Metadata = {
   title: 'Invitia — One link. Everything your guests need.',
   description:
@@ -63,7 +89,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${dmSerif.variable} ${instrumentSans.variable} ${pinyonScript.variable} ${greatVibes.variable} h-full`}
+      className={`${cormorant.variable} ${dmSerif.variable} ${instrumentSans.variable} ${pinyonScript.variable} ${greatVibes.variable} ${playfairDisplay.variable} ${dmMono.variable} ${cinzel.variable} h-full`}
     >
       <body className="min-h-full flex flex-col" style={{ WebkitFontSmoothing: 'antialiased', MozOsxFontSmoothing: 'grayscale' } as React.CSSProperties}>
         {children}

@@ -1,5 +1,5 @@
 export type Package = 'essential' | 'elegance' | 'signature'
-export type TemplateId = 'botanica' | 'modern' | 'heritage' | 'eliarose' | 'noir' | 'nocturne' | 'promesse' | 'rosewood'
+export type TemplateId = 'botanica' | 'modern' | 'heritage' | 'eliarose' | 'noir' | 'nocturne' | 'promesse' | 'rosewood' | 'editorial' | 'venezia'
 
 export interface TimelineEvent {
   time: string
@@ -54,6 +54,8 @@ export interface Invitation {
   active_until?: string
   is_active: boolean
   view_count: number
+  // RSVP mode
+  rsvp_mode?: 'form' | 'contact' | 'both'
   // Extra sections
   hashtag?: string
   contact_name?: string
@@ -91,6 +93,8 @@ export interface RSVPResponse {
   adults: number
   children: number
   menu_choice?: 'meat' | 'fish' | 'vegetarian' | 'vegan'
+  guest_menus?: Array<{ label: string; menu: string }>
+  children_ages?: string
   allergies?: string
   message?: string
   created_at: string
@@ -340,5 +344,41 @@ export const TEMPLATES: TemplateConfig[] = [
       script: 'Pinyon Script',
     },
     previewImage: '/templates/rosewood.jpg',
+  },
+  {
+    id: 'editorial',
+    name: 'Editorial',
+    category: 'contemporary',
+    colors: {
+      background: '#f8f5f0',
+      primary: '#c8553d',
+      accent: '#c8553d',
+      text: '#0e0e0e',
+      textMuted: '#8a8278',
+    },
+    fonts: {
+      heading: 'Playfair Display',
+      body: 'DM Mono',
+      script: 'Playfair Display',
+    },
+    previewImage: '/templates/editorial.jpg',
+  },
+  {
+    id: 'venezia',
+    name: 'Venezia',
+    category: 'timeless',
+    colors: {
+      background: '#f7f3ee',
+      primary: '#b8935a',
+      accent: '#b8935a',
+      text: '#2c2318',
+      textMuted: '#8b7355',
+    },
+    fonts: {
+      heading: 'Cormorant Garamond',
+      body: 'Cinzel',
+      script: 'Cormorant Garamond',
+    },
+    previewImage: '/templates/venezia.jpg',
   },
 ]

@@ -36,6 +36,7 @@ export async function POST(req: Request) {
     show_story, show_program, show_dress_code, show_children_policy,
     show_hashtag, show_music, show_contact, show_transport,
     show_accommodation, show_gift_registry, show_faq,
+    rsvp_mode,
   } = body
 
   const year = new Date(wedding_date).getFullYear()
@@ -94,6 +95,7 @@ export async function POST(req: Request) {
       show_accommodation: show_accommodation ?? true,
       show_gift_registry: show_gift_registry ?? true,
       show_faq: show_faq ?? true,
+      rsvp_mode: rsvp_mode ?? 'form',
       is_active: false,
       view_count: 0,
     })
