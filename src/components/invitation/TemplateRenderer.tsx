@@ -19,8 +19,8 @@ export function TemplateRenderer({ invitation, existingRSVP }: Props) {
   const props = { invitation, existingRSVP }
 
   switch (invitation.template_id) {
-    case 'modern':     return <ModernTemplate invitation={invitation} />
-    case 'heritage':   return <HeritageTemplate invitation={invitation} />
+    case 'modern':     return <ModernTemplate {...props} />
+    case 'heritage':   return <HeritageTemplate {...props} />
     case 'eliarose':   return <EliaRoseTemplate {...props} />
     case 'noir':       return <NoirTemplate {...props} />
     case 'nocturne':   return <NocturneTemplate {...props} />

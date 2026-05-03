@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { Eye, Users, ExternalLink, Crown } from 'lucide-react'
+import { Eye, Users, Crown } from 'lucide-react'
 import { formatDate } from '@/lib/utils/format'
+import { InvitationActions } from '@/components/admin/InvitationActions'
 
 const INK  = '#1A1714'
 const MUTE = '#6e6359'
@@ -23,7 +24,6 @@ async function getAllUsersData() {
   const rv = rsvps ?? []
   const pay = payments ?? []
 
-  // Group invitations by user
   const userMap: Record<string, {
     user_id: string
     invitations: typeof inv
@@ -48,15 +48,11 @@ async function getAllUsersData() {
     u.invitations.push(invitation)
     u.totalViews += invitation.view_count ?? 0
     u.packages.push(invitation.package)
-
-    const invRSVPs = rv.filter(r => r.invitation_id === invitation.id)
-    u.totalRSVPs += invRSVPs.length
+    u.totalRSVPs += rv.filter(r => r.invitation_id === invitation.id).length
   })
 
   pay.forEach(p => {
-    if (userMap[p.user_id]) {
-      userMap[p.user_id].totalRevenue += p.amount / 100
-    }
+    if (userMap[p.user_id]) userMap[p.user_id].totalRevenue += p.amount / 100
   })
 
   return Object.values(userMap).sort((a, b) => {
@@ -81,18 +77,16 @@ export default async function UsersPage() {
         <p style={{ fontSize: 13, color: MUTE, marginTop: 8 }}>{users.length} users with invitations</p>
       </div>
 
-      {/* Users table */}
       <div style={{ border: `1px solid ${RULE}`, background: CREAM }}>
         {/* Header */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: '1fr 80px 80px 80px 80px 80px 120px',
-          gap: 0,
+          gridTemplateColumns: '1fr 72px 72px 72px 80px 90px',
           padding: '12px 24px',
           borderBottom: `1px solid ${RULE}`,
           background: SOFT,
         }}>
-          {['User / Invitations', 'Inv.', 'Views', 'RSVPs', 'Revenue', 'Package', 'Actions'].map(h => (
+          {['User / Invitations', 'Inv.', 'Views', 'RSVPs', 'Revenue', 'Package'].map(h => (
             <span key={h} style={{ fontSize: 9.5, letterSpacing: '0.25em', textTransform: 'uppercase', color: MUTE }}>{h}</span>
           ))}
         </div>
@@ -105,25 +99,16 @@ export default async function UsersPage() {
           users.map((user) => {
             const hasSignature = user.packages.includes('signature')
             const latestInv = user.invitations[0]
-            const latestDate = latestInv?.created_at
 
             return (
-              <div
-                key={user.user_id}
-                style={{
-                  borderBottom: `1px solid ${RULE}`,
-                  padding: '0',
-                }}
-              >
-                {/* User row */}
+              <div key={user.user_id} style={{ borderBottom: `1px solid ${RULE}` }}>
+                {/* User summary row */}
                 <div style={{
                   display: 'grid',
-                  gridTemplateColumns: '1fr 80px 80px 80px 80px 80px 120px',
+                  gridTemplateColumns: '1fr 72px 72px 72px 80px 90px',
                   padding: '16px 24px',
                   alignItems: 'center',
-                  gap: 0,
                 }}>
-                  {/* User info */}
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
                       <span style={{ fontSize: 10, letterSpacing: '0.2em', color: MUTE, fontFamily: 'monospace' }}>
@@ -137,10 +122,9 @@ export default async function UsersPage() {
                       )}
                     </div>
                     <p style={{ fontSize: 11, color: MUTE }}>
-                      {latestDate ? `Last active ${formatDate(latestDate, 'dd MMM yyyy')}` : '—'}
+                      {latestInv?.created_at ? `Since ${formatDate(latestInv.created_at, 'dd MMM yyyy')}` : '—'}
                     </p>
                   </div>
-
                   <span style={{ fontFamily: 'var(--font-cormorant)', fontSize: 22, color: INK }}>{user.invitations.length}</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                     <Eye size={11} style={{ color: ACC }} />
@@ -164,14 +148,11 @@ export default async function UsersPage() {
                         {pkg}
                       </span>
                     ))}
-                  </div>
-                  <div style={{ display: 'flex', gap: 8 }}>
                     {hasSignature && (
                       <Link href={`/admin/custom-code?user=${user.user_id}`} style={{
-                        fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase',
-                        padding: '6px 12px', border: `1px solid ${RULE}`,
-                        color: INK, textDecoration: 'none',
-                        background: 'transparent',
+                        display: 'block', fontSize: 9.5, letterSpacing: '0.1em', textTransform: 'uppercase',
+                        padding: '4px 8px', border: `1px solid ${RULE}`, marginTop: 4,
+                        color: INK, textDecoration: 'none', background: 'white',
                       }}>
                         Code
                       </Link>
@@ -179,45 +160,47 @@ export default async function UsersPage() {
                   </div>
                 </div>
 
-                {/* Invitations sub-rows */}
+                {/* Invitation sub-rows */}
                 {user.invitations.map(inv => (
                   <div key={inv.id} style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    padding: '8px 24px 8px 40px',
+                    padding: '10px 24px 10px 40px',
                     background: '#FAFAF6',
                     borderTop: `1px solid ${RULE}`,
+                    display: 'flex', flexDirection: 'column', gap: 6,
                   }}>
-                    <div style={{ flex: 1 }}>
-                      <span style={{ fontSize: 12.5, color: INK }}>
+                    {/* Name + meta */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                      <span style={{ fontSize: 13, color: INK }}>
                         {inv.partner1_name} &amp; {inv.partner2_name}
                       </span>
-                      <span style={{ fontSize: 11, color: MUTE, marginLeft: 10 }}>
+                      <span style={{ fontSize: 11, color: MUTE }}>
                         /invite/{inv.slug} · {formatDate(inv.wedding_date)}
                       </span>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                       <span style={{
                         fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase',
                         padding: '2px 6px',
                         background: inv.is_active ? '#e8f5e9' : '#F7F4EF',
                         color: inv.is_active ? '#2e7d32' : MUTE,
                       }}>
-                        {inv.is_active ? 'Active' : 'Draft'}
+                        {inv.is_active ? 'Active' : 'Inactive'}
                       </span>
-                      <span style={{ fontSize: 11, color: MUTE, display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <span style={{ fontSize: 11, color: MUTE, display: 'flex', alignItems: 'center', gap: 3 }}>
                         <Eye size={10} /> {inv.view_count ?? 0}
                       </span>
-                      <Link href={`/invite/${inv.slug}`} target="_blank" style={{ color: MUTE, display: 'flex' }}>
-                        <ExternalLink size={12} />
-                      </Link>
-                      <Link href={`/dashboard/${inv.id}`} style={{
-                        fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase',
-                        padding: '5px 10px', border: `1px solid ${RULE}`,
-                        color: INK, textDecoration: 'none',
-                      }}>
-                        Manage
-                      </Link>
+                      {inv.active_until && (
+                        <span style={{ fontSize: 11, color: MUTE }}>
+                          Expires: {formatDate(inv.active_until, 'dd MMM yyyy')}
+                        </span>
+                      )}
                     </div>
+                    {/* Actions */}
+                    <InvitationActions
+                      invId={inv.id}
+                      slug={inv.slug}
+                      activeUntil={inv.active_until}
+                      isActive={inv.is_active}
+                      partnerNames={`${inv.partner1_name} & ${inv.partner2_name}`}
+                    />
                   </div>
                 ))}
               </div>

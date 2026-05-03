@@ -8,7 +8,7 @@ import {
   ChevronLeft, ChevronRight, Check, Plus, Trash2,
   Clock, MapPin, Heart, Gift, HelpCircle,
   Hotel, Car, Hash, Phone, Users, Music,
-  ChevronDown, ChevronUp,
+  ChevronDown, ChevronUp, Sparkles, Loader2,
 } from 'lucide-react'
 import { TEMPLATES } from '@/types'
 import type { TemplateId, TimelineEvent, AccommodationItem, GiftRegistryItem, FAQItem } from '@/types'
@@ -276,8 +276,50 @@ function AddButton({ onClick, label }: { onClick: () => void; label: string }) {
   )
 }
 
+// ─── AI assist button ─────────────────────────────────────────────────────────
+function AiButton({ onClick, loading, label = 'AI predlog' }: { onClick: () => void; loading: boolean; label?: string }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={loading}
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: 6,
+        padding: '7px 12px', border: `1px solid ${ACC}`, background: loading ? SOFT : WHITE,
+        fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase',
+        color: ACC, cursor: loading ? 'wait' : 'pointer',
+        opacity: loading ? 0.7 : 1, transition: 'background .15s',
+      }}
+    >
+      {loading ? <Loader2 size={12} style={{ animation: 'spin 1s linear infinite' }} /> : <Sparkles size={12} />}
+      {loading ? 'Generating…' : label}
+    </button>
+  )
+}
+
 // ─── STEP 1: Par ──────────────────────────────────────────────────────────────
 function Step1({ data, set }: { data: WizardData; set: (k: keyof WizardData, v: unknown) => void }) {
+  const [aiMsg, setAiMsg] = useState(false)
+
+  async function generateMessage() {
+    const input = [
+      data.partner1_name && data.partner2_name ? `${data.partner1_name} and ${data.partner2_name}` : '',
+      data.story || '',
+    ].filter(Boolean).join('. ') || 'a couple getting married'
+    setAiMsg(true)
+    try {
+      const res = await fetch('/api/ai/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'message', input, tone: 'warm and romantic' }),
+      })
+      const json = await res.json()
+      if (json.result) set('personal_message', json.result)
+    } finally {
+      setAiMsg(false)
+    }
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
@@ -316,6 +358,9 @@ function Step1({ data, set }: { data: WizardData; set: (k: keyof WizardData, v: 
           onChange={v => set('personal_message', v)}
           placeholder="Z veseljem vas vabimo, da delite z nami ta posebni dan..."
         />
+        <div style={{ marginTop: 6 }}>
+          <AiButton onClick={generateMessage} loading={aiMsg} label="Generiraj sporočilo z AI" />
+        </div>
       </Field>
     </div>
   )
@@ -481,6 +526,24 @@ function Step4({ data, set }: { data: WizardData; set: (k: keyof WizardData, v: 
 
 // ─── STEP 5: Podrobnosti ──────────────────────────────────────────────────────
 function Step5({ data, set }: { data: WizardData; set: (k: keyof WizardData, v: unknown) => void }) {
+  const [aiDress, setAiDress] = useState(false)
+
+  async function generateDressCode() {
+    const input = data.dress_code || 'formal wedding, elegant'
+    setAiDress(true)
+    try {
+      const res = await fetch('/api/ai/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'dresscode', input }),
+      })
+      const json = await res.json()
+      if (json.result) set('dress_code', json.result)
+    } finally {
+      setAiDress(false)
+    }
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
 
@@ -492,6 +555,9 @@ function Step5({ data, set }: { data: WizardData; set: (k: keyof WizardData, v: 
       >
         <Field label="Dress code">
           <TextInput value={data.dress_code} onChange={v => set('dress_code', v)} placeholder="Slovesno, barvna tematika: zemeljski toni" />
+          <div style={{ marginTop: 6 }}>
+            <AiButton onClick={generateDressCode} loading={aiDress} label="AI predlog" />
+          </div>
         </Field>
       </SectionToggle>
 
