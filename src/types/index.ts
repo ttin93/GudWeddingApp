@@ -1,5 +1,12 @@
 export type Package = 'essential' | 'elegance' | 'signature'
 export type TemplateId = 'riviera' | 'coastal' | 'darkgrid' | 'gatsby' | 'scandi' | 'watercolor' | 'azulejo' | 'industrial' | 'botanica' | 'modern' | 'heritage' | 'eliarose' | 'noir' | 'nocturne' | 'promesse' | 'rosewood' | 'editorial' | 'venezia'
+export type BackgroundMusicId = 'none' | 'romance' | 'waltz' | 'garden'
+
+export const BACKGROUND_MUSIC_TRACKS: Record<Exclude<BackgroundMusicId, 'none'>, { label: string; description: string; src: string }> = {
+  romance:  { label: 'Romance',      description: 'Romantični klavir',       src: '/music/romance.mp3' },
+  waltz:    { label: 'Waltz',        description: 'Klasični godalni valček',  src: '/music/waltz.mp3' },
+  garden:   { label: 'Garden',       description: 'Mehka akustična ambica',   src: '/music/garden.mp3' },
+}
 
 export interface TimelineEvent {
   time: string
@@ -69,6 +76,10 @@ export interface Invitation {
   music_playlist_url?: string
   labels?: Record<string, string>
   // Section visibility (null/undefined = visible)
+  background_music?: BackgroundMusicId
+  cover_photo_url?: string     // virtual — computed at serve time from first invitation_photo
+  cover_photo_caption?: string
+  cover_photo_badge?: string   // short text in the circle on photo card (default: wedding year)
   show_story?: boolean
   show_program?: boolean
   show_dress_code?: boolean

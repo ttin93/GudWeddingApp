@@ -28,13 +28,19 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
 
   // Allowlist — users must never set is_active, user_id, or payment fields
   const ALLOWED = [
-    'partner1_name', 'partner2_name', 'wedding_date', 'wedding_time',
-    'venue_name', 'venue_address', 'venue_city', 'venue_country',
-    'ceremony_time', 'ceremony_venue', 'reception_time', 'reception_venue',
-    'rsvp_deadline', 'rsvp_email', 'template_id', 'language',
-    'dress_code', 'custom_message', 'additional_info',
-    'show_gallery', 'show_rsvp', 'show_schedule', 'show_accommodation',
-    'accommodation_info', 'transport_info',
+    'partner1_name', 'partner2_name', 'wedding_date', 'template_id',
+    'venue_name', 'venue_address', 'ceremony_time', 'reception_time',
+    'personal_message', 'story', 'dress_code',
+    'timeline', 'languages', 'labels',
+    'show_gallery', 'show_countdown', 'show_story', 'show_program',
+    'show_dress_code', 'show_children_policy', 'show_hashtag',
+    'show_music', 'show_contact', 'show_transport',
+    'show_accommodation', 'show_gift_registry', 'show_faq',
+    'rsvp_deadline', 'rsvp_mode', 'max_guests',
+    'hashtag', 'contact_name', 'contact_phone', 'contact_email',
+    'children_policy', 'transport_notes', 'music_playlist_url',
+    'accommodation', 'gift_registry', 'faq',
+    'background_music', 'cover_photo_caption', 'cover_photo_badge',
   ] as const
   type AllowedField = (typeof ALLOWED)[number]
   const patch: Partial<Record<AllowedField, unknown>> & { updated_at: string } = {

@@ -95,24 +95,32 @@ export function RivieraTemplate({ invitation, onRSVPSubmit, existingRSVP }: Prop
           )}
         </motion.div>
 
-        {/* Rotated card */}
+        {/* Rotated card — photo if uploaded, else SVG illustration */}
         <motion.div variants={fade} initial="hidden" animate="visible" transition={{ duration: 1, delay: 0.3 }}>
           <div style={{ position: 'relative', aspectRatio: '3/4', background: 'linear-gradient(160deg,#d8c8a8,#bda37c)', border: `1px solid ${C.ruleSoft}`, boxShadow: `0 30px 60px -30px rgba(31,26,20,0.4), 0 60px 120px -50px rgba(31,26,20,0.3)`, overflow: 'hidden', transform: 'rotate(2deg)', maxWidth: 380, marginLeft: 'auto' }}>
-            <svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-              <defs><linearGradient id="rv-sky" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#e6d4af"/><stop offset=".55" stopColor="#c89b7b"/><stop offset="1" stopColor="#9c6644"/></linearGradient></defs>
-              <rect width="300" height="400" fill="url(#rv-sky)"/>
-              <circle cx="150" cy="170" r="58" fill="#f5efe2" opacity=".85"/>
-              <rect x="0" y="240" width="300" height="160" fill="#7a4f30"/>
-              <g fill="#3a261a"><ellipse cx="40" cy="240" rx="6" ry="40"/><ellipse cx="58" cy="245" rx="5" ry="35"/><ellipse cx="245" cy="240" rx="6" ry="42"/><ellipse cx="262" cy="248" rx="4" ry="32"/></g>
-              <g fill="#f5efe2" opacity=".95"><rect x="110" y="200" width="80" height="50"/><polygon points="105,200 150,170 195,200"/><rect x="135" y="220" width="12" height="30" fill="#9c6644"/><rect x="155" y="220" width="12" height="30" fill="#9c6644"/><rect x="118" y="210" width="8" height="8" fill="#9c6644"/><rect x="174" y="210" width="8" height="8" fill="#9c6644"/></g>
-              <g stroke="#f5efe2" strokeWidth="1" fill="none" opacity=".6"><path d="M0,310 Q30,304 60,310 T120,310 T180,310 T240,310 T300,310"/><path d="M0,330 Q30,324 60,330 T120,330 T180,330 T240,330 T300,330"/></g>
-              <g stroke="#3a261a" strokeWidth="1.4" fill="none" strokeLinecap="round"><path d="M70,90 q5,-5 10,0 q5,-5 10,0"/><path d="M210,75 q4,-4 8,0 q4,-4 8,0"/></g>
-            </svg>
-            <div style={{ position: 'absolute', top: 18, right: 18, width: 64, height: 64, border: '1px solid #f5efe2', color: '#f5efe2', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: cormorant, fontStyle: 'italic', fontSize: 11, textAlign: 'center', lineHeight: 1.2, letterSpacing: '0.1em', textTransform: 'uppercase', opacity: 0.85 }}>
-              {year}
+            {invitation.cover_photo_url ? (
+              <img
+                src={invitation.cover_photo_url}
+                alt=""
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              />
+            ) : (
+              <svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <defs><linearGradient id="rv-sky" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#e6d4af"/><stop offset=".55" stopColor="#c89b7b"/><stop offset="1" stopColor="#9c6644"/></linearGradient></defs>
+                <rect width="300" height="400" fill="url(#rv-sky)"/>
+                <circle cx="150" cy="170" r="58" fill="#f5efe2" opacity=".85"/>
+                <rect x="0" y="240" width="300" height="160" fill="#7a4f30"/>
+                <g fill="#3a261a"><ellipse cx="40" cy="240" rx="6" ry="40"/><ellipse cx="58" cy="245" rx="5" ry="35"/><ellipse cx="245" cy="240" rx="6" ry="42"/><ellipse cx="262" cy="248" rx="4" ry="32"/></g>
+                <g fill="#f5efe2" opacity=".95"><rect x="110" y="200" width="80" height="50"/><polygon points="105,200 150,170 195,200"/><rect x="135" y="220" width="12" height="30" fill="#9c6644"/><rect x="155" y="220" width="12" height="30" fill="#9c6644"/><rect x="118" y="210" width="8" height="8" fill="#9c6644"/><rect x="174" y="210" width="8" height="8" fill="#9c6644"/></g>
+                <g stroke="#f5efe2" strokeWidth="1" fill="none" opacity=".6"><path d="M0,310 Q30,304 60,310 T120,310 T180,310 T240,310 T300,310"/><path d="M0,330 Q30,324 60,330 T120,330 T180,330 T240,330 T300,330"/></g>
+                <g stroke="#3a261a" strokeWidth="1.4" fill="none" strokeLinecap="round"><path d="M70,90 q5,-5 10,0 q5,-5 10,0"/><path d="M210,75 q4,-4 8,0 q4,-4 8,0"/></g>
+              </svg>
+            )}
+            <div style={{ position: 'absolute', top: 18, right: 18, width: 64, height: 64, border: '1px solid rgba(245,239,226,0.8)', color: '#f5efe2', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: cormorant, fontStyle: 'italic', fontSize: 11, textAlign: 'center', lineHeight: 1.2, letterSpacing: '0.1em', textTransform: 'uppercase', opacity: 0.85 }}>
+              {invitation.cover_photo_badge ?? year}
             </div>
-            <div style={{ position: 'absolute', left: 20, bottom: 20, color: '#f5efe2', fontFamily: cormorant, fontStyle: 'italic', fontSize: 14, letterSpacing: '0.06em', textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
-              — {invitation.venue_name ?? labels.save_the_date} —
+            <div style={{ position: 'absolute', left: 20, bottom: 20, color: '#f5efe2', fontFamily: cormorant, fontStyle: 'italic', fontSize: 14, letterSpacing: '0.06em', textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>
+              — {invitation.cover_photo_caption ?? invitation.venue_name ?? labels.save_the_date} —
             </div>
           </div>
         </motion.div>
@@ -212,7 +220,7 @@ export function RivieraTemplate({ invitation, onRSVPSubmit, existingRSVP }: Prop
         </section>
       )}
 
-      <SharedSections invitation={invitation} theme={THEME} labels={labels} />
+      <SharedSections invitation={invitation} theme={THEME} labels={labels} coverPhotoUrl={invitation.cover_photo_url} />
 
       {/* RSVP */}
       <section style={{ padding: '120px 0', background: C.ink, color: C.cream, position: 'relative' }}>

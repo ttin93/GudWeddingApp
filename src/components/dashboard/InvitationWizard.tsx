@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import toast from 'react-hot-toast'
@@ -9,9 +9,10 @@ import {
   Clock, MapPin, Heart, Gift, HelpCircle,
   Hotel, Car, Hash, Phone, Users, Music,
   ChevronDown, ChevronUp, Sparkles, Loader2, Eye,
+  Upload, X, ImageIcon,
 } from 'lucide-react'
-import { TEMPLATES } from '@/types'
-import type { TemplateId, TimelineEvent, AccommodationItem, GiftRegistryItem, FAQItem, Invitation } from '@/types'
+import { TEMPLATES, BACKGROUND_MUSIC_TRACKS } from '@/types'
+import type { TemplateId, BackgroundMusicId, TimelineEvent, AccommodationItem, GiftRegistryItem, FAQItem, Invitation, InvitationPhoto } from '@/types'
 import { TemplateRenderer } from '../invitation/TemplateRenderer'
 import { DEFAULT_LABELS, LANGUAGE_OPTIONS, LABEL_FIELD_GROUPS } from '@/lib/utils/labels'
 import type { InvitationLabels } from '@/lib/utils/labels'
@@ -75,6 +76,8 @@ interface WizardData {
   // Step 8 — jezik
   language: string
   labels: InvitationLabels
+  // Background music
+  background_music: BackgroundMusicId
 }
 
 const DEFAULT: WizardData = {
@@ -94,6 +97,7 @@ const DEFAULT: WizardData = {
   rsvp_mode: 'form', rsvp_deadline: '', max_guests: '', show_countdown: true, show_gallery: true,
   language: 'sl',
   labels: DEFAULT_LABELS['sl'],
+  background_music: 'none',
 }
 
 // ─── Step config ──────────────────────────────────────────────────────────────
@@ -596,6 +600,50 @@ function Step4({ data, set }: { data: WizardData; set: (k: keyof WizardData, v: 
 // ─── STEP 5: Podrobnosti ──────────────────────────────────────────────────────
 function Step5({ data, set }: { data: WizardData; set: (k: keyof WizardData, v: unknown) => void }) {
   const [aiDress, setAiDress] = useState(false)
+  const [previewPlaying, setPreviewPlaying] = useState<string | null>(null)
+  const previewAudioRef = useRef<HTMLAudioElement | null>(null)
+
+  function stopPreview() {
+    if (previewAudioRef.current) {
+      previewAudioRef.current.pause()
+      previewAudioRef.current.src = ''
+      previewAudioRef.current = null
+    }
+    setPreviewPlaying(null)
+  }
+
+  function playPreview(id: string) {
+    const track = BACKGROUND_MUSIC_TRACKS[id as keyof typeof BACKGROUND_MUSIC_TRACKS]
+    if (!track) return
+
+    if (previewPlaying === id) { stopPreview(); return }
+
+    if (previewAudioRef.current) {
+      previewAudioRef.current.pause()
+      previewAudioRef.current.src = ''
+    }
+
+    const audio = new Audio(track.src)
+    audio.volume = 0.35
+    audio.loop = true
+    previewAudioRef.current = audio
+
+    // keep play() call synchronous (preserves browser gesture context)
+    const promise = audio.play()
+    if (promise !== undefined) {
+      promise
+        .then(() => setPreviewPlaying(id))
+        .catch(() => toast.error('Klikni nekje na strani, nato znova izberi glasbo'))
+    }
+  }
+
+  function selectTrack(id: BackgroundMusicId) {
+    set('background_music', id)
+    if (id === 'none') { stopPreview(); return }
+    playPreview(id)
+  }
+
+  useEffect(() => () => { previewAudioRef.current?.pause() }, [])
 
   async function generateDressCode() {
     const input = data.dress_code || 'formal wedding, elegant'
@@ -666,9 +714,105 @@ function Step5({ data, set }: { data: WizardData; set: (k: keyof WizardData, v: 
         enabled={data.show_music}
         onToggle={() => set('show_music', !data.show_music)}
       >
-        <Field label="Spotify / Apple Music" hint="Link na skupno predvajalno listo.">
-          <TextInput value={data.music_playlist_url} onChange={v => set('music_playlist_url', v)} placeholder="https://open.spotify.com/playlist/..." />
-        </Field>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <Field label="Glasbeno ozadje" hint="Klikni za predvajanje. Gostje glasbo vklopijo sami na povabilu.">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 2 }}>
+              {/* None option */}
+              <button
+                type="button"
+                onClick={() => selectTrack('none')}
+                style={{
+                  padding: '10px 14px', textAlign: 'left', fontFamily: 'inherit',
+                  border: `2px solid ${data.background_music === 'none' ? ACC : RULE}`,
+                  background: data.background_music === 'none' ? ACC + '0D' : WHITE,
+                  cursor: 'pointer', transition: 'all .15s',
+                  display: 'flex', alignItems: 'center', gap: 12,
+                }}
+              >
+                <span style={{ fontSize: 18, lineHeight: 1 }}>🔇</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: INK }}>Brez glasbe</div>
+                  <div style={{ fontSize: 11, color: MUTE }}>Tiho</div>
+                </div>
+              </button>
+
+              {/* Track options */}
+              {(Object.entries(BACKGROUND_MUSIC_TRACKS) as [string, { label: string; description: string }][]).map(([id, track]) => {
+                const selected = data.background_music === id
+                const playing = previewPlaying === id
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => selectTrack(id as BackgroundMusicId)}
+                    style={{
+                      padding: '10px 14px', textAlign: 'left', fontFamily: 'inherit',
+                      border: `2px solid ${selected ? ACC : RULE}`,
+                      background: selected ? ACC + '0D' : WHITE,
+                      cursor: 'pointer', transition: 'all .15s',
+                      display: 'flex', alignItems: 'center', gap: 12,
+                    }}
+                  >
+                    {/* Play/pause indicator */}
+                    <div style={{
+                      width: 30, height: 30, borderRadius: '50%', flexShrink: 0,
+                      background: playing ? ACC : selected ? ACC + '30' : RULE,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: 13, color: playing ? WHITE : MUTE,
+                      transition: 'all .2s',
+                    }}>
+                      {playing ? '⏸' : '▶'}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 13, fontWeight: selected ? 600 : 400, color: INK }}>{track.label}</div>
+                      <div style={{ fontSize: 11, color: MUTE }}>{track.description}</div>
+                    </div>
+                    {playing && (
+                      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2, height: 14 }}>
+                        {[1, 1.5, 0.8, 1.2].map((h, i) => (
+                          <div key={i} style={{
+                            width: 3, borderRadius: 2, background: ACC,
+                            height: `${h * 9}px`,
+                            animation: `musicBar ${0.7 + i * 0.15}s ease-in-out infinite alternate`,
+                          }} />
+                        ))}
+                      </div>
+                    )}
+                  </button>
+                )
+              })}
+
+              {/* Stop bar */}
+              {previewPlaying && (
+                <div style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '8px 14px', background: ACC + '15', border: `1px solid ${ACC}30`,
+                  marginTop: 2,
+                }}>
+                  <span style={{ fontSize: 11.5, color: ACC, fontWeight: 500 }}>
+                    ♫ Predvajam: {BACKGROUND_MUSIC_TRACKS[previewPlaying as keyof typeof BACKGROUND_MUSIC_TRACKS]?.label}
+                  </span>
+                  <button type="button" onClick={stopPreview} style={{
+                    background: 'none', border: `1px solid ${ACC}60`, color: ACC,
+                    fontSize: 11, padding: '3px 10px', cursor: 'pointer', fontFamily: 'inherit',
+                  }}>
+                    ■ Stop
+                  </button>
+                </div>
+              )}
+
+              <style>{`
+                @keyframes musicBar {
+                  from { transform: scaleY(0.3); opacity: 0.5; }
+                  to   { transform: scaleY(1);   opacity: 1;   }
+                }
+              `}</style>
+            </div>
+          </Field>
+          <Field label="Spotify / Apple Music" hint="Link na skupno predvajalno listo (prikaže se na povabilu).">
+            <TextInput value={data.music_playlist_url} onChange={v => set('music_playlist_url', v)} placeholder="https://open.spotify.com/playlist/..." />
+          </Field>
+        </div>
       </SectionToggle>
 
       <SectionToggle
@@ -1041,10 +1185,117 @@ const STEP_TITLES = [
   'Pregled',
 ]
 
+// ─── Photo upload step (shown after invitation created) ───────────────────────
+function WizardPhotoUpload({ invitationId, onFinish }: { invitationId: string; onFinish: () => void }) {
+  const [photos, setPhotos] = useState<(InvitationPhoto & { url: string })[]>([])
+  const [uploading, setUploading] = useState(false)
+  const fileRef = useRef<HTMLInputElement>(null)
+
+  async function handleFiles(files: FileList | null) {
+    if (!files || files.length === 0) return
+    setUploading(true)
+    for (const file of Array.from(files)) {
+      const fd = new FormData()
+      fd.append('file', file)
+      fd.append('invitationId', invitationId)
+      const res = await fetch('/api/photos', { method: 'POST', body: fd })
+      const json = await res.json()
+      if (!res.ok) { toast.error(json.error ?? 'Upload ni uspel'); break }
+      setPhotos(prev => [...prev, json])
+    }
+    setUploading(false)
+  }
+
+  async function deletePhoto(id: string) {
+    const res = await fetch(`/api/photos/${id}`, { method: 'DELETE' })
+    if (res.ok) setPhotos(prev => prev.filter(p => p.id !== id))
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <p style={{ fontSize: 13, color: MUTE, lineHeight: 1.6 }}>
+        Naložite fotografije za galerijo. Prva slika bo cover fotografija (prikazana na templateih z hero sliko, npr. Riviera). Fotografije lahko kadar koli spremenite v urejevalniku.
+      </p>
+
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <p style={{ fontSize: 13, color: MUTE }}>{photos.length} fotografij</p>
+        <button
+          type="button"
+          onClick={() => fileRef.current?.click()}
+          disabled={uploading}
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            padding: '10px 18px', background: INK, color: CREAM,
+            border: 'none', cursor: uploading ? 'not-allowed' : 'pointer',
+            fontFamily: 'inherit', fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase',
+            opacity: uploading ? 0.7 : 1,
+          }}
+        >
+          <Upload size={13} />
+          {uploading ? 'Nalagam…' : 'Dodaj fotografije'}
+        </button>
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          multiple
+          style={{ display: 'none' }}
+          onChange={e => handleFiles(e.target.files)}
+        />
+      </div>
+
+      {photos.length === 0 ? (
+        <div style={{ border: `1px dashed ${RULE}`, padding: '40px 24px', textAlign: 'center' }}>
+          <ImageIcon size={28} style={{ color: MUTE, marginBottom: 10 }} />
+          <p style={{ fontSize: 13, color: MUTE }}>Še ni fotografij. Kliknite "Dodaj fotografije" ali preskočite.</p>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {photos.map((photo, i) => (
+            <div key={photo.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', border: `1px solid ${RULE}`, background: WHITE }}>
+              <img src={photo.url} alt="" style={{ width: 48, height: 48, objectFit: 'cover', flexShrink: 0 }} />
+              <div style={{ flex: 1, minWidth: 0 }}>
+                {i === 0 && <span style={{ fontSize: 10, color: ACC, letterSpacing: '0.18em', textTransform: 'uppercase' }}>★ Cover</span>}
+              </div>
+              <button
+                type="button"
+                onClick={() => deletePhoto(photo.id)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: MUTE, padding: 4, display: 'flex' }}
+              >
+                <X size={15} />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 16, paddingTop: 24, borderTop: `1px solid ${RULE}` }}>
+        <button
+          type="button"
+          onClick={onFinish}
+          style={{ padding: '10px 20px', border: `1px solid ${RULE}`, background: 'transparent', color: MUTE, fontSize: 12, letterSpacing: '0.15em', textTransform: 'uppercase', cursor: 'pointer', fontFamily: 'inherit' }}
+        >
+          Preskoči
+        </button>
+        <button
+          type="button"
+          onClick={onFinish}
+          style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 28px', background: INK, color: CREAM, border: 'none', fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase', cursor: 'pointer', fontFamily: 'inherit' }}
+        >
+          Zaključi
+          <Check size={14} />
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export function InvitationWizard() {
   const [step, setStep] = useState(0)
   const [data, setData] = useState<WizardData>(DEFAULT)
   const [submitting, setSubmitting] = useState(false)
+  const [uploadStep, setUploadStep] = useState(false)
+  const [createdId, setCreatedId] = useState<string | null>(null)
   const router = useRouter()
 
   function set(key: keyof WizardData, value: unknown) {
@@ -1066,13 +1317,14 @@ export function InvitationWizard() {
         body: JSON.stringify({
           ...data,
           max_guests: data.max_guests ? parseInt(data.max_guests) : undefined,
-          package: 'essential',
+          package: 'signature', // TODO: set to 'essential' when Stripe is live; Stripe webhook upgrades package after payment
         }),
       })
       const result = await res.json()
       if (!res.ok) throw new Error(result.error)
       toast.success('Povabilo ustvarjeno!')
-      router.push(`/dashboard/${result.id}`)
+      setCreatedId(result.id)
+      setUploadStep(true)
     } catch (e) {
       toast.error((e as Error).message || 'Napaka')
     } finally {
@@ -1171,6 +1423,33 @@ export function InvitationWizard() {
       </div>
     </div>
   )
+
+  if (uploadStep && createdId) {
+    return (
+      <div style={{ minHeight: '100vh', background: SOFT, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '48px 16px 80px' }}>
+        <div style={{ width: '100%', maxWidth: 680 }}>
+          <div style={{ textAlign: 'center', marginBottom: 32 }}>
+            <div style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 20, color: INK, letterSpacing: '0.05em' }}>Invitia</div>
+            <p style={{ fontSize: 11, color: MUTE, letterSpacing: '0.2em', textTransform: 'uppercase', marginTop: 4 }}>Ustvari povabilo</p>
+          </div>
+          <div style={{ background: WHITE, border: `1px solid ${RULE}`, padding: '40px 40px' }}>
+            <div style={{ marginBottom: 28 }}>
+              <div style={{ fontSize: 10, letterSpacing: '0.3em', textTransform: 'uppercase', color: MUTE, marginBottom: 6 }}>
+                Zadnji korak
+              </div>
+              <h2 style={{ fontSize: 22, fontWeight: 400, color: INK, fontFamily: 'var(--font-dm-serif)', letterSpacing: '0.03em' }}>
+                Dodajte fotografije
+              </h2>
+            </div>
+            <WizardPhotoUpload
+              invitationId={createdId}
+              onFinish={() => router.push(`/dashboard/${createdId}`)}
+            />
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div style={{ minHeight: '100vh', background: SOFT, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '48px 16px 80px' }}>

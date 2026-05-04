@@ -8,8 +8,9 @@ import {
   ChevronLeft, ChevronRight, Check, Plus, Trash2,
   Clock, MapPin, Heart, Gift, HelpCircle, Hotel,
   Car, Hash, Phone, Users, Music, ChevronDown, ChevronUp,
-  Upload, X, ImageIcon,
+  Upload, X, ImageIcon, ArrowUp, ArrowDown,
 } from 'lucide-react'
+import { BACKGROUND_MUSIC_TRACKS } from '@/types'
 import type { Invitation, TimelineEvent, AccommodationItem, GiftRegistryItem, FAQItem, InvitationPhoto, Package } from '@/types'
 import { DEFAULT_LABELS, LANGUAGE_OPTIONS, LABEL_FIELD_GROUPS } from '@/lib/utils/labels'
 import type { InvitationLabels } from '@/lib/utils/labels'
@@ -223,9 +224,17 @@ function TimelineEditor({ events, onChange }: { events: TimelineEvent[]; onChang
 }
 
 // ─── Gallery tab ─────────────────────────────────────────────────────────────
-const GALLERY_LIMITS: Record<string, number> = { essential: 0, elegance: 10, signature: 20 }
+// TODO: restore limits when Stripe is live — essential: 0, elegance: 10
+const GALLERY_LIMITS: Record<string, number> = { essential: 20, elegance: 20, signature: 20 }
 
-function GalleryTab({ invitationId, pkg }: { invitationId: string; pkg: Package }) {
+function GalleryTab({ invitationId, pkg, caption, onCaptionChange, badge, onBadgeChange }: {
+  invitationId: string
+  pkg: Package
+  caption: string
+  onCaptionChange: (v: string) => void
+  badge: string
+  onBadgeChange: (v: string) => void
+}) {
   const [photos, setPhotos] = useState<(InvitationPhoto & { url: string })[]>([])
   const [uploading, setUploading] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
@@ -253,26 +262,70 @@ function GalleryTab({ invitationId, pkg }: { invitationId: string; pkg: Package 
     setUploading(false)
   }
 
-  async function deletePhoto(id: string, storagePath: string) {
+  async function deletePhoto(id: string) {
     const res = await fetch(`/api/photos/${id}`, { method: 'DELETE' })
     if (res.ok) setPhotos(prev => prev.filter(p => p.id !== id))
-    else toast.error('Could not delete photo')
+    else toast.error('Napaka pri brisanju')
+  }
+
+  async function movePhoto(index: number, dir: -1 | 1) {
+    const target = index + dir
+    if (target < 0 || target >= photos.length) return
+    const updated = [...photos]
+    const aOrder = updated[index].display_order
+    const bOrder = updated[target].display_order
+    // swap display_order values
+    await Promise.all([
+      fetch(`/api/photos/${updated[index].id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ display_order: bOrder }) }),
+      fetch(`/api/photos/${updated[target].id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ display_order: aOrder }) }),
+    ])
+    updated[index] = { ...updated[index], display_order: bOrder }
+    updated[target] = { ...updated[target], display_order: aOrder }
+    updated.sort((a, b) => a.display_order - b.display_order)
+    setPhotos(updated)
   }
 
   if (limit === 0) {
     return (
       <div style={{ border: `1px solid ${RULE}`, background: SOFT, padding: '32px 24px', textAlign: 'center' }}>
         <ImageIcon size={32} style={{ color: MUTE, marginBottom: 12 }} />
-        <p style={{ fontSize: 14, color: INK, fontWeight: 500, marginBottom: 8 }}>Photo gallery not available</p>
-        <p style={{ fontSize: 13, color: MUTE }}>Upgrade to Elegance or Signature to add photos to your invitation.</p>
+        <p style={{ fontSize: 14, color: INK, fontWeight: 500, marginBottom: 8 }}>Galerija ni na voljo</p>
+        <p style={{ fontSize: 13, color: MUTE }}>Nadgradi na Elegance ali Signature za dodajanje fotografij.</p>
       </div>
     )
   }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+
+      {/* Caption + badge for cover photo */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 12 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <label style={{ fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: MUTE }}>Napis pod cover fotografijo</label>
+          <p style={{ fontSize: 11.5, color: MUTE, marginTop: -2 }}>Prikaže se pri templateih z cover sliko (npr. Riviera). Privzeto: ime prizorišča.</p>
+          <input
+            value={caption}
+            onChange={e => onCaptionChange(e.target.value)}
+            placeholder="Villa Rosa · Toskana"
+            style={{ padding: '10px 14px', border: `1px solid ${RULE}`, background: WHITE, fontSize: 14, color: INK, outline: 'none', fontFamily: 'inherit' }}
+          />
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: 110 }}>
+          <label style={{ fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: MUTE }}>Krog ⬤</label>
+          <p style={{ fontSize: 11.5, color: MUTE, marginTop: -2 }}>Kratko (leto, kraj…)</p>
+          <input
+            value={badge}
+            onChange={e => onBadgeChange(e.target.value)}
+            placeholder="2019"
+            maxLength={8}
+            style={{ padding: '10px 14px', border: `1px solid ${RULE}`, background: WHITE, fontSize: 14, color: INK, outline: 'none', fontFamily: 'inherit' }}
+          />
+        </div>
+      </div>
+
+      {/* Upload header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <p style={{ fontSize: 13, color: MUTE }}>{photos.length} / {limit} photos</p>
+        <p style={{ fontSize: 13, color: MUTE }}>{photos.length} / {limit} fotografij</p>
         {photos.length < limit && (
           <button
             onClick={() => fileRef.current?.click()}
@@ -286,7 +339,7 @@ function GalleryTab({ invitationId, pkg }: { invitationId: string; pkg: Package 
             }}
           >
             <Upload size={13} />
-            {uploading ? 'Uploading…' : 'Add photos'}
+            {uploading ? 'Nalagam…' : 'Dodaj fotografije'}
           </button>
         )}
         <input
@@ -300,22 +353,44 @@ function GalleryTab({ invitationId, pkg }: { invitationId: string; pkg: Package 
       </div>
 
       {photos.length > 0 ? (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 8 }}>
-          {photos.map(photo => (
-            <div key={photo.id} style={{ position: 'relative', aspectRatio: '1', overflow: 'hidden', border: `1px solid ${RULE}` }}>
-              <img src={photo.url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              <button
-                onClick={() => deletePhoto(photo.id, photo.storage_path)}
-                style={{
-                  position: 'absolute', top: 6, right: 6,
-                  background: 'rgba(0,0,0,0.55)', border: 'none',
-                  borderRadius: '50%', width: 26, height: 26,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  cursor: 'pointer', color: 'white',
-                }}
-              >
-                <X size={12} />
-              </button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {photos.map((photo, i) => (
+            <div key={photo.id} style={{
+              display: 'flex', alignItems: 'center', gap: 12,
+              border: `1px solid ${i === 0 ? ACC : RULE}`,
+              background: i === 0 ? ACC + '08' : WHITE,
+              padding: 8,
+            }}>
+              {/* Thumbnail */}
+              <div style={{ width: 72, height: 72, flexShrink: 0, overflow: 'hidden', position: 'relative' }}>
+                <img src={photo.url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
+
+              {/* Info */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                {i === 0 && (
+                  <div style={{ fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: ACC, marginBottom: 4, fontWeight: 600 }}>
+                    ★ Cover fotografija
+                  </div>
+                )}
+                <div style={{ fontSize: 12, color: MUTE }}>Fotografija {i + 1}</div>
+              </div>
+
+              {/* Reorder + delete */}
+              <div style={{ display: 'flex', gap: 4, flexShrink: 0 }}>
+                <button onClick={() => movePhoto(i, -1)} disabled={i === 0}
+                  style={{ width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${RULE}`, background: WHITE, cursor: i === 0 ? 'not-allowed' : 'pointer', opacity: i === 0 ? 0.3 : 1, color: MUTE }}>
+                  <ArrowUp size={13} />
+                </button>
+                <button onClick={() => movePhoto(i, 1)} disabled={i === photos.length - 1}
+                  style={{ width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${RULE}`, background: WHITE, cursor: i === photos.length - 1 ? 'not-allowed' : 'pointer', opacity: i === photos.length - 1 ? 0.3 : 1, color: MUTE }}>
+                  <ArrowDown size={13} />
+                </button>
+                <button onClick={() => deletePhoto(photo.id)}
+                  style={{ width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${RULE}`, background: WHITE, cursor: 'pointer', color: '#C0504A' }}>
+                  <X size={13} />
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -331,8 +406,8 @@ function GalleryTab({ invitationId, pkg }: { invitationId: string; pkg: Package 
           onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = RULE }}
         >
           <ImageIcon size={32} style={{ color: MUTE, marginBottom: 12 }} />
-          <p style={{ fontSize: 14, color: INK, marginBottom: 4 }}>Drop photos here or click to upload</p>
-          <p style={{ fontSize: 12, color: MUTE }}>JPEG, PNG, WebP · max 5MB per photo</p>
+          <p style={{ fontSize: 14, color: INK, marginBottom: 4 }}>Povleci sem ali klikni za nalaganje</p>
+          <p style={{ fontSize: 12, color: MUTE }}>JPEG, PNG, WebP · max 5MB · 1. slika = cover na templatu</p>
         </div>
       )}
     </div>
@@ -351,6 +426,7 @@ interface EditorState {
   hashtag: string; show_hashtag: boolean
   contact_name: string; contact_phone: string; contact_email: string; show_contact: boolean
   music_playlist_url: string; show_music: boolean
+  background_music: string
   transport_notes: string; show_transport: boolean
   accommodation: AccommodationItem[]; show_accommodation: boolean
   gift_registry: GiftRegistryItem[]; show_gift_registry: boolean
@@ -359,6 +435,8 @@ interface EditorState {
   rsvp_deadline: string; max_guests: string
   show_countdown: boolean; show_gallery: boolean
   language: string; labels: InvitationLabels
+  cover_photo_caption: string
+  cover_photo_badge: string
 }
 
 function invToState(inv: Invitation): EditorState {
@@ -388,6 +466,7 @@ function invToState(inv: Invitation): EditorState {
     contact_email: inv.contact_email ?? '',
     show_contact: inv.show_contact ?? false,
     music_playlist_url: inv.music_playlist_url ?? '',
+    background_music: inv.background_music ?? 'none',
     show_music: inv.show_music ?? false,
     transport_notes: inv.transport_notes ?? '',
     show_transport: inv.show_transport ?? false,
@@ -404,6 +483,8 @@ function invToState(inv: Invitation): EditorState {
     show_gallery: inv.show_gallery ?? true,
     language: lang,
     labels: { ...defaults, ...(inv.labels as Partial<InvitationLabels> ?? {}) },
+    cover_photo_caption: inv.cover_photo_caption ?? '',
+    cover_photo_badge: inv.cover_photo_badge ?? '',
   }
 }
 
@@ -427,13 +508,19 @@ export function InvitationEditor({ invitation }: { invitation: Invitation }) {
           ...data,
           max_guests: data.max_guests ? parseInt(data.max_guests) : null,
           languages: [data.language],
+          background_music: data.background_music && data.background_music !== 'none' ? data.background_music : null,
+          ceremony_time: data.ceremony_time || null,
+          reception_time: data.reception_time || null,
+          rsvp_deadline: data.rsvp_deadline || null,
+          wedding_date: data.wedding_date || null,
         }),
       })
-      if (!res.ok) throw new Error('Failed to save')
+      const result = await res.json()
+      if (!res.ok) throw new Error(result.error ?? 'Failed to save')
       toast.success('Shranjeno!')
       router.refresh()
-    } catch {
-      toast.error('Napaka pri shranjevanju')
+    } catch (e) {
+      toast.error((e as Error).message || 'Napaka pri shranjevanju')
     } finally {
       setSaving(false)
     }
@@ -561,7 +648,37 @@ export function InvitationEditor({ invitation }: { invitation: Invitation }) {
                 <TextInput value={data.hashtag} onChange={v => set('hashtag', v)} placeholder="#AnaInMarko2025" />
               </SectionToggle>
               <SectionToggle label="Glasba / Playlist" icon={Music} enabled={data.show_music} onToggle={() => set('show_music', !data.show_music)}>
-                <TextInput value={data.music_playlist_url} onChange={v => set('music_playlist_url', v)} placeholder="https://open.spotify.com/playlist/..." />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                  <Field label="Glasbeno ozadje na povabilu" hint="Gostje glasbo vklopijo sami s klikom na ♪ gumb.">
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 2 }}>
+                      {[{ id: 'none', label: 'Brez glasbe', description: 'Tiho', icon: '🔇' },
+                        ...Object.entries(BACKGROUND_MUSIC_TRACKS).map(([id, t]) => ({ id, ...t, icon: '♪' }))
+                      ].map(track => {
+                        const active = (data.background_music || 'none') === track.id
+                        return (
+                          <button key={track.id} type="button"
+                            onClick={() => set('background_music', track.id)}
+                            style={{
+                              display: 'flex', alignItems: 'center', gap: 12, padding: '9px 12px',
+                              border: `2px solid ${active ? ACC : RULE}`,
+                              background: active ? ACC + '0D' : WHITE,
+                              cursor: 'pointer', textAlign: 'left', fontFamily: 'inherit', transition: 'all .15s',
+                            }}>
+                            <span style={{ fontSize: 15 }}>{track.icon}</span>
+                            <div>
+                              <div style={{ fontSize: 12.5, fontWeight: active ? 600 : 400, color: INK }}>{track.label}</div>
+                              <div style={{ fontSize: 10.5, color: MUTE }}>{track.description}</div>
+                            </div>
+                            {active && <div style={{ marginLeft: 'auto', width: 8, height: 8, borderRadius: '50%', background: ACC }} />}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </Field>
+                  <Field label="Spotify / Apple Music" hint="Link na skupno predvajalno listo.">
+                    <TextInput value={data.music_playlist_url} onChange={v => set('music_playlist_url', v)} placeholder="https://open.spotify.com/playlist/..." />
+                  </Field>
+                </div>
               </SectionToggle>
               <SectionToggle label="Kontaktna oseba" icon={Phone} enabled={data.show_contact} onToggle={() => set('show_contact', !data.show_contact)}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -702,7 +819,14 @@ export function InvitationEditor({ invitation }: { invitation: Invitation }) {
 
           {/* ── Galerija ── */}
           {tab === 6 && (
-            <GalleryTab invitationId={invitation.id} pkg={invitation.package} />
+            <GalleryTab
+              invitationId={invitation.id}
+              pkg={invitation.package}
+              caption={data.cover_photo_caption}
+              onCaptionChange={v => set('cover_photo_caption', v)}
+              badge={data.cover_photo_badge}
+              onBadgeChange={v => set('cover_photo_badge', v)}
+            />
           )}
 
           {/* ── Jezik ── */}

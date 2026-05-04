@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
 import { createClient, createServiceClient } from '@/lib/supabase/server'
 
-const LIMITS: Record<string, number> = { essential: 0, elegance: 10, signature: 20 }
+// TODO: restore limits when Stripe is live — essential: 0, elegance: 10
+const LIMITS: Record<string, number> = { essential: 20, elegance: 20, signature: 20 }
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
 const MAX_SIZE = 5 * 1024 * 1024 // 5MB
 

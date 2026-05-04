@@ -1,6 +1,8 @@
 import { notFound } from 'next/navigation'
 import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { TemplateRenderer } from '@/components/invitation/TemplateRenderer'
+import { MusicPlayer } from '@/components/invitation/MusicPlayer'
+import { PreviewBanner } from '@/components/invitation/PreviewBanner'
 import type { Metadata } from 'next'
 import type { Invitation } from '@/types'
 
@@ -52,15 +54,32 @@ export default async function InvitePage({ params }: Props) {
   const invitation = await getInvitationBySlug(slug)
 
   if (!invitation) notFound()
-  if (!invitation.is_active) notFound()
-  // Enforce subscription expiry
+  // Expired invitations → 404
   if (invitation.active_until && new Date(invitation.active_until) < new Date()) notFound()
+  const isPreview = !invitation.is_active
 
-  // Atomic increment via service client to avoid race conditions
   const serviceClient = await createServiceClient()
-  serviceClient
-    .rpc('increment_view_count', { inv_slug: slug })
-    .then(() => {})
+
+  // Attach cover photo (first photo by display_order)
+  const { data: firstPhoto } = await serviceClient
+    .from('invitation_photos')
+    .select('storage_path')
+    .eq('invitation_id', invitation.id)
+    .order('display_order', { ascending: true })
+    .limit(1)
+    .maybeSingle()
+
+  const invitationWithPhoto: FullInvitation = {
+    ...invitation,
+    cover_photo_url: firstPhoto
+      ? serviceClient.storage.from('invitation-photos').getPublicUrl(firstPhoto.storage_path).data.publicUrl
+      : undefined,
+  }
+
+  // Count views only for live invitations
+  if (!isPreview) {
+    serviceClient.rpc('increment_view_count', { inv_slug: slug }).then(() => {})
+  }
 
   return (
     <>
@@ -71,7 +90,9 @@ export default async function InvitePage({ params }: Props) {
         <style dangerouslySetInnerHTML={{ __html: invitation.custom_css }} />
       )}
 
-      <TemplateRenderer invitation={invitation} />
+      <TemplateRenderer invitation={invitationWithPhoto} />
+      <MusicPlayer trackId={invitation.background_music} />
+      {isPreview && <PreviewBanner invitationId={invitation.id} />}
 
       {invitation.custom_js && (
         <script defer dangerouslySetInnerHTML={{ __html: invitation.custom_js }} />

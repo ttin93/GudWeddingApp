@@ -8,6 +8,7 @@ import { CheckCircle2 } from 'lucide-react'
 import { SiteNav } from '@/components/ui/SiteNav'
 import { SiteFooter } from '@/components/ui/SiteFooter'
 import { useTranslations } from 'next-intl'
+import { TemplateArt } from '@/components/ui/TemplateArt'
 
 const INK   = '#1A1714'
 const MUTE  = '#6e6359'
@@ -295,46 +296,119 @@ function HowItWorksSection() {
   )
 }
 
+function LandingTemplateCard({ id, name, category, index }: { id: string; name: string; category: string; index: number }) {
+  const [hovered, setHovered] = useState(false)
+  const isPopular = ['watercolor', 'riviera'].includes(id)
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.55, delay: Math.min(index, 4) * 0.07 }}
+      style={{ flexShrink: 0, width: 'clamp(260px, calc((100vw - 160px) / 3), 420px)' }}
+    >
+      <Link href={`/templates/${id}`} target="_blank" rel="noopener noreferrer" style={{ display: 'block', textDecoration: 'none' }}>
+        <div
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+          style={{
+            aspectRatio: '3/4',
+            overflow: 'hidden',
+            border: `1px solid ${RULE}`,
+            position: 'relative',
+            transition: 'box-shadow .4s, transform .35s',
+            boxShadow: hovered ? '0 30px 60px -28px rgba(28,24,20,.28)' : 'none',
+            transform: hovered ? 'translateY(-4px)' : 'none',
+          }}
+        >
+          <TemplateArt id={id} />
+          {isPopular && (
+            <div style={{ position: 'absolute', top: 12, left: 12, padding: '5px 11px', background: 'rgba(247,244,239,.92)', color: ACC, borderRadius: 99, fontSize: 9, letterSpacing: '.22em', textTransform: 'uppercase', fontWeight: 600, backdropFilter: 'blur(6px)' }}>
+              ★ Popular
+            </div>
+          )}
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(26,23,20,.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: hovered ? 1 : 0, transition: 'opacity .35s', backdropFilter: 'blur(2px)' }}>
+            <span style={{ padding: '13px 22px', background: CREAM, color: INK, borderRadius: 99, fontSize: 12, letterSpacing: '.04em', fontWeight: 500, display: 'inline-flex', alignItems: 'center', gap: 8, transform: hovered ? 'translateY(0)' : 'translateY(8px)', transition: 'transform .35s' }}>
+              Poglej dizajn
+              <svg width="13" height="10" viewBox="0 0 14 10" fill="none"><path d="M0 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" strokeWidth="1.2" /></svg>
+            </span>
+          </div>
+        </div>
+        <div style={{ marginTop: 14 }}>
+          <div style={{ fontSize: 10, letterSpacing: '.28em', color: MUTE, textTransform: 'uppercase', marginBottom: 5, fontWeight: 500 }}>{category}</div>
+          <div style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontWeight: 400, fontSize: 22, color: INK, letterSpacing: '-.005em' }}>{name}</div>
+        </div>
+      </Link>
+    </motion.div>
+  )
+}
+
 function TemplatesSection() {
   const t = useTranslations('home')
+  const sectionRef = useRef<HTMLElement>(null)
+  const carouselRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    const carousel = carouselRef.current
+    if (!section || !carousel) return
+
+    let active = false
+
+    const io = new IntersectionObserver(
+      ([entry]) => { active = entry.isIntersecting },
+      { threshold: 0.3 }
+    )
+    io.observe(section)
+
+    function onWheel(e: WheelEvent) {
+      if (!active) return
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return
+
+      const atStart = carousel.scrollLeft <= 0
+      const atEnd = carousel.scrollLeft >= carousel.scrollWidth - carousel.clientWidth - 1
+
+      if (e.deltaY < 0 && atStart) return
+      if (e.deltaY > 0 && atEnd) return
+
+      e.preventDefault()
+      carousel.scrollLeft += e.deltaY
+    }
+
+    window.addEventListener('wheel', onWheel, { passive: false })
+    return () => {
+      window.removeEventListener('wheel', onWheel)
+      io.disconnect()
+    }
+  }, [])
+
   return (
-    <section style={{ padding: '100px 56px', background: '#EFE9DD', borderTop: `1px solid ${RULE}` }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 64 }}>
-          <div>
-            <SectionLabel>{t('designs')}</SectionLabel>
-            <h2 style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontWeight: 400, fontSize: 'clamp(42px,6vw,72px)', lineHeight: 0.95, color: INK, letterSpacing: '-0.02em' }}>
-              {t('findStyle').split('\n').map((line, i) => <span key={i}>{i > 0 && <br />}{line}</span>)}
-            </h2>
-          </div>
-          <Link href="/templates" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: INK, borderBottom: `1px solid ${RULES}`, paddingBottom: 4, textDecoration: 'none' }}>
-            {t('allTemplates')}
-            <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M0 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" strokeWidth="1" /></svg>
-          </Link>
+    <section ref={sectionRef} style={{ padding: '100px 0', background: '#EFE9DD', borderTop: `1px solid ${RULE}` }}>
+      {/* Header */}
+      <div style={{ padding: '0 56px', marginBottom: 56, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+        <div>
+          <SectionLabel>{t('designs')}</SectionLabel>
+          <h2 style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontWeight: 400, fontSize: 'clamp(42px,6vw,72px)', lineHeight: 0.95, color: INK, letterSpacing: '-0.02em' }}>
+            {t('findStyle').split('\n').map((line, i) => <span key={i}>{i > 0 && <br />}{line}</span>)}
+          </h2>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 16 }}>
-          {TEMPLATES.map((tmpl, i) => (
-            <motion.div key={tmpl.id}
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.08 }}
-              style={{ cursor: 'pointer' }}
-            >
-              <div style={{ aspectRatio: '3/4', background: tmpl.colors.background, border: `1px solid ${RULE}`, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 16, transition: 'transform .3s ease, box-shadow .3s ease' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1.02)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 20px 40px -12px rgba(26,23,20,.2)' }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = ''; (e.currentTarget as HTMLElement).style.boxShadow = '' }}
-              >
-                <span style={{ fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', color: tmpl.colors.textMuted, marginBottom: 8 }}>{tmpl.category}</span>
-                <span style={{ fontFamily: 'var(--font-pinyon)', fontSize: 28, color: tmpl.colors.primary, lineHeight: 1.2 }}>Emma &amp; James</span>
-                <div style={{ width: 24, height: 1, background: tmpl.colors.accent, margin: '10px 0' }} />
-                <span style={{ fontSize: 10, color: tmpl.colors.text }}>June 14, 2026</span>
-              </div>
-              <div style={{ marginTop: 10 }}>
-                <div style={{ fontSize: 13, fontWeight: 500, color: INK }}>{tmpl.name}</div>
-                <div style={{ fontSize: 11, color: MUTE, textTransform: 'capitalize', marginTop: 2 }}>{tmpl.category}</div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        <Link href="/templates" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: INK, borderBottom: `1px solid ${RULES}`, paddingBottom: 4, textDecoration: 'none', flexShrink: 0 }}>
+          {t('allTemplates')}
+          <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M0 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" strokeWidth="1" /></svg>
+        </Link>
+      </div>
+
+      {/* Horizontal scroll carousel — scroll hijack via wheel event on section */}
+      <div ref={carouselRef} className="no-scrollbar" style={{
+        display: 'flex',
+        overflowX: 'auto',
+        gap: 24,
+        padding: '0 56px 40px',
+      }}>
+        {TEMPLATES.map((tmpl, i) => (
+          <LandingTemplateCard key={tmpl.id} id={tmpl.id} name={tmpl.name} category={tmpl.category} index={i} />
+        ))}
       </div>
     </section>
   )

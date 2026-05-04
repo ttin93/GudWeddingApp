@@ -478,11 +478,12 @@ export function DirectContactCard({ invitation, theme, labels }: {
 
 // ─── SharedSections: all extra sections in one drop-in component ──────────────
 export function SharedSections({
-  invitation, theme, labels,
+  invitation, theme, labels, coverPhotoUrl,
 }: {
   invitation: Invitation
   theme: SectionTheme
   labels: InvitationLabels
+  coverPhotoUrl?: string
 }) {
   return (
     <>
@@ -514,14 +515,14 @@ export function SharedSections({
         <ContactSection invitation={invitation} theme={theme} labels={labels} />
       )}
       {invitation.show_gallery && invitation.package !== 'essential' && (
-        <GallerySection invitation={invitation} theme={theme} />
+        <GallerySection invitation={invitation} theme={theme} coverPhotoUrl={coverPhotoUrl} />
       )}
     </>
   )
 }
 
 // ─── Gallery section ──────────────────────────────────────────────────────────
-function GallerySection({ invitation, theme }: { invitation: Invitation; theme: SectionTheme }) {
+function GallerySection({ invitation, theme, coverPhotoUrl }: { invitation: Invitation; theme: SectionTheme; coverPhotoUrl?: string }) {
   const [photos, setPhotos] = useState<(InvitationPhoto & { url: string })[]>([])
   const [lightbox, setLightbox] = useState<string | null>(null)
 
@@ -532,7 +533,11 @@ function GallerySection({ invitation, theme }: { invitation: Invitation; theme: 
       .catch(() => {})
   }, [invitation.id])
 
-  if (photos.length === 0) return null
+  const visiblePhotos = coverPhotoUrl
+    ? photos.filter(p => p.url !== coverPhotoUrl)
+    : photos
+
+  if (visiblePhotos.length === 0) return null
 
   return (
     <motion.section
@@ -555,7 +560,7 @@ function GallerySection({ invitation, theme }: { invitation: Invitation; theme: 
           gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
           gap: 8,
         }}>
-          {photos.map(photo => (
+          {visiblePhotos.map(photo => (
             <div
               key={photo.id}
               onClick={() => setLightbox(photo.url)}
