@@ -41,6 +41,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     'children_policy', 'transport_notes', 'music_playlist_url',
     'accommodation', 'gift_registry', 'faq',
     'background_music', 'cover_photo_caption', 'cover_photo_badge',
+    'show_intro',
   ] as const
   type AllowedField = (typeof ALLOWED)[number]
   const patch: Partial<Record<AllowedField, unknown>> & { updated_at: string } = {

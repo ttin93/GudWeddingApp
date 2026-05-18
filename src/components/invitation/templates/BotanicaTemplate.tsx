@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { MapPin, Clock } from 'lucide-react'
 import { formatDate, formatTime, daysUntilWedding } from '@/lib/utils/format'
@@ -7,6 +8,7 @@ import type { Invitation, RSVPResponse } from '@/types'
 import { RSVPForm } from '../RSVPForm'
 import { SharedSections, DirectContactCard, getEffectiveLabels } from '../InvitationSections'
 import type { SectionTheme } from '../InvitationSections'
+import { AnimateSection } from '../AnimateSection'
 
 export interface RSVPFormData {
   guest_name: string; email?: string; attending: boolean
@@ -26,7 +28,6 @@ const THEME: SectionTheme = {
   accent: C.accent, rule: C.rule, card: C.card,
 }
 
-const fade = { hidden: { opacity: 0, y: 28 }, visible: { opacity: 1, y: 0 } }
 
 function Divider() {
   return (
@@ -49,7 +50,8 @@ interface Props {
 }
 
 export function BotanicaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props) {
-  const daysLeft = daysUntilWedding(invitation.wedding_date)
+  const [daysLeft, setDaysLeft] = useState(0)
+  useEffect(() => { setDaysLeft(daysUntilWedding(invitation.wedding_date)) }, [invitation.wedding_date])
   const labels = getEffectiveLabels(invitation)
 
   return (
@@ -64,7 +66,7 @@ export function BotanicaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
           backgroundSize: '80px 80px',
         }} />
 
-        <motion.div variants={fade} initial="hidden" animate="visible" transition={{ duration: 1 }} style={{ position: 'relative', zIndex: 1, maxWidth: 560 }}>
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 560 }}>
           <p style={{ fontSize: 9.5, letterSpacing: '0.5em', textTransform: 'uppercase', color: C.accent, marginBottom: 36 }}>
             Together with their families
           </p>
@@ -90,19 +92,16 @@ export function BotanicaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
           )}
 
           {invitation.show_countdown && daysLeft > 0 && (
-            <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}
-              style={{ marginTop: 32, display: 'inline-flex', gap: 0, border: `1px solid ${C.rule}`, overflow: 'hidden' }}
-            >
+            <div style={{ marginTop: 32, display: 'inline-flex', gap: 0, border: `1px solid ${C.rule}`, overflow: 'hidden' }}>
               {[['Days', daysLeft], ['Until', 'we say'], ['I do', '♥']].map(([label, value], ci) => (
                 <div key={String(label)} style={{ padding: '12px 20px', borderRight: ci < 2 ? `1px solid ${C.rule}` : 'none', textAlign: 'center' }}>
                   <div style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontSize: 28, lineHeight: 1, color: C.primary }}>{value}</div>
                   <div style={{ fontSize: 8, letterSpacing: '0.28em', textTransform: 'uppercase', color: C.muted, marginTop: 4 }}>{label}</div>
                 </div>
               ))}
-            </motion.div>
+            </div>
           )}
-        </motion.div>
+        </div>
 
         {/* Scroll cue */}
         <motion.div
@@ -115,11 +114,7 @@ export function BotanicaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
 
       {/* ── DETAILS ── */}
       {(invitation.venue_name || invitation.ceremony_time) && (
-        <motion.section
-          variants={fade} initial="hidden" whileInView="visible"
-          viewport={{ once: true }} transition={{ duration: 0.7 }}
-          style={{ padding: '80px 32px', background: C.alt }}
-        >
+        <AnimateSection style={{ padding: '80px 32px', background: C.alt }}>
           <div style={{ maxWidth: 560, margin: '0 auto', textAlign: 'center' }}>
             <p style={{ fontSize: 9.5, letterSpacing: '0.5em', textTransform: 'uppercase', color: C.accent, marginBottom: 32 }}>The celebration</p>
 
@@ -162,14 +157,12 @@ export function BotanicaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
               )}
             </div>
           </div>
-        </motion.section>
+        </AnimateSection>
       )}
 
       {/* ── PERSONAL MESSAGE ── */}
       {invitation.personal_message && (
-        <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
-          style={{ padding: '80px 32px', background: C.bg, textAlign: 'center' }}
-        >
+        <AnimateSection style={{ padding: '80px 32px', background: C.bg, textAlign: 'center' }}>
           <div style={{ maxWidth: 520, margin: '0 auto' }}>
             <div style={{ width: 1, height: 48, background: C.primary, margin: '0 auto 32px', opacity: 0.4 }} />
             <p style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontSize: 20, lineHeight: 1.75, color: C.text }}>
@@ -177,44 +170,38 @@ export function BotanicaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
             </p>
             <div style={{ width: 1, height: 48, background: C.primary, margin: '32px auto 0', opacity: 0.4 }} />
           </div>
-        </motion.section>
+        </AnimateSection>
       )}
 
       {/* ── TIMELINE ── */}
       {invitation.timeline?.length > 0 && (
-        <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
-          style={{ padding: '80px 32px', background: C.alt }}
-        >
+        <AnimateSection style={{ padding: '80px 32px', background: C.alt }}>
           <div style={{ maxWidth: 560, margin: '0 auto' }}>
             <p style={{ fontSize: 9.5, letterSpacing: '0.5em', textTransform: 'uppercase', color: C.accent, textAlign: 'center', marginBottom: 48 }}>The day</p>
             <div style={{ position: 'relative' }}>
               <div style={{ position: 'absolute', left: 20, top: 0, bottom: 0, width: 1, background: `${C.primary}30` }} />
               <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                 {invitation.timeline.map((event, i) => (
-                  <motion.div key={i} variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                    style={{ display: 'flex', gap: 28, alignItems: 'flex-start', paddingBottom: 32 }}
-                  >
-                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: C.bg, border: `1px solid ${C.primary}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0, zIndex: 1 }}>
-                      {event.emoji ?? '♥'}
+                  <div key={i} style={{ display: 'flex', gap: 28, alignItems: 'flex-start', paddingBottom: 32 }}>
+                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: C.bg, border: `1px solid ${C.primary}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, zIndex: 1 }}>
+                      <div style={{ width: 8, height: 8, borderRadius: '50%', background: C.primary }} />
                     </div>
                     <div style={{ paddingTop: 8 }}>
                       <p style={{ fontSize: 10, letterSpacing: '0.3em', textTransform: 'uppercase', color: C.primary, marginBottom: 4 }}>{event.time}</p>
                       <p style={{ fontSize: 17, color: C.text, marginBottom: 4 }}>{event.title}</p>
                       {event.description && <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.5 }}>{event.description}</p>}
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </div>
           </div>
-        </motion.section>
+        </AnimateSection>
       )}
 
       {/* ── DRESS CODE ── */}
       {invitation.dress_code && (
-        <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
-          style={{ padding: '64px 32px', background: C.bg, textAlign: 'center' }}
-        >
+        <AnimateSection style={{ padding: '64px 32px', background: C.bg, textAlign: 'center' }}>
           <div style={{ maxWidth: 480, margin: '0 auto', border: `1px solid ${C.rule}`, padding: '40px 32px', position: 'relative' }}>
             {/* Corner accents */}
             {[{top:-4,left:-4,borderRight:'none',borderBottom:'none'},{top:-4,right:-4,borderLeft:'none',borderBottom:'none'},{bottom:-4,left:-4,borderRight:'none',borderTop:'none'},{bottom:-4,right:-4,borderLeft:'none',borderTop:'none'}].map((s,i) => (
@@ -223,16 +210,14 @@ export function BotanicaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
             <p style={{ fontSize: 9.5, letterSpacing: '0.5em', textTransform: 'uppercase', color: C.accent, marginBottom: 16 }}>Dress code</p>
             <p style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontSize: 22, color: C.text, lineHeight: 1.6 }}>{invitation.dress_code}</p>
           </div>
-        </motion.section>
+        </AnimateSection>
       )}
 
       {/* ── SHARED SECTIONS (transport, accommodation, gifts, etc.) ── */}
       <SharedSections invitation={invitation} theme={THEME} labels={labels} />
 
       {/* ── RSVP ── */}
-      <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
-        style={{ padding: '80px 32px', background: `${C.accent}08` }}
-      >
+      <AnimateSection style={{ padding: '80px 32px', background: `${C.accent}08` }}>
         <div style={{ maxWidth: 540, margin: '0 auto' }}>
           <p style={{ fontSize: 9.5, letterSpacing: '0.5em', textTransform: 'uppercase', color: C.accent, textAlign: 'center', marginBottom: 8 }}>
             {labels.rsvp_title}
@@ -258,7 +243,7 @@ export function BotanicaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
             </div>
           )}
         </div>
-      </motion.section>
+      </AnimateSection>
 
       <footer style={{ padding: '24px 32px', textAlign: 'center', fontSize: 11, letterSpacing: '0.2em', color: C.muted, borderTop: `1px solid ${C.rule}` }}>
         {invitation.partner1_name} &amp; {invitation.partner2_name} · {new Date(invitation.wedding_date).getFullYear()}

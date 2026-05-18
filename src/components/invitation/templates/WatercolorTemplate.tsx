@@ -26,7 +26,6 @@ const THEME: SectionTheme = {
   accent: C.rose, rule: C.rule, card: '#fff',
 }
 
-const fade = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }
 
 const parisienne = 'var(--font-parisienne), "Parisienne", cursive'
 const cormorant = 'var(--font-cormorant), "Cormorant Garamond", Georgia, serif'
@@ -76,7 +75,7 @@ export function WatercolorTemplate({ invitation, onRSVPSubmit, existingRSVP }: P
           <circle cx="100" cy="40" r="10" fill={C.rose} opacity="0.45"/>
         </svg>
 
-        <motion.div variants={fade} initial="hidden" animate="visible" transition={{ duration: 1.2 }} style={{ maxWidth: 760 }}>
+        <motion.div animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2 }} style={{ maxWidth: 760 }}>
           <div style={{ fontFamily: cormorant, fontStyle: 'italic', fontSize: 22, color: C.ink2, marginBottom: 24 }}>{labels.together_with_families}</div>
           <h1 style={{ fontFamily: parisienne, fontSize: 'clamp(80px,12vw,180px)', lineHeight: 0.95, color: C.ink, marginBottom: 8 }}>
             {invitation.partner1_name}
@@ -130,7 +129,7 @@ export function WatercolorTemplate({ invitation, onRSVPSubmit, existingRSVP }: P
               <div style={{ fontFamily: parisienne, fontSize: 36, color: C.rose, marginBottom: 8 }}>{labels.program}</div>
             </div>
             {invitation.timeline.map((ev, i) => (
-              <motion.div key={i} variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+              <motion.div key={i} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
                 style={{ display: 'grid', gridTemplateColumns: '90px 1fr', gap: 28, padding: '20px 0', borderBottom: `1px solid ${C.rule}` }}>
                 <div style={{ fontFamily: cormorant, fontStyle: 'italic', fontSize: 20, color: C.rose, textAlign: 'right' }}>{ev.time}</div>
                 <div>

@@ -26,7 +26,6 @@ const THEME: SectionTheme = {
   accent: C.azul, rule: '#D0C4B0', card: C.bg2,
 }
 
-const fade = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }
 
 const dmSerif = 'var(--font-dm-serif), "DM Serif Display", Georgia, serif'
 const cormorant = 'var(--font-cormorant), "Cormorant Garamond", Georgia, serif'
@@ -86,7 +85,7 @@ export function AzulejoTemplate({ invitation, onRSVPSubmit, existingRSVP }: Prop
           </div>
         </div>
 
-        <motion.div variants={fade} initial="hidden" animate="visible" transition={{ duration: 1 }}
+        <motion.div animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}
           style={{ background: '#fff', border: `2px solid ${C.ink}`, boxShadow: `8px 8px 0 ${C.azul}`, padding: '60px 52px', textAlign: 'center', maxWidth: 680, width: '100%', position: 'relative' }}>
           {/* Diamonds at corners */}
           {(['tl','tr','bl','br'] as const).map(pos => (
@@ -143,7 +142,7 @@ export function AzulejoTemplate({ invitation, onRSVPSubmit, existingRSVP }: Prop
               <h2 style={{ fontFamily: dmSerif, fontStyle: 'italic', fontSize: 52, color: C.ink }}>{labels.program}</h2>
             </div>
             {invitation.timeline.map((ev, i) => (
-              <motion.div key={i} variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+              <motion.div key={i} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
                 style={{ display: 'grid', gridTemplateColumns: '80px 16px 1fr', gap: '0 24px', padding: '24px 0', borderBottom: `1px solid rgba(30,77,139,0.15)`, alignItems: 'start' }}>
                 <div style={{ fontFamily: cormorant, fontStyle: 'italic', fontSize: 20, color: C.terra }}>{ev.time}</div>
                 <div style={{ width: 8, height: 8, background: C.azul, transform: 'rotate(45deg)', marginTop: 8 }} />

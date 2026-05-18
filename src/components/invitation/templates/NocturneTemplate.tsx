@@ -9,7 +9,6 @@ import type { Invitation, RSVPResponse } from '@/types'
 import { SharedSections, DirectContactCard, getEffectiveLabels } from '../InvitationSections'
 import type { SectionTheme } from '../InvitationSections'
 
-const fade = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }
 
 const C = {
   bg: '#0D1B2A',
@@ -169,7 +168,7 @@ export function NocturneTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
         }} />
 
         <motion.div
-          variants={fade} initial="hidden" animate="visible"
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2 }}
           style={{ position: 'relative', zIndex: 1, maxWidth: 660 }}
         >
@@ -227,7 +226,7 @@ export function NocturneTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
         {/* Countdown */}
         {invitation.show_countdown && daysLeft > 0 && (
           <motion.div
-            variants={fade} initial="hidden" animate="visible"
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.5 }}
             style={{ position: 'relative', zIndex: 1, marginTop: 72, width: '100%', maxWidth: 520 }}
           >
@@ -239,7 +238,7 @@ export function NocturneTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
       {/* ── Personal message ── */}
       {invitation.personal_message && (
         <motion.section
-          variants={fade} initial="hidden" whileInView="visible"
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ padding: '80px 24px', background: C.surface, textAlign: 'center', position: 'relative', overflow: 'hidden' }}
         >
@@ -271,7 +270,7 @@ export function NocturneTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
       {/* ── Timeline ── */}
       {invitation.timeline?.length > 0 && (
         <motion.section
-          variants={fade} initial="hidden" whileInView="visible"
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ padding: '80px 24px' }}
         >
@@ -290,9 +289,8 @@ export function NocturneTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
             {invitation.timeline.map((event, i) => (
               <motion.div
                 key={i}
-                variants={fade}
-                initial="hidden"
-                whileInView="visible"
+               
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.09 }}
                 style={{
@@ -329,7 +327,7 @@ export function NocturneTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
       {/* ── Venue ── */}
       {invitation.venue_name && (
         <motion.section
-          variants={fade} initial="hidden" whileInView="visible"
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ padding: '80px 24px', background: C.surface, textAlign: 'center' }}
         >
@@ -377,7 +375,7 @@ export function NocturneTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
       {/* ── Dress code ── */}
       {invitation.dress_code && (
         <motion.section
-          variants={fade} initial="hidden" whileInView="visible"
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ padding: '60px 24px', textAlign: 'center' }}
         >
@@ -395,7 +393,7 @@ export function NocturneTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
 
       {/* ── RSVP ── */}
       <motion.section
-        variants={fade} initial="hidden" whileInView="visible"
+        whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }} transition={{ duration: 0.7 }}
         style={{ padding: '80px 24px', background: C.surface }}
       >

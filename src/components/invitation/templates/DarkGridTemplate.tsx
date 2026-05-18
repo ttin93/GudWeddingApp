@@ -26,7 +26,6 @@ const THEME: SectionTheme = {
   accent: C.gold, rule: C.line, card: C.bg3,
 }
 
-const fade = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }
 
 const playfair = 'var(--font-playfair), "Playfair Display", Georgia, serif'
 const mono = 'var(--font-mono-dm), "DM Mono", monospace'
@@ -56,7 +55,7 @@ export function DarkGridTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
         ))}
 
         {/* Left meta column */}
-        <motion.div variants={fade} initial="hidden" animate="visible" transition={{ duration: 0.8 }}
+        <motion.div animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
           style={{ padding: '80px 40px', borderRight: `1px solid ${C.line}`, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <div>
             <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: '0.36em', color: C.gold, textTransform: 'uppercase', marginBottom: 32 }}>No. 001</div>
@@ -78,7 +77,7 @@ export function DarkGridTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
         </motion.div>
 
         {/* Center names */}
-        <motion.div variants={fade} initial="hidden" animate="visible" transition={{ duration: 1 }}
+        <motion.div animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}
           style={{ padding: '80px 40px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', position: 'relative' }}>
           <div style={{ fontSize: 10, letterSpacing: '0.5em', color: C.mute, textTransform: 'uppercase', marginBottom: 48 }}>{labels.together_with_families}</div>
           <h1 style={{ fontFamily: playfair, fontSize: 'clamp(80px,10vw,168px)', fontWeight: 400, lineHeight: 0.92, color: C.ink, letterSpacing: '-0.01em' }}>
@@ -94,7 +93,7 @@ export function DarkGridTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
         </motion.div>
 
         {/* Right column */}
-        <motion.div variants={fade} initial="hidden" animate="visible" transition={{ duration: 0.8, delay: 0.2 }}
+        <motion.div animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }}
           style={{ padding: '80px 40px', borderLeft: `1px solid ${C.line}`, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           {invitation.personal_message && (
             <div>
@@ -126,7 +125,7 @@ export function DarkGridTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
               </div>
             </div>
             {invitation.timeline.map((ev, i) => (
-              <motion.div key={i} variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+              <motion.div key={i} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
                 style={{ display: 'grid', gridTemplateColumns: '80px 1px 1fr', gap: '0 32px', padding: '28px 0', borderBottom: `1px solid ${C.lineSoft}`, alignItems: 'start' }}>
                 <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: '0.2em', color: C.gold, paddingTop: 2 }}>{ev.time}</div>
                 <div style={{ background: C.line }} />

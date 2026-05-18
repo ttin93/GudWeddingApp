@@ -9,7 +9,6 @@ import type { Invitation, RSVPResponse } from '@/types'
 import { SharedSections, DirectContactCard, getEffectiveLabels } from '../InvitationSections'
 import type { SectionTheme } from '../InvitationSections'
 
-const fade = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }
 
 const C = {
   bg: '#F9F7F5',
@@ -123,7 +122,7 @@ export function PromesseTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
         }} />
 
         <motion.div
-          variants={fade} initial="hidden" animate="visible"
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9 }}
           style={{ position: 'relative', zIndex: 1, maxWidth: 600 }}
         >
@@ -177,7 +176,7 @@ export function PromesseTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
         {/* Countdown */}
         {invitation.show_countdown && daysLeft > 0 && (
           <motion.div
-            variants={fade} initial="hidden" animate="visible"
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.4 }}
             style={{ position: 'relative', zIndex: 1, marginTop: 64, width: '100%', maxWidth: 480 }}
           >
@@ -189,7 +188,7 @@ export function PromesseTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
       {/* ── Personal message ── */}
       {invitation.personal_message && (
         <motion.section
-          variants={fade} initial="hidden" whileInView="visible"
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ padding: '72px 24px', background: C.soft, textAlign: 'center' }}
         >
@@ -216,7 +215,7 @@ export function PromesseTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
       {/* ── Timeline ── */}
       {invitation.timeline?.length > 0 && (
         <motion.section
-          variants={fade} initial="hidden" whileInView="visible"
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ padding: '80px 24px' }}
         >
@@ -236,9 +235,8 @@ export function PromesseTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
                 return (
                   <motion.div
                     key={i}
-                    variants={fade}
-                    initial="hidden"
-                    whileInView="visible"
+                   
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.08 }}
                     style={{
@@ -269,7 +267,7 @@ export function PromesseTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
       {/* ── Venue ── */}
       {invitation.venue_name && (
         <motion.section
-          variants={fade} initial="hidden" whileInView="visible"
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ padding: '80px 24px', background: C.soft, textAlign: 'center' }}
         >
@@ -319,7 +317,7 @@ export function PromesseTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
       {/* ── Dress code ── */}
       {invitation.dress_code && (
         <motion.section
-          variants={fade} initial="hidden" whileInView="visible"
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ padding: '60px 24px', textAlign: 'center' }}
         >
@@ -337,7 +335,7 @@ export function PromesseTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pro
 
       {/* ── RSVP ── */}
       <motion.section
-        variants={fade} initial="hidden" whileInView="visible"
+        whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }} transition={{ duration: 0.7 }}
         style={{ padding: '80px 24px', background: C.soft }}
       >

@@ -30,7 +30,6 @@ const SECTION_THEME: SectionTheme = {
   accent: C.gold, rule: C.goldPale, card: C.marbleDark,
 }
 
-const fade = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }
 
 const cormorant = 'var(--font-cormorant), "Cormorant Garamond", Georgia, serif'
 const cinzel = 'var(--font-cinzel), "Cinzel", "Trajan Pro", serif'
@@ -109,18 +108,18 @@ export function VeneziaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Prop
         <CornerOrnament position="bl" />
         <CornerOrnament position="br" />
 
-        <motion.div className="vz-hero-frame" variants={fade} initial="hidden" animate="visible" transition={{ duration: 1.2 }}
+        <motion.div className="vz-hero-frame" animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2 }}
           style={{ border: `1px solid rgba(184,147,90,0.3)`, padding: '5rem 4rem', textAlign: 'center', position: 'relative', maxWidth: 680, width: '90%' }}
         >
           {/* Inner double border */}
           <div style={{ position: 'absolute', inset: 8, border: `1px solid rgba(184,147,90,0.12)`, pointerEvents: 'none' }} />
 
-          <motion.p variants={fade} initial="hidden" animate="visible" transition={{ delay: 0.4 }}
+          <motion.p animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
             style={{ fontFamily: cinzel, fontSize: '0.58rem', letterSpacing: '0.6em', color: C.gold, textTransform: 'uppercase', marginBottom: '2.5rem' }}>
             {labels.together_with_families}
           </motion.p>
 
-          <motion.div variants={fade} initial="hidden" animate="visible" transition={{ delay: 0.6 }} style={{ marginBottom: '1rem' }}>
+          <motion.div animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} style={{ marginBottom: '1rem' }}>
             <div style={{ fontSize: 'clamp(3rem,8vw,6.5rem)', fontWeight: 300, lineHeight: 1, color: C.black, letterSpacing: '0.05em', fontStyle: 'italic' }}>
               {invitation.partner1_name}
             </div>
@@ -134,13 +133,13 @@ export function VeneziaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Prop
 
           <GoldRule />
 
-          <motion.p variants={fade} initial="hidden" animate="visible" transition={{ delay: 1 }}
+          <motion.p animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}
             style={{ fontFamily: cinzel, fontSize: '0.75rem', letterSpacing: '0.4em', color: C.warm, textTransform: 'uppercase' }}>
             {formatDate(invitation.wedding_date, 'EEEE · d. MMMM · yyyy')}
           </motion.p>
 
           {invitation.venue_name && (
-            <motion.p variants={fade} initial="hidden" animate="visible" transition={{ delay: 1.2 }}
+            <motion.p animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2 }}
               style={{ fontStyle: 'italic', fontSize: '1.15rem', color: C.ink, opacity: 0.55, marginTop: '0.7rem' }}>
               {invitation.venue_name}
               {invitation.venue_address ? ` · ${invitation.venue_address}` : ''}
@@ -148,7 +147,7 @@ export function VeneziaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Prop
           )}
 
           {invitation.show_countdown && daysLeft > 0 && (
-            <motion.div variants={fade} initial="hidden" animate="visible" transition={{ delay: 1.4 }}
+            <motion.div animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.4 }}
               style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center', gap: '2rem' }}>
               <div style={{ textAlign: 'center' }}>
                 <div style={{ fontFamily: cinzel, fontSize: '2rem', color: C.gold }}>{daysLeft}</div>
@@ -163,7 +162,7 @@ export function VeneziaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Prop
 
       {/* STORY — dark two-column */}
       {invitation.story && invitation.show_story !== false && (
-        <motion.div variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.8 }}
+        <motion.div whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}
           style={{ background: C.ink, padding: '7rem 2rem' }}>
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
             <p style={{ fontFamily: cinzel, fontSize: '0.55rem', letterSpacing: '0.6em', color: C.goldLight, textTransform: 'uppercase', marginBottom: '1rem' }}>
@@ -205,7 +204,7 @@ export function VeneziaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Prop
 
       {/* ITINERARY */}
       {invitation.timeline?.length > 0 && (
-        <motion.div variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+        <motion.div whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ background: C.marbleDark, padding: '7rem 2rem' }}>
           <div style={{ maxWidth: 700, margin: '0 auto' }}>
             <p style={{ fontFamily: cinzel, fontSize: '0.55rem', letterSpacing: '0.6em', color: C.gold, textTransform: 'uppercase', textAlign: 'center', marginBottom: '1rem' }}>
@@ -216,7 +215,7 @@ export function VeneziaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Prop
             </h2>
             <div style={{ marginTop: '4rem', display: 'flex', flexDirection: 'column' }}>
               {invitation.timeline.map((event, i) => (
-                <motion.div key={i} variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                <motion.div key={i} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
                   style={{ display: 'grid', gridTemplateColumns: '90px 30px 1fr', gap: '0 1.5rem', padding: '2rem 0', borderBottom: i < invitation.timeline.length - 1 ? `1px solid rgba(184,147,90,0.15)` : 'none', alignItems: 'center' }}>
                   <div style={{ fontFamily: cinzel, fontSize: '0.7rem', letterSpacing: '0.15em', color: C.gold, textAlign: 'right' }}>
                     {event.time}
@@ -241,7 +240,7 @@ export function VeneziaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Prop
 
       {/* LOCATION */}
       {(invitation.venue_name || invitation.venue_address) && (
-        <motion.div variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+        <motion.div whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ padding: '7rem 2rem', background: C.marble }}>
           <div className="vz-location-inner" style={{ maxWidth: 1000, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6rem', alignItems: 'center' }}>
             <div>
@@ -295,7 +294,7 @@ export function VeneziaTemplate({ invitation, onRSVPSubmit, existingRSVP }: Prop
       <SharedSections invitation={invForShared} theme={SECTION_THEME} labels={labels} />
 
       {/* RSVP */}
-      <motion.div variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+      <motion.div whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
         style={{ background: C.ink }}>
         <div className="vz-rsvp-inner" style={{ maxWidth: 620, margin: '0 auto', padding: '7rem 2rem', textAlign: 'center' }}>
           <p style={{ fontFamily: cinzel, fontSize: '0.55rem', letterSpacing: '0.6em', color: C.goldLight, textTransform: 'uppercase', marginBottom: '1rem' }}>

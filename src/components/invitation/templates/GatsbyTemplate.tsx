@@ -25,7 +25,6 @@ const THEME: SectionTheme = {
   accent: C.gold, rule: C.rule, card: C.black2,
 }
 
-const fade = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }
 
 const limelight = 'var(--font-limelight), "Limelight", cursive'
 const cinzel = 'var(--font-cinzel), "Cinzel", serif'
@@ -65,7 +64,7 @@ export function GatsbyTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props
         ))}
 
         {/* Sun ornament */}
-        <motion.div variants={fade} initial="hidden" animate="visible" transition={{ duration: 1 }} style={{ marginBottom: 40 }}>
+        <motion.div animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} style={{ marginBottom: 40 }}>
           <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="40" cy="40" r="14" stroke={C.gold} strokeWidth="1"/>
             <circle cx="40" cy="40" r="18" stroke={C.gold} strokeWidth="0.4" opacity="0.5"/>
@@ -77,7 +76,7 @@ export function GatsbyTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props
           </svg>
         </motion.div>
 
-        <motion.div variants={fade} initial="hidden" animate="visible" transition={{ duration: 1, delay: 0.2 }}
+        <motion.div animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.2 }}
           style={{ position: 'relative', maxWidth: 720, width: '100%', border: `1px solid ${C.gold}`, padding: '60px 52px' }}>
           {/* Inner frame */}
           <div style={{ position: 'absolute', inset: 8, border: `1px solid ${C.gold}`, opacity: 0.3, pointerEvents: 'none' }} />
@@ -139,7 +138,7 @@ export function GatsbyTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props
               <DecoRule />
             </div>
             {invitation.timeline.map((ev, i) => (
-              <motion.div key={i} variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+              <motion.div key={i} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
                 style={{ display: 'grid', gridTemplateColumns: '80px 20px 1fr', gap: '0 24px', padding: '20px 0', borderBottom: `1px solid ${C.rule}`, alignItems: 'start' }}>
                 <div style={{ fontFamily: cinzel, fontSize: 11, letterSpacing: '0.15em', color: C.gold, paddingTop: 4 }}>{ev.time}</div>
                 <div style={{ width: 8, height: 8, border: `1px solid ${C.gold}`, transform: 'rotate(45deg)', marginTop: 6, background: C.black, flexShrink: 0 }} />

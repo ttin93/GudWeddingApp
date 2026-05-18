@@ -1,7 +1,7 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { Car, Hotel, Gift, HelpCircle, Phone, Mail, Hash, Music2, ExternalLink, Baby, Users } from 'lucide-react'
+import { AnimateSection } from './AnimateSection'
 import { useEffect, useState } from 'react'
 import type { Invitation, InvitationPhoto } from '@/types'
 import type { InvitationLabels } from '@/lib/utils/labels'
@@ -27,19 +27,14 @@ export function getEffectiveLabels(invitation: Invitation): InvitationLabels {
 }
 
 // ─── Shared primitives ────────────────────────────────────────────────────────
-const fade = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }
 
 function Wrap({ children, bg }: { children: React.ReactNode; bg: string }) {
   return (
-    <motion.section
-      variants={fade} initial="hidden" whileInView="visible"
-      viewport={{ once: true }} transition={{ duration: 0.7 }}
-      style={{ padding: '72px 24px', background: bg }}
-    >
+    <AnimateSection style={{ padding: '72px 24px', background: bg }}>
       <div style={{ maxWidth: 600, margin: '0 auto' }}>
         {children}
       </div>
-    </motion.section>
+    </AnimateSection>
   )
 }
 
@@ -202,13 +197,8 @@ function AccommodationSection({ invitation, theme, labels }: { invitation: Invit
       <SLabel text={labels.accommodation_title} theme={theme} />
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         {items.map((item, i) => (
-          <motion.div
+          <div
             key={i}
-            variants={fade}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.07 }}
             style={{ border: `1px solid ${theme.rule}`, background: theme.card, padding: '20px 24px' }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8, gap: 12 }}>
@@ -270,7 +260,7 @@ function AccommodationSection({ invitation, theme, labels }: { invitation: Invit
                 <ExternalLink size={10} />
               </a>
             )}
-          </motion.div>
+          </div>
         ))}
       </div>
     </Wrap>
@@ -540,12 +530,7 @@ function GallerySection({ invitation, theme, coverPhotoUrl }: { invitation: Invi
   if (visiblePhotos.length === 0) return null
 
   return (
-    <motion.section
-      variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }}
-      initial="hidden" whileInView="visible"
-      viewport={{ once: true }} transition={{ duration: 0.7 }}
-      style={{ padding: '72px 24px', background: theme.bgAlt }}
-    >
+    <AnimateSection style={{ padding: '72px 24px', background: theme.bgAlt }}>
       <div style={{ maxWidth: 800, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 40, justifyContent: 'center' }}>
           <div style={{ height: 1, width: 48, background: theme.rule }} />
@@ -602,6 +587,6 @@ function GallerySection({ invitation, theme, coverPhotoUrl }: { invitation: Invi
           />
         </div>
       )}
-    </motion.section>
+    </AnimateSection>
   )
 }

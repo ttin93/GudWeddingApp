@@ -14,7 +14,6 @@ const C = {
   text: '#1C1C1C', muted: '#5A5A5A', rule: '#DDD8CE',
 }
 const THEME: SectionTheme = { bg: C.bg, bgAlt: C.alt, text: C.text, muted: C.muted, accent: C.accent, rule: C.rule, card: C.card }
-const fade = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }
 
 export function HeritageTemplate({ invitation, onRSVPSubmit, existingRSVP }: { invitation: Invitation; onRSVPSubmit?: (data: unknown) => Promise<void>; existingRSVP?: RSVPResponse | null }) {
   const daysLeft = daysUntilWedding(invitation.wedding_date)
@@ -25,7 +24,7 @@ export function HeritageTemplate({ invitation, onRSVPSubmit, existingRSVP }: { i
 
       {/* ── HERO ── */}
       <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 32px' }}>
-        <motion.div variants={fade} initial="hidden" animate="visible" transition={{ duration: 0.9 }}
+        <motion.div animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9 }}
           style={{ textAlign: 'center', maxWidth: 520, width: '100%' }}
         >
           {/* Ornamental double border frame */}
@@ -79,7 +78,7 @@ export function HeritageTemplate({ invitation, onRSVPSubmit, existingRSVP }: { i
 
       {/* ── DETAILS ── */}
       {(invitation.venue_name || invitation.ceremony_time) && (
-        <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+        <motion.section whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ padding: '80px 32px', background: C.alt }}
         >
           <div style={{ maxWidth: 560, margin: '0 auto', textAlign: 'center' }}>
@@ -128,7 +127,7 @@ export function HeritageTemplate({ invitation, onRSVPSubmit, existingRSVP }: { i
 
       {/* ── MESSAGE ── */}
       {invitation.personal_message && (
-        <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+        <motion.section whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ padding: '80px 32px', background: C.bg, textAlign: 'center' }}
         >
           <div style={{ maxWidth: 520, margin: '0 auto', borderTop: `1px solid ${C.rule}`, borderBottom: `1px solid ${C.rule}`, padding: '40px 0' }}>
@@ -141,7 +140,7 @@ export function HeritageTemplate({ invitation, onRSVPSubmit, existingRSVP }: { i
 
       {/* ── TIMELINE ── */}
       {invitation.timeline?.length > 0 && (
-        <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+        <motion.section whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ padding: '80px 32px', background: C.alt }}
         >
           <div style={{ maxWidth: 560, margin: '0 auto' }}>
@@ -168,7 +167,7 @@ export function HeritageTemplate({ invitation, onRSVPSubmit, existingRSVP }: { i
       )}
 
       {invitation.dress_code && (
-        <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+        <motion.section whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ padding: '64px 32px', background: C.bg, textAlign: 'center' }}
         >
           <p style={{ fontSize: 9.5, letterSpacing: '0.5em', textTransform: 'uppercase', color: C.accent, marginBottom: 12 }}>Dress code</p>
@@ -179,7 +178,7 @@ export function HeritageTemplate({ invitation, onRSVPSubmit, existingRSVP }: { i
       <SharedSections invitation={invitation} theme={THEME} labels={labels} />
 
       {/* ── RSVP ── */}
-      <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+      <motion.section whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
         style={{ padding: '80px 32px', background: C.alt }}
       >
         <div style={{ maxWidth: 540, margin: '0 auto', textAlign: 'center' }}>

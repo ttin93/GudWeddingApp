@@ -19,7 +19,6 @@ const THEME: SectionTheme = {
   accent: C.primary, rule: C.rule, card: C.card,
 }
 
-const fade = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }
 
 interface Props {
   invitation: Invitation
@@ -38,7 +37,7 @@ export function ModernTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props
       <section style={{ minHeight: '100vh', display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
         {/* Left */}
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '80px 60px 80px 64px' }}>
-          <motion.div variants={fade} initial="hidden" animate="visible" transition={{ duration: 0.8 }}>
+          <motion.div animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
             <p style={{ fontSize: 9, letterSpacing: '0.55em', textTransform: 'uppercase', color: C.primary, marginBottom: 32 }}>
               Wedding Invitation
             </p>
@@ -69,7 +68,7 @@ export function ModernTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props
 
         {/* Right — dark panel */}
         <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.2, delay: 0.3 }}
+          animate={{ opacity: 1 }} transition={{ duration: 1.2, delay: 0.3 }}
           style={{ background: C.dark, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '64px 48px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}
         >
           {/* Grid lines overlay */}
@@ -96,7 +95,7 @@ export function ModernTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props
 
       {/* ── DETAILS ── */}
       {(invitation.venue_name || invitation.ceremony_time) && (
-        <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+        <motion.section whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ padding: '80px 64px', background: C.card, borderTop: `1px solid ${C.rule}` }}
         >
           <div style={{ maxWidth: 800, margin: '0 auto', display: 'grid', gridTemplateColumns: invitation.reception_time ? '1fr 1fr 1fr' : '1fr 1fr', gap: 24 }}>
@@ -131,7 +130,7 @@ export function ModernTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props
 
       {/* ── PERSONAL MESSAGE ── */}
       {invitation.personal_message && (
-        <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+        <motion.section whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ padding: '80px 64px', background: C.bg }}
         >
           <div style={{ maxWidth: 700, margin: '0 auto', display: 'grid', gridTemplateColumns: '4px 1fr', gap: 32, alignItems: 'start' }}>
@@ -148,7 +147,7 @@ export function ModernTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props
 
       {/* ── TIMELINE ── */}
       {invitation.timeline?.length > 0 && (
-        <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+        <motion.section whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ padding: '80px 64px', background: C.card }}
         >
           <div style={{ maxWidth: 800, margin: '0 auto' }}>
@@ -168,7 +167,7 @@ export function ModernTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props
 
       {/* ── DRESS CODE ── */}
       {invitation.dress_code && (
-        <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+        <motion.section whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ padding: '64px', background: C.dark, color: '#F5F5F3' }}
         >
           <div style={{ maxWidth: 600, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 32 }}>
@@ -184,7 +183,7 @@ export function ModernTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props
       <SharedSections invitation={invitation} theme={THEME} labels={labels} />
 
       {/* ── RSVP ── */}
-      <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+      <motion.section whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
         style={{ padding: '80px 64px', background: C.bg }}
       >
         <div style={{ maxWidth: 560, margin: '0 auto' }}>

@@ -26,7 +26,6 @@ const THEME: SectionTheme = {
   accent: C.sageDeep, rule: C.bone2, card: '#fff',
 }
 
-const fade = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }
 
 const italiana = 'var(--font-italiana), "Italiana", Georgia, serif'
 const caveat = 'var(--font-caveat), "Caveat", cursive'
@@ -87,7 +86,7 @@ export function CoastalTemplate({ invitation, onRSVPSubmit, existingRSVP }: Prop
         <BotanicLeaf style={{ left: -80, top: '40%', width: 220, opacity: 0.5, transform: 'rotate(80deg)' }} />
         <BotanicLeaf style={{ right: -60, top: '50%', width: 200, opacity: 0.4, transform: 'rotate(-90deg)' }} />
 
-        <motion.div variants={fade} initial="hidden" animate="visible" transition={{ duration: 1.2 }} style={{ position: 'relative', zIndex: 2, maxWidth: 780 }}>
+        <motion.div animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2 }} style={{ position: 'relative', zIndex: 2, maxWidth: 780 }}>
           <div style={{ fontFamily: caveat, fontSize: 30, color: C.rose, marginBottom: 18, fontWeight: 500 }}>— {labels.together_with_families} —</div>
           <h1 style={{ fontFamily: italiana, fontSize: 'clamp(72px,10vw,148px)', lineHeight: 1.02, color: C.ink, letterSpacing: '-0.005em', marginBottom: 8 }}>
             {invitation.partner1_name}
@@ -147,7 +146,7 @@ export function CoastalTemplate({ invitation, onRSVPSubmit, existingRSVP }: Prop
             <div style={{ maxWidth: 680, margin: '0 auto', position: 'relative' }}>
               <div style={{ position: 'absolute', left: 120, top: 24, bottom: 24, width: 1, background: `repeating-linear-gradient(to bottom, ${C.sage} 0, ${C.sage} 4px, transparent 4px, transparent 10px)` }} />
               {invitation.timeline.map((ev, i) => (
-                <motion.div key={i} variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+                <motion.div key={i} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
                   style={{ display: 'grid', gridTemplateColumns: '120px 24px 1fr', alignItems: 'center', gap: 24, padding: '24px 0', position: 'relative' }}>
                   <div style={{ fontFamily: italiana, fontStyle: 'italic', fontSize: 18, color: C.sageDeep, textAlign: 'right', letterSpacing: '0.04em' }}>{ev.time}</div>
                   <div style={{ width: 14, height: 14, borderRadius: '50%', background: i === 0 ? C.rose : C.bone, border: `2px solid ${C.rose}`, justifySelf: 'center', position: 'relative', zIndex: 1 }} />

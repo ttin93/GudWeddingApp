@@ -28,7 +28,6 @@ const THEME: SectionTheme = {
   accent: C.accent, rule: C.lightGray, card: C.warm,
 }
 
-const fade = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }
 
 interface Props {
   invitation: Invitation
@@ -84,7 +83,7 @@ export function EditorialTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pr
           <div aria-hidden style={{ fontFamily: playfair, fontWeight: 700, fontSize: 'clamp(120px,18vw,220px)', lineHeight: 0.85, color: 'rgba(255,255,255,0.05)', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', whiteSpace: 'nowrap', pointerEvents: 'none', userSelect: 'none' }}>
             {year}
           </div>
-          <motion.div variants={fade} initial="hidden" animate="visible" transition={{ duration: 1 }} style={{ position: 'relative', zIndex: 2 }}>
+          <motion.div animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} style={{ position: 'relative', zIndex: 2 }}>
             <div style={{ display: 'inline-block', border: '1px solid rgba(255,255,255,0.3)', color: 'rgba(255,255,255,0.6)', fontSize: '0.6rem', letterSpacing: '0.35em', padding: '0.6rem 1.2rem', textTransform: 'uppercase', marginBottom: '1rem' }}>
               {formatDate(invitation.wedding_date, 'EEEE · d. MMMM yyyy')}
             </div>
@@ -149,7 +148,7 @@ export function EditorialTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pr
 
       {/* TIMELINE / PROGRAM */}
       {invitation.timeline?.length > 0 && (
-        <motion.div className="ed-program" variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+        <motion.div className="ed-program" whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ display: 'grid', gridTemplateColumns: '300px 1fr', minHeight: '60vh' }}
         >
           <div className="ed-sidebar" style={{ borderRight: `1px solid ${C.black}`, padding: '4rem 3rem', background: C.warm, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
@@ -165,7 +164,7 @@ export function EditorialTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pr
           </div>
           <div style={{ padding: '4rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             {invitation.timeline.map((event, i) => (
-              <motion.div key={i} variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+              <motion.div key={i} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
                 style={{ display: 'grid', gridTemplateColumns: '100px 1px 1fr', gap: '0 2rem', padding: '1.8rem 0', borderBottom: `1px solid ${C.lightGray}`, alignItems: 'start' }}
               >
                 <div style={{ fontSize: '0.7rem', letterSpacing: '0.1em', color: C.accent, paddingTop: '0.2rem' }}>
@@ -188,7 +187,7 @@ export function EditorialTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pr
 
       {/* VENUE */}
       {(invitation.venue_name || invitation.venue_address) && (
-        <motion.div className="ed-venue" variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+        <motion.div className="ed-venue" whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', borderTop: `1px solid ${C.black}` }}
         >
           <div className="ed-venue-info" style={{ padding: '5rem 4rem', borderRight: `1px solid ${C.black}` }}>
@@ -227,7 +226,7 @@ export function EditorialTemplate({ invitation, onRSVPSubmit, existingRSVP }: Pr
       <SharedSections invitation={invitation} theme={THEME} labels={labels} />
 
       {/* RSVP */}
-      <motion.section className="ed-rsvp" variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+      <motion.section className="ed-rsvp" whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
         style={{ padding: '6rem 4rem', background: C.black, color: 'white', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6rem', alignItems: 'center', borderTop: `4px solid ${C.accent}` }}
       >
         <div>

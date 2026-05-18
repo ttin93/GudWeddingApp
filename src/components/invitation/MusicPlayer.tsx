@@ -7,66 +7,48 @@ import type { BackgroundMusicId } from '@/types'
 export function MusicPlayer({ trackId }: { trackId?: BackgroundMusicId | null }) {
   const [playing, setPlaying] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
-  const fadeRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   if (!trackId || trackId === 'none') return null
   const track = BACKGROUND_MUSIC_TRACKS[trackId as keyof typeof BACKGROUND_MUSIC_TRACKS]
   if (!track) return null
 
-  function getOrCreateAudio() {
-    if (audioRef.current) return audioRef.current
-    const audio = new Audio(track!.src)
-    audio.loop = true
-    audio.volume = 0
-    audioRef.current = audio
-    return audio
-  }
-
-  function fadeTo(audio: HTMLAudioElement, target: number, onDone?: () => void) {
-    if (fadeRef.current) clearInterval(fadeRef.current)
-    const step = target > audio.volume ? 0.03 : -0.03
-    fadeRef.current = setInterval(() => {
-      const next = Math.min(1, Math.max(0, audio.volume + step))
-      audio.volume = next
-      if ((step > 0 && next >= target) || (step < 0 && next <= target)) {
-        clearInterval(fadeRef.current!)
-        onDone?.()
-      }
-    }, 40)
-  }
-
   function toggle() {
-    const audio = getOrCreateAudio()
     if (playing) {
-      fadeTo(audio, 0, () => audio.pause())
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current.currentTime = 0
+        audioRef.current = null
+      }
       setPlaying(false)
-    } else {
-      audio.play()
-        .then(() => { fadeTo(audio, 0.35); setPlaying(true) })
-        .catch(() => { setPlaying(false) })
+      return
     }
+
+    // Create and play in the same synchronous user-gesture call — required by iOS Safari
+    const audio = new Audio(track.src)
+    audio.loop = true
+    audioRef.current = audio
+    audio.play()
+      .then(() => setPlaying(true))
+      .catch(() => setPlaying(false))
   }
 
   return (
-    <div
-      title={playing ? `Ustavi glasbo — ${track.label}` : `Predvajaj glasbo — ${track.label}`}
-      style={{ position: 'fixed', bottom: 22, left: 22, zIndex: 9999, display: 'flex', alignItems: 'center', gap: 8 }}
-    >
+    <div style={{ position: 'fixed', bottom: 22, left: 22, zIndex: 9999, display: 'flex', alignItems: 'center', gap: 8 }}>
       <button
         onClick={toggle}
+        title={playing ? `Ustavi glasbo — ${track.label}` : `Predvajaj glasbo — ${track.label}`}
         style={{
-          width: 44, height: 44, borderRadius: '50%',
+          width: 48, height: 48, borderRadius: '50%',
           background: 'rgba(15,12,10,0.75)',
           backdropFilter: 'blur(10px)',
           border: '1px solid rgba(255,255,255,0.2)',
           color: '#fff', cursor: 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 18, lineHeight: 1,
-          transition: 'transform .15s',
           boxShadow: '0 2px 16px rgba(0,0,0,0.4)',
-        }}
-        onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.1)')}
-        onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
+          touchAction: 'manipulation',
+          WebkitTapHighlightColor: 'transparent',
+        } as React.CSSProperties}
       >
         {playing ? '⏸' : '♪'}
       </button>

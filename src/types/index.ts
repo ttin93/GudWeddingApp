@@ -1,5 +1,5 @@
 export type Package = 'essential' | 'elegance' | 'signature'
-export type TemplateId = 'riviera' | 'coastal' | 'darkgrid' | 'gatsby' | 'scandi' | 'watercolor' | 'azulejo' | 'industrial' | 'botanica' | 'modern' | 'heritage' | 'eliarose' | 'noir' | 'nocturne' | 'promesse' | 'rosewood' | 'editorial' | 'venezia'
+export type TemplateId = 'toscana' | 'riviera' | 'coastal' | 'scandi' | 'watercolor' | 'botanica' | 'heritage' | 'eliarose' | 'noir' | 'nocturne' | 'promesse' | 'rosewood' | 'venezia'
 export type BackgroundMusicId = 'none' | 'romance' | 'waltz' | 'garden'
 
 export const BACKGROUND_MUSIC_TRACKS: Record<Exclude<BackgroundMusicId, 'none'>, { label: string; description: string; src: string }> = {
@@ -80,6 +80,7 @@ export interface Invitation {
   cover_photo_url?: string     // virtual — computed at serve time from first invitation_photo
   cover_photo_caption?: string
   cover_photo_badge?: string   // short text in the circle on photo card (default: wedding year)
+  show_intro?: boolean
   show_story?: boolean
   show_program?: boolean
   show_dress_code?: boolean
@@ -213,6 +214,24 @@ export const PACKAGES = {
 
 export const TEMPLATES: TemplateConfig[] = [
   {
+    id: 'toscana',
+    name: 'Toscana',
+    category: 'timeless',
+    colors: {
+      background: '#f4ede0',
+      primary: '#c4653b',
+      accent: '#5a7860',
+      text: '#1c1813',
+      textMuted: '#7a6e5f',
+    },
+    fonts: {
+      heading: 'Italiana',
+      body: 'Cormorant Garamond',
+      script: 'Pinyon Script',
+    },
+    previewImage: '/templates/toscana.jpg',
+  },
+  {
     id: 'riviera',
     name: 'Riviera',
     category: 'romance',
@@ -247,42 +266,6 @@ export const TEMPLATES: TemplateConfig[] = [
       script: 'Caveat',
     },
     previewImage: '/templates/coastal.jpg',
-  },
-  {
-    id: 'darkgrid',
-    name: 'Dark Grid',
-    category: 'contemporary',
-    colors: {
-      background: '#0B0E14',
-      primary: '#C9A45C',
-      accent: '#C9A45C',
-      text: '#F0ECE0',
-      textMuted: '#8A8478',
-    },
-    fonts: {
-      heading: 'Playfair Display',
-      body: 'DM Mono',
-      script: 'Playfair Display',
-    },
-    previewImage: '/templates/darkgrid.jpg',
-  },
-  {
-    id: 'gatsby',
-    name: 'Gatsby',
-    category: 'timeless',
-    colors: {
-      background: '#0A0908',
-      primary: '#D4AF37',
-      accent: '#D4AF37',
-      text: '#F4ECD8',
-      textMuted: '#A89060',
-    },
-    fonts: {
-      heading: 'Limelight',
-      body: 'Cormorant Garamond',
-      script: 'Cormorant Garamond',
-    },
-    previewImage: '/templates/gatsby.jpg',
   },
   {
     id: 'scandi',
@@ -321,42 +304,6 @@ export const TEMPLATES: TemplateConfig[] = [
     previewImage: '/templates/watercolor.jpg',
   },
   {
-    id: 'azulejo',
-    name: 'Azulejo',
-    category: 'timeless',
-    colors: {
-      background: '#F5F0E8',
-      primary: '#1E4D8B',
-      accent: '#C5644E',
-      text: '#1A2840',
-      textMuted: '#5A6070',
-    },
-    fonts: {
-      heading: 'DM Serif Display',
-      body: 'Cormorant Garamond',
-      script: 'DM Serif Display',
-    },
-    previewImage: '/templates/azulejo.jpg',
-  },
-  {
-    id: 'industrial',
-    name: 'Industrial',
-    category: 'contemporary',
-    colors: {
-      background: '#1A1A17',
-      primary: '#5C6B3A',
-      accent: '#A8542B',
-      text: '#E8E5DC',
-      textMuted: '#A0A090',
-    },
-    fonts: {
-      heading: 'Archivo Black',
-      body: 'EB Garamond',
-      script: 'EB Garamond',
-    },
-    previewImage: '/templates/industrial.jpg',
-  },
-  {
     id: 'botanica',
     name: 'Botanica',
     category: 'timeless',
@@ -373,24 +320,6 @@ export const TEMPLATES: TemplateConfig[] = [
       script: 'Great Vibes',
     },
     previewImage: '/templates/botanica.jpg',
-  },
-  {
-    id: 'modern',
-    name: 'Modern',
-    category: 'contemporary',
-    colors: {
-      background: '#F5F5F3',
-      primary: '#7A8C7A',
-      accent: '#2D2D2D',
-      text: '#1C1C1C',
-      textMuted: '#6B6B6B',
-    },
-    fonts: {
-      heading: 'DM Serif Display',
-      body: 'Inter',
-      script: 'Dancing Script',
-    },
-    previewImage: '/templates/modern.jpg',
   },
   {
     id: 'heritage',
@@ -499,24 +428,6 @@ export const TEMPLATES: TemplateConfig[] = [
       script: 'Pinyon Script',
     },
     previewImage: '/templates/rosewood.jpg',
-  },
-  {
-    id: 'editorial',
-    name: 'Editorial',
-    category: 'contemporary',
-    colors: {
-      background: '#f8f5f0',
-      primary: '#c8553d',
-      accent: '#c8553d',
-      text: '#0e0e0e',
-      textMuted: '#8a8278',
-    },
-    fonts: {
-      heading: 'Playfair Display',
-      body: 'DM Mono',
-      script: 'Playfair Display',
-    },
-    previewImage: '/templates/editorial.jpg',
   },
   {
     id: 'venezia',

@@ -26,7 +26,6 @@ const THEME: SectionTheme = {
   accent: C.olive, rule: C.rule, card: C.bg,
 }
 
-const fade = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }
 
 const archivo = 'var(--font-archivo), "Archivo Black", sans-serif'
 const garamond = 'var(--font-eb-garamond), "EB Garamond", Georgia, serif'
@@ -51,7 +50,7 @@ export function IndustrialTemplate({ invitation, onRSVPSubmit, existingRSVP }: P
       {/* HERO — split layout */}
       <section style={{ position: 'relative', zIndex: 1, minHeight: '100vh', display: 'grid', gridTemplateColumns: '7fr 5fr', borderBottom: `1px solid ${C.rule}` }}>
         {/* Left */}
-        <motion.div variants={fade} initial="hidden" animate="visible" transition={{ duration: 1 }}
+        <motion.div animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}
           style={{ padding: '80px 64px', borderRight: `1px solid ${C.rule}`, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <div>
             <div style={{ display: 'flex', gap: 40, marginBottom: 60, fontSize: 10, letterSpacing: '0.4em', textTransform: 'uppercase', color: C.concrete }}>
@@ -87,7 +86,7 @@ export function IndustrialTemplate({ invitation, onRSVPSubmit, existingRSVP }: P
         </motion.div>
 
         {/* Right — olive branch SVG */}
-        <motion.div variants={fade} initial="hidden" animate="visible" transition={{ duration: 1, delay: 0.3 }}
+        <motion.div animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3 }}
           style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', padding: '60px 40px', background: C.bg2 }}>
           <div aria-hidden style={{ position: 'absolute', top: '10%', left: '50%', transform: 'translateX(-50%)', fontFamily: archivo, fontSize: 'clamp(100px,18vw,240px)', color: C.rule, lineHeight: 1, userSelect: 'none', pointerEvents: 'none', fontWeight: 400 }}>
             {year}
@@ -142,7 +141,7 @@ export function IndustrialTemplate({ invitation, onRSVPSubmit, existingRSVP }: P
               <h2 style={{ fontFamily: archivo, fontSize: 32, color: C.paper, letterSpacing: '0.05em', textTransform: 'uppercase' }}>{labels.program}</h2>
             </div>
             {invitation.timeline.map((ev, i) => (
-              <motion.div key={i} variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+              <motion.div key={i} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
                 style={{ display: 'grid', gridTemplateColumns: '80px 1px 1fr', gap: '0 32px', padding: '28px 0', borderBottom: `1px solid ${C.rule}`, alignItems: 'start' }}>
                 <div style={{ fontFamily: garamond, fontStyle: 'italic', fontSize: 20, color: C.rust, paddingTop: 2 }}>{ev.time}</div>
                 <div style={{ background: C.rule }} />

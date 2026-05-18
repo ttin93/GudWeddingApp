@@ -25,7 +25,6 @@ const THEME: SectionTheme = {
   accent: C.sage, rule: C.rule, card: C.bg2,
 }
 
-const fade = { hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0 } }
 
 const fraunces = 'var(--font-fraunces), "Fraunces", Georgia, serif'
 const sans = 'var(--font-instrument), "Inter Tight", sans-serif'
@@ -52,7 +51,7 @@ export function ScandiTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props
 
       {/* HERO */}
       <section style={{ padding: '120px 64px 160px', textAlign: 'center', position: 'relative' }}>
-        <motion.div variants={fade} initial="hidden" animate="visible" transition={{ duration: 1 }}>
+        <motion.div animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
           <div style={{ fontSize: 11, letterSpacing: '0.36em', textTransform: 'uppercase', color: C.mute, marginBottom: 48 }}>{labels.together_with_families}</div>
           <h1 style={{ fontFamily: fraunces, fontSize: 'clamp(72px,12vw,160px)', fontWeight: 300, letterSpacing: '-0.02em', lineHeight: 0.9, color: C.ink }}>
             {invitation.partner1_name}
@@ -111,7 +110,7 @@ export function ScandiTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props
                 <h2 style={{ fontFamily: fraunces, fontSize: 52, fontWeight: 300, letterSpacing: '-0.01em', color: C.ink }}>{labels.program}</h2>
               </div>
               {invitation.timeline.map((ev, i) => (
-                <motion.div key={i} variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.07 }}
+                <motion.div key={i} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.07 }}
                   style={{ display: 'grid', gridTemplateColumns: '80px 1fr', gap: 32, padding: '28px 0', borderTop: `1px solid ${C.rule}` }}>
                   <div style={{ fontFamily: fraunces, fontStyle: 'italic', fontSize: 18, color: C.sage, fontWeight: 300 }}>{ev.time}</div>
                   <div>

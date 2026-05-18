@@ -26,7 +26,6 @@ const THEME: SectionTheme = {
   accent: C.gold, rule: C.rule, card: C.card,
 }
 
-const fade = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }
 
 interface Props {
   invitation: Invitation
@@ -49,7 +48,7 @@ export function NoirTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props) 
           <div style={{ position: 'absolute', top: '20%', left: '50%', transform: 'translateX(-50%)', width: '55%', paddingBottom: '55%', border: `1px solid ${C.gold}`, borderRadius: '50%' }} />
         </div>
 
-        <motion.div variants={fade} initial="hidden" animate="visible" transition={{ duration: 1 }} style={{ position: 'relative', zIndex: 1, maxWidth: 560 }}>
+        <motion.div animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} style={{ position: 'relative', zIndex: 1, maxWidth: 560 }}>
           {/* Top rule */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 40, justifyContent: 'center' }}>
             <div style={{ flex: 1, height: 1, background: C.goldDim }} />
@@ -99,7 +98,7 @@ export function NoirTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props) 
 
       {/* ── DETAILS ── */}
       {(invitation.venue_name || invitation.ceremony_time) && (
-        <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+        <motion.section whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ padding: '80px 32px', background: C.surface, borderTop: `1px solid ${C.rule}` }}
         >
           <div style={{ maxWidth: 560, margin: '0 auto' }}>
@@ -148,7 +147,7 @@ export function NoirTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props) 
 
       {/* ── PERSONAL MESSAGE ── */}
       {invitation.personal_message && (
-        <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+        <motion.section whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ padding: '80px 32px', background: C.bg, textAlign: 'center' }}
         >
           <div style={{ maxWidth: 520, margin: '0 auto' }}>
@@ -163,7 +162,7 @@ export function NoirTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props) 
 
       {/* ── TIMELINE ── */}
       {invitation.timeline?.length > 0 && (
-        <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+        <motion.section whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ padding: '80px 32px', background: C.surface, borderTop: `1px solid ${C.rule}` }}
         >
           <div style={{ maxWidth: 560, margin: '0 auto' }}>
@@ -174,11 +173,11 @@ export function NoirTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props) 
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 0, borderLeft: `1px solid ${C.rule}`, paddingLeft: 32, marginLeft: 16 }}>
               {invitation.timeline.map((event, i) => (
-                <motion.div key={i} variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+                <motion.div key={i} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
                   style={{ paddingBottom: 32, position: 'relative' }}
                 >
-                  <div style={{ position: 'absolute', left: -41, top: 2, width: 18, height: 18, background: C.bg, border: `1px solid ${C.gold}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10 }}>
-                    {event.emoji ?? '◆'}
+                  <div style={{ position: 'absolute', left: -41, top: 2, width: 18, height: 18, background: C.bg, border: `1px solid ${C.gold}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: 6, height: 6, background: C.gold, transform: 'rotate(45deg)' }} />
                   </div>
                   <p style={{ fontSize: 9, letterSpacing: '0.36em', textTransform: 'uppercase', color: C.gold, marginBottom: 4 }}>{event.time}</p>
                   <p style={{ fontSize: 17, color: C.text, marginBottom: 4 }}>{event.title}</p>
@@ -192,7 +191,7 @@ export function NoirTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props) 
 
       {/* ── DRESS CODE ── */}
       {invitation.dress_code && (
-        <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+        <motion.section whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
           style={{ padding: '64px 32px', background: C.bg, textAlign: 'center' }}
         >
           <div style={{ maxWidth: 400, margin: '0 auto' }}>
@@ -205,7 +204,7 @@ export function NoirTemplate({ invitation, onRSVPSubmit, existingRSVP }: Props) 
       <SharedSections invitation={invitation} theme={THEME} labels={labels} />
 
       {/* ── RSVP ── */}
-      <motion.section variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.7 }}
+      <motion.section whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
         style={{ padding: '80px 32px', background: C.surface, borderTop: `1px solid ${C.rule}` }}
       >
         <div style={{ maxWidth: 540, margin: '0 auto' }}>

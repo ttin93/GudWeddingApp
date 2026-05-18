@@ -3,9 +3,10 @@ import { TemplateDemoClient } from '@/components/demo/TemplateDemoClient'
 import type { TemplateId } from '@/types'
 
 const VALID: TemplateId[] = [
-  'botanica', 'modern', 'heritage', 'eliarose', 'noir', 'nocturne',
-  'promesse', 'rosewood', 'editorial', 'venezia',
-  'riviera', 'coastal', 'darkgrid', 'gatsby', 'scandi', 'watercolor', 'azulejo', 'industrial',
+  'toscana',
+  'botanica', 'heritage', 'eliarose', 'noir', 'nocturne',
+  'promesse', 'rosewood', 'venezia',
+  'riviera', 'coastal', 'scandi', 'watercolor',
 ]
 
 export default async function TemplateDemoPage({ params }: { params: Promise<{ id: string; locale: string }> }) {

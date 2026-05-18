@@ -26,7 +26,6 @@ const THEME: SectionTheme = {
   accent: C.accent, rule: C.rule, card: C.creamDeep,
 }
 
-const fade = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }
 
 const pinyon = 'var(--font-pinyon), "Pinyon Script", cursive'
 const cormorant = 'var(--font-cormorant), "Cormorant Garamond", Georgia, serif'
@@ -68,7 +67,7 @@ export function RivieraTemplate({ invitation, onRSVPSubmit, existingRSVP }: Prop
 
       {/* HERO */}
       <section style={{ maxWidth: 1280, margin: '0 auto', padding: '60px 56px 120px', display: 'grid', gridTemplateColumns: '1.05fr 0.95fr', gap: 80, alignItems: 'end' }}>
-        <motion.div variants={fade} initial="hidden" animate="visible" transition={{ duration: 1 }} style={{ position: 'relative' }}>
+        <motion.div animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} style={{ position: 'relative' }}>
           <div style={{ position: 'absolute', left: -12, top: 0, writingMode: 'vertical-rl', transform: 'rotate(180deg)', fontSize: 9.5, letterSpacing: '0.4em', color: C.mute, textTransform: 'uppercase' }}>
             No. I · {invitation.venue_name ?? labels.save_the_date}
           </div>
@@ -96,7 +95,7 @@ export function RivieraTemplate({ invitation, onRSVPSubmit, existingRSVP }: Prop
         </motion.div>
 
         {/* Rotated card — photo if uploaded, else SVG illustration */}
-        <motion.div variants={fade} initial="hidden" animate="visible" transition={{ duration: 1, delay: 0.3 }}>
+        <motion.div animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3 }}>
           <div style={{ position: 'relative', aspectRatio: '3/4', background: 'linear-gradient(160deg,#d8c8a8,#bda37c)', border: `1px solid ${C.ruleSoft}`, boxShadow: `0 30px 60px -30px rgba(31,26,20,0.4), 0 60px 120px -50px rgba(31,26,20,0.3)`, overflow: 'hidden', transform: 'rotate(2deg)', maxWidth: 380, marginLeft: 'auto' }}>
             {invitation.cover_photo_url ? (
               <img
@@ -169,7 +168,7 @@ export function RivieraTemplate({ invitation, onRSVPSubmit, existingRSVP }: Prop
             </div>
             <div style={{ maxWidth: 760, margin: '0 auto' }}>
               {invitation.timeline.map((ev, i) => (
-                <motion.div key={i} variants={fade} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.07 }}
+                <motion.div key={i} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.07 }}
                   style={{ display: 'grid', gridTemplateColumns: '160px 1fr auto', alignItems: 'baseline', gap: 32, padding: '24px 0', borderBottom: i < invitation.timeline.length - 1 ? `1px solid ${C.ruleSoft}` : 'none' }}>
                   <div style={{ fontFamily: cormorant, fontStyle: 'italic', fontSize: 24, color: C.ink, letterSpacing: '0.04em' }}>{ev.time}</div>
                   <div>

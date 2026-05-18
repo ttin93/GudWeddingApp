@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { createClient, createServiceClient } from '@/lib/supabase/server'
-import { TemplateRenderer } from '@/components/invitation/TemplateRenderer'
+import { InvitationWithIntro } from '@/components/invitation/InvitationWithIntro'
 import { MusicPlayer } from '@/components/invitation/MusicPlayer'
 import { PreviewBanner } from '@/components/invitation/PreviewBanner'
 import type { Metadata } from 'next'
@@ -8,6 +8,7 @@ import type { Invitation } from '@/types'
 
 interface Props {
   params: Promise<{ slug: string }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
 }
 
 type FullInvitation = Invitation & {
@@ -47,8 +48,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function InvitePage({ params }: Props) {
+export default async function InvitePage({ params, searchParams }: Props) {
   const { slug } = await params
+  const sp = await searchParams
+  const forceIntro = 'preview_intro' in sp
   const supabase = await createClient()
 
   const invitation = await getInvitationBySlug(slug)
@@ -90,7 +93,7 @@ export default async function InvitePage({ params }: Props) {
         <style dangerouslySetInnerHTML={{ __html: invitation.custom_css }} />
       )}
 
-      <TemplateRenderer invitation={invitationWithPhoto} />
+      <InvitationWithIntro invitation={invitationWithPhoto} forceIntro={forceIntro} />
       <MusicPlayer trackId={invitation.background_music} />
       {isPreview && <PreviewBanner invitationId={invitation.id} />}
 

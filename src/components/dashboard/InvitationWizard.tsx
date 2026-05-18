@@ -18,13 +18,27 @@ import { DEFAULT_LABELS, LANGUAGE_OPTIONS, LABEL_FIELD_GROUPS } from '@/lib/util
 import type { InvitationLabels } from '@/lib/utils/labels'
 
 // ─── Colors ───────────────────────────────────────────────────────────────────
-const INK   = '#1A1714'
-const MUTE  = '#6e6359'
-const ACC   = '#8C7B6B'
-const CREAM = '#F7F4EF'
-const RULE  = '#E8E2D9'
-const SOFT  = '#F4F1EC'
-const WHITE = '#FDFCFA'
+const INK      = '#1C1814'
+const INK_MUTE = '#8a7d6d'
+const INK_FAINT = '#b8aa95'
+const ACC      = '#9C6B3D'
+const LINE     = '#E2D7BF'
+const LINE_SOFT = '#ece2cc'
+const PAPER    = '#FFFFFF'
+const PAPER_W  = '#FBF7EE'
+const BG       = '#F6F1E8'
+const STEP_BG  = '#E8DCC2'
+const STEP_FG  = '#9C8C72'
+const SHADOW   = '0 1px 0 rgba(28,24,20,.02), 0 24px 60px -40px rgba(28,24,20,.18)'
+const fran     = 'var(--font-fraunces), Georgia, serif'
+const sans     = 'var(--font-instrument), "Helvetica Neue", sans-serif'
+
+// Legacy aliases used in existing step components
+const MUTE  = INK_MUTE
+const CREAM = BG
+const RULE  = LINE
+const SOFT  = PAPER_W
+const WHITE = PAPER
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface WizardData {
@@ -73,6 +87,7 @@ interface WizardData {
   max_guests: string
   show_countdown: boolean
   show_gallery: boolean
+  show_intro: boolean
   // Step 8 — jezik
   language: string
   labels: InvitationLabels
@@ -94,7 +109,7 @@ const DEFAULT: WizardData = {
   accommodation: [], show_accommodation: true,
   gift_registry: [], show_gift_registry: true,
   faq: [], show_faq: true,
-  rsvp_mode: 'form', rsvp_deadline: '', max_guests: '', show_countdown: true, show_gallery: true,
+  rsvp_mode: 'form', rsvp_deadline: '', max_guests: '', show_countdown: true, show_gallery: true, show_intro: true,
   language: 'sl',
   labels: DEFAULT_LABELS['sl'],
   background_music: 'none',
@@ -516,14 +531,12 @@ function Step3({ data, set }: { data: WizardData; set: (k: keyof WizardData, v: 
 }
 
 // ─── STEP 4: Timeline ─────────────────────────────────────────────────────────
-const QUICK_EMOJIS = ['💒','⛪','🥂','🎂','🍽️','🎵','💃','🎉','🌸','💍','🚗','🕯️','📸','🌙','🌅','❤️','🙏','✨']
-
 function TimelineEditor({ events, onChange }: {
   events: TimelineEvent[]
   onChange: (events: TimelineEvent[]) => void
 }) {
   function add() {
-    onChange([...events, { time: '', title: '', description: '', emoji: '✨' }])
+    onChange([...events, { time: '', title: '', description: '' }])
   }
   function update(i: number, field: keyof TimelineEvent, value: string) {
     onChange(events.map((e, idx) => idx === i ? { ...e, [field]: value } : e))
@@ -541,40 +554,27 @@ function TimelineEditor({ events, onChange }: {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
       {events.map((event, i) => (
-        <div key={i} style={{ border: `1px solid ${RULE}`, background: WHITE, padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-            <div style={{ flexShrink: 0 }}>
-              <div style={{ fontSize: 22, lineHeight: 1, paddingTop: 6 }}>{event.emoji || '✨'}</div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, width: 200, marginTop: 4 }}>
-                {QUICK_EMOJIS.map(em => (
-                  <button key={em} type="button" onClick={() => update(i, 'emoji', em)}
-                    style={{ fontSize: 16, padding: '2px 3px', border: `1px solid ${event.emoji === em ? ACC : 'transparent'}`, background: 'transparent', cursor: 'pointer', borderRadius: 3 }}>
-                    {em}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8 }}>
-                <input type="time" value={event.time} onChange={e => update(i, 'time', e.target.value)}
-                  style={{ padding: '8px 10px', border: `1px solid ${RULE}`, background: WHITE, fontSize: 13, color: INK, outline: 'none', fontFamily: 'inherit' }} />
-                <input value={event.title} onChange={e => update(i, 'title', e.target.value)} placeholder="Prihod gostov"
-                  style={{ padding: '8px 10px', border: `1px solid ${RULE}`, background: WHITE, fontSize: 13, color: INK, outline: 'none', fontFamily: 'inherit' }} />
-              </div>
-              <input value={event.description ?? ''} onChange={e => update(i, 'description', e.target.value)} placeholder="Kratek opis (opcijsko)"
-                style={{ padding: '8px 10px', border: `1px solid ${RULE}`, background: SOFT, fontSize: 12.5, color: INK, outline: 'none', width: '100%', boxSizing: 'border-box', fontFamily: 'inherit' }} />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flexShrink: 0 }}>
-              <button type="button" onClick={() => moveUp(i)} style={{ padding: 4, background: 'none', border: 'none', cursor: 'pointer', color: MUTE }}><ChevronUp size={14} /></button>
-              <button type="button" onClick={() => moveDown(i)} style={{ padding: 4, background: 'none', border: 'none', cursor: 'pointer', color: MUTE }}><ChevronDown size={14} /></button>
-              <button type="button" onClick={() => remove(i)} style={{ padding: 4, background: 'none', border: 'none', cursor: 'pointer', color: '#C0504A' }}><Trash2 size={14} /></button>
-            </div>
+        <div key={i} style={{ display: 'grid', gridTemplateColumns: '88px 1fr 28px', gap: 16, alignItems: 'start', padding: '14px 0', borderTop: i === 0 ? 'none' : `1px solid ${LINE_SOFT}` }}>
+          <input type="time" value={event.time} onChange={e => update(i, 'time', e.target.value)}
+            style={{ padding: '8px 10px', border: `1px solid ${LINE}`, background: PAPER, fontSize: 17, color: INK, outline: 'none', fontFamily: fran, fontWeight: 300, textAlign: 'center', width: '100%', boxSizing: 'border-box' }} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <input value={event.title} onChange={e => update(i, 'title', e.target.value)} placeholder="Naslov dogodka"
+              style={{ padding: '8px 10px', border: `1px solid ${LINE}`, background: PAPER, fontSize: 17, color: INK, outline: 'none', fontFamily: fran, fontWeight: 300, width: '100%', boxSizing: 'border-box' }} />
+            <input value={event.description ?? ''} onChange={e => update(i, 'description', e.target.value)} placeholder="Kratek opis (neobvezno)"
+              style={{ padding: '8px 10px', border: `1px solid ${LINE}`, background: PAPER_W, fontSize: 14, color: INK, outline: 'none', fontStyle: 'italic', width: '100%', boxSizing: 'border-box', fontFamily: fran, fontWeight: 300 }} />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, paddingTop: 4 }}>
+            <button type="button" onClick={() => moveUp(i)} style={{ padding: 4, background: 'none', border: 'none', cursor: 'pointer', color: MUTE }}><ChevronUp size={13} /></button>
+            <button type="button" onClick={() => moveDown(i)} style={{ padding: 4, background: 'none', border: 'none', cursor: 'pointer', color: MUTE }}><ChevronDown size={13} /></button>
+            <button type="button" onClick={() => remove(i)} style={{ padding: 4, background: 'none', border: 'none', cursor: 'pointer', color: '#C0504A' }}><Trash2 size={13} /></button>
           </div>
         </div>
       ))}
-      <AddButton onClick={add} label="Dodaj event v program" />
+      <div onClick={add} style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 10, fontSize: 11, letterSpacing: '.22em', textTransform: 'uppercase', color: ACC, cursor: 'pointer', padding: '12px 0', borderTop: `1px dashed ${LINE}`, fontFamily: sans, fontWeight: 500 }}>
+        <span style={{ fontSize: 18, lineHeight: 1 }}>+</span> Dodaj dogodek
+      </div>
     </div>
   )
 }
@@ -1147,28 +1147,53 @@ function Step9({ data }: { data: WizardData }) {
   )
 }
 
-// ─── Step indicator ───────────────────────────────────────────────────────────
-function StepIndicator({ current, total }: { current: number; total: number }) {
+// ─── Stepper ──────────────────────────────────────────────────────────────────
+function StepIndicator({ current, total, onJump }: { current: number; total: number; onJump?: (i: number) => void }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 0, marginBottom: 36 }}>
-      {STEPS.map((s, i) => (
-        <div key={i} style={{ display: 'flex', alignItems: 'center', flex: i < total - 1 ? 1 : 0 }}>
-          <div style={{
-            width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 11, fontWeight: 500,
-            background: i < current ? ACC : i === current ? INK : RULE,
-            color: i <= current ? '#fff' : MUTE,
-            transition: 'background .3s',
-          }}>
-            {i < current ? <Check size={12} /> : i + 1}
-          </div>
-          {i < total - 1 && (
-            <div style={{ flex: 1, height: 1, background: i < current ? ACC : RULE, margin: '0 4px', transition: 'background .3s' }} />
-          )}
-        </div>
-      ))}
-    </div>
+    <>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0, padding: '0 16px', maxWidth: 860, margin: '0 auto', flexWrap: 'nowrap' }}>
+        {STEPS.map((s, i) => {
+          const done = i < current
+          const isCurrent = i === current
+          return (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', ...(i < total - 1 ? { flex: 1, maxWidth: 80 } : {}) }}>
+              <div
+                onClick={() => onJump?.(i)}
+                title={s.label}
+                style={{
+                  width: 34, height: 34, borderRadius: '50%', flexShrink: 0,
+                  background: isCurrent ? INK : done ? '#c8b78f' : STEP_BG,
+                  color: isCurrent ? PAPER : done ? PAPER_W : STEP_FG,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 13, fontWeight: 500, fontFamily: sans,
+                  cursor: onJump ? 'pointer' : 'default', position: 'relative',
+                  outline: isCurrent ? `2px solid ${INK}` : 'none',
+                  outlineOffset: isCurrent ? 5 : 0,
+                  transition: 'background .22s, color .22s',
+                }}
+                onMouseEnter={e => { if (!isCurrent && onJump) (e.currentTarget as HTMLElement).style.transform = 'scale(1.06)' }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1)' }}
+              >
+                {isCurrent && (
+                  <motion.div
+                    animate={{ scale: [0.85, 1.4], opacity: [0, 0.6, 0] }}
+                    transition={{ duration: 2.4, repeat: Infinity, ease: 'easeOut' }}
+                    style={{ position: 'absolute', inset: -12, borderRadius: '50%', border: `1px solid ${LINE}`, pointerEvents: 'none' }}
+                  />
+                )}
+                {done ? <Check size={13} /> : i + 1}
+              </div>
+              {i < total - 1 && (
+                <div style={{ flex: 1, height: 1, background: done ? '#c8b78f' : LINE, margin: '0 6px' }} />
+              )}
+            </div>
+          )
+        })}
+      </div>
+      <div style={{ textAlign: 'center', marginTop: 20, fontFamily: fran, fontStyle: 'italic', fontWeight: 300, fontSize: 14, color: INK_MUTE }}>
+        {STEPS[current]?.label ?? ''}
+      </div>
+    </>
   )
 }
 
@@ -1334,90 +1359,77 @@ export function InvitationWizard() {
 
   const stepProps = { data, set }
 
-  const isTemplateStep = step === 1
-
   const stepHeader = (
-    <div style={{ marginBottom: 28 }}>
-      <div style={{ fontSize: 10, letterSpacing: '0.3em', textTransform: 'uppercase', color: MUTE, marginBottom: 6 }}>
+    <div style={{ marginBottom: 0 }}>
+      <div style={{ fontSize: 11, letterSpacing: '.28em', textTransform: 'uppercase', color: ACC, fontWeight: 500, fontFamily: sans }}>
         Korak {step + 1} / {STEPS.length}
       </div>
-      <h2 style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontWeight: 400, fontSize: 34, color: INK, lineHeight: 1 }}>
+      <h2 style={{ fontFamily: fran, fontWeight: 300, fontStyle: 'italic', fontSize: 'clamp(36px,4vw,54px)', lineHeight: 1.05, letterSpacing: '-.015em', marginTop: 10, color: INK }}>
         {STEP_TITLES[step]}
       </h2>
+      <div style={{ height: 1, background: LINE_SOFT, margin: '32px 0 28px' }} />
     </div>
   )
 
   const stepContent = (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={step}
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -16 }}
-        transition={{ duration: 0.2 }}
-      >
-        {step === 0 && <Step1 {...stepProps} />}
-        {step === 1 && <Step2 {...stepProps} />}
-        {step === 2 && <Step3 {...stepProps} />}
-        {step === 3 && <Step4 {...stepProps} />}
-        {step === 4 && <Step5 {...stepProps} />}
-        {step === 5 && <Step6 {...stepProps} />}
-        {step === 6 && <Step7 {...stepProps} />}
-        {step === 7 && <Step8 {...stepProps} />}
-        {step === 8 && <Step9 data={data} />}
-      </motion.div>
-    </AnimatePresence>
+    <div>
+      {step === 0 && <Step1 {...stepProps} />}
+      {step === 1 && <Step2 {...stepProps} />}
+      {step === 2 && <Step3 {...stepProps} />}
+      {step === 3 && <Step4 {...stepProps} />}
+      {step === 4 && <Step5 {...stepProps} />}
+      {step === 5 && <Step6 {...stepProps} />}
+      {step === 6 && <Step7 {...stepProps} />}
+      {step === 7 && <Step8 {...stepProps} />}
+      {step === 8 && <Step9 data={data} />}
+    </div>
   )
 
   const navButtons = (
-    <div style={{
-      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-      marginTop: 36, paddingTop: 24, borderTop: `1px solid ${RULE}`,
-    }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 36, paddingTop: 24, borderTop: `1px solid ${LINE_SOFT}` }}>
       <button type="button" onClick={() => setStep(s => Math.max(0, s - 1))} disabled={step === 0}
         style={{
-          display: 'flex', alignItems: 'center', gap: 8,
-          padding: '10px 20px', border: `1px solid ${RULE}`,
-          background: 'transparent', color: step === 0 ? RULE : MUTE,
-          fontSize: 12, letterSpacing: '0.15em', textTransform: 'uppercase',
-          cursor: step === 0 ? 'not-allowed' : 'pointer', fontFamily: 'inherit',
-        }}>
-        <ChevronLeft size={14} />
-        Nazaj
+          padding: '13px 22px', fontSize: 11, letterSpacing: '.22em', textTransform: 'uppercase', fontWeight: 500,
+          border: `1px solid ${LINE}`, color: step === 0 ? INK_FAINT : INK_MUTE, background: PAPER,
+          cursor: step === 0 ? 'not-allowed' : 'pointer', opacity: step === 0 ? 0.4 : 1,
+          fontFamily: sans, borderRadius: 2, transition: 'all .15s',
+        }}
+        onMouseEnter={e => { if (step > 0) { (e.currentTarget).style.borderColor = INK; (e.currentTarget).style.color = INK } }}
+        onMouseLeave={e => { (e.currentTarget).style.borderColor = LINE; (e.currentTarget).style.color = step === 0 ? INK_FAINT : INK_MUTE }}
+      >
+        ‹ Nazaj
       </button>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         {step >= 3 && step <= 6 && (
           <button type="button" onClick={() => setStep(s => s + 1)}
-            style={{
-              padding: '10px 16px', border: 'none', background: 'transparent', color: MUTE,
-              fontSize: 12, letterSpacing: '0.15em', textTransform: 'uppercase', cursor: 'pointer', fontFamily: 'inherit',
-            }}>
+            style={{ padding: '13px 18px', fontSize: 11, letterSpacing: '.22em', textTransform: 'uppercase', border: 'none', background: 'transparent', color: INK_MUTE, cursor: 'pointer', fontFamily: sans }}>
             Preskoči
           </button>
         )}
-
         {step < STEPS.length - 1 ? (
           <button type="button" onClick={() => canProceed() && setStep(s => s + 1)} disabled={!canProceed()}
             style={{
-              display: 'flex', alignItems: 'center', gap: 8, padding: '10px 24px',
-              background: canProceed() ? INK : RULE, color: canProceed() ? CREAM : MUTE,
-              border: 'none', fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase',
-              cursor: canProceed() ? 'pointer' : 'not-allowed', fontFamily: 'inherit', transition: 'background .2s',
-            }}>
-            Naprej
-            <ChevronRight size={14} />
+              padding: '13px 28px', fontSize: 11, letterSpacing: '.22em', textTransform: 'uppercase', fontWeight: 500,
+              border: 'none', background: canProceed() ? INK : LINE, color: canProceed() ? PAPER : INK_MUTE,
+              cursor: canProceed() ? 'pointer' : 'not-allowed', fontFamily: sans, borderRadius: 2, transition: 'background .15s',
+            }}
+            onMouseEnter={e => { if (canProceed()) (e.currentTarget.style.background = '#000') }}
+            onMouseLeave={e => { (e.currentTarget.style.background = canProceed() ? INK : LINE) }}
+          >
+            Naprej ›
           </button>
         ) : (
           <button type="button" onClick={submit} disabled={submitting}
             style={{
-              display: 'flex', alignItems: 'center', gap: 8, padding: '10px 28px',
-              background: submitting ? MUTE : INK, color: CREAM,
-              border: 'none', fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase',
-              cursor: submitting ? 'not-allowed' : 'pointer', fontFamily: 'inherit',
-            }}>
+              padding: '13px 28px', fontSize: 11, letterSpacing: '.22em', textTransform: 'uppercase', fontWeight: 500,
+              border: 'none', background: submitting ? INK_MUTE : ACC, color: PAPER,
+              cursor: submitting ? 'not-allowed' : 'pointer', fontFamily: sans, borderRadius: 2, transition: 'background .15s',
+            }}
+            onMouseEnter={e => { if (!submitting) (e.currentTarget.style.background = '#83572d') }}
+            onMouseLeave={e => { (e.currentTarget.style.background = submitting ? INK_MUTE : ACC) }}
+          >
             {submitting ? 'Ustvarjam…' : 'Ustvari povabilo'}
-            {!submitting && <Check size={14} />}
           </button>
         )}
       </div>
@@ -1426,25 +1438,18 @@ export function InvitationWizard() {
 
   if (uploadStep && createdId) {
     return (
-      <div style={{ minHeight: '100vh', background: SOFT, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '48px 16px 80px' }}>
-        <div style={{ width: '100%', maxWidth: 680 }}>
-          <div style={{ textAlign: 'center', marginBottom: 32 }}>
-            <div style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 20, color: INK, letterSpacing: '0.05em' }}>Invitia</div>
-            <p style={{ fontSize: 11, color: MUTE, letterSpacing: '0.2em', textTransform: 'uppercase', marginTop: 4 }}>Ustvari povabilo</p>
-          </div>
-          <div style={{ background: WHITE, border: `1px solid ${RULE}`, padding: '40px 40px' }}>
-            <div style={{ marginBottom: 28 }}>
-              <div style={{ fontSize: 10, letterSpacing: '0.3em', textTransform: 'uppercase', color: MUTE, marginBottom: 6 }}>
-                Zadnji korak
-              </div>
-              <h2 style={{ fontSize: 22, fontWeight: 400, color: INK, fontFamily: 'var(--font-dm-serif)', letterSpacing: '0.03em' }}>
-                Dodajte fotografije
-              </h2>
-            </div>
-            <WizardPhotoUpload
-              invitationId={createdId}
-              onFinish={() => router.push(`/dashboard/${createdId}`)}
-            />
+      <div style={{ fontFamily: sans }}>
+        <div style={{ textAlign: 'center', padding: '36px 24px 8px', borderBottom: `1px solid ${LINE}`, marginBottom: 0 }}>
+          <div style={{ fontFamily: fran, fontWeight: 300, fontStyle: 'italic', fontSize: 30, color: INK }}>najindan</div>
+          <div style={{ marginTop: 6, fontSize: 11, letterSpacing: '.32em', textTransform: 'uppercase', color: INK_MUTE, fontFamily: sans }}>Ustvari povabilo</div>
+          <div style={{ width: 64, height: 1, background: INK, margin: '18px auto 0' }} />
+        </div>
+        <div style={{ maxWidth: 760, margin: '28px auto 60px', padding: '0 4px' }}>
+          <div style={{ background: PAPER, border: `1px solid ${LINE}`, boxShadow: SHADOW, padding: '52px 60px 44px' }}>
+            <div style={{ fontSize: 11, letterSpacing: '.28em', textTransform: 'uppercase', color: ACC, fontWeight: 500, fontFamily: sans }}>Zadnji korak</div>
+            <h2 style={{ fontFamily: fran, fontWeight: 300, fontStyle: 'italic', fontSize: 'clamp(36px,4vw,54px)', lineHeight: 1.05, marginTop: 10, color: INK }}>Dodajte fotografije</h2>
+            <div style={{ height: 1, background: LINE_SOFT, margin: '32px 0 28px' }} />
+            <WizardPhotoUpload invitationId={createdId} onFinish={() => router.push(`/dashboard/${createdId}`)} />
           </div>
         </div>
       </div>
@@ -1452,39 +1457,41 @@ export function InvitationWizard() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: SOFT, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '48px 16px 80px' }}>
-      <div style={{ width: '100%', maxWidth: isTemplateStep ? 1300 : 680 }}>
-        <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <div style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 20, color: INK, letterSpacing: '0.05em' }}>Invitia</div>
-          <p style={{ fontSize: 11, color: MUTE, letterSpacing: '0.2em', textTransform: 'uppercase', marginTop: 4 }}>Ustvari povabilo</p>
+    <div style={{ fontFamily: sans }}>
+      {/* Topbar */}
+      <div style={{ textAlign: 'center', padding: '36px 24px 8px', position: 'relative', borderBottom: `1px solid ${LINE}`, marginBottom: 0 }}>
+        <a href="/dashboard" style={{ position: 'absolute', left: 32, top: 46, display: 'flex', alignItems: 'center', gap: 10, fontSize: 11, letterSpacing: '.22em', textTransform: 'uppercase', color: INK_MUTE, fontFamily: sans, textDecoration: 'none' }}
+          onMouseEnter={e => (e.currentTarget.style.color = INK)} onMouseLeave={e => (e.currentTarget.style.color = INK_MUTE)}>
+          ← Nadzorna plošča
+        </a>
+        <div style={{ fontFamily: fran, fontWeight: 300, fontStyle: 'italic', fontSize: 30, letterSpacing: '.005em', color: INK }}>
+          najindan
         </div>
+        <div style={{ marginTop: 6, fontSize: 11, letterSpacing: '.32em', textTransform: 'uppercase', color: INK_MUTE, fontFamily: sans }}>
+          Ustvari povabilo
+        </div>
+        <div style={{ width: 64, height: 1, background: INK, margin: '18px auto 0' }} />
+      </div>
 
-        <StepIndicator current={step} total={STEPS.length} />
+      {/* Stepper */}
+      <div style={{ padding: '32px 24px 0' }}>
+        <StepIndicator current={step} total={STEPS.length} onJump={i => { if (i < step) setStep(i) }} />
+      </div>
 
-        {isTemplateStep ? (
-          /* ── Two-column layout: picker left, live preview right ── */
-          <div style={{ display: 'grid', gridTemplateColumns: '420px 1fr', background: WHITE, border: `1px solid ${RULE}` }}>
-            {/* Left panel */}
-            <div style={{ padding: '36px 40px', borderRight: `1px solid ${RULE}`, display: 'flex', flexDirection: 'column' }}>
-              {stepHeader}
-              <div style={{ flex: 1, overflowY: 'auto', maxHeight: '70vh' }}>
-                {stepContent}
-              </div>
-              {navButtons}
-            </div>
-            {/* Right panel — live preview */}
-            <div style={{ position: 'relative', minHeight: 600, background: SOFT }}>
-              <TemplatePreviewPanel data={data} />
-            </div>
-          </div>
-        ) : (
-          /* ── Single column for all other steps ── */
-          <div style={{ background: WHITE, border: `1px solid ${RULE}`, padding: '36px 40px' }}>
+      {/* Card area */}
+      <div style={{ maxWidth: 760, margin: '28px auto 60px', padding: '0 4px' }}>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.28, ease: [0.2, 0.6, 0.2, 1] }}
+            style={{ background: PAPER, border: `1px solid ${LINE}`, boxShadow: SHADOW, padding: '52px 60px 44px' }}
+          >
             {stepHeader}
             {stepContent}
             {navButtons}
-          </div>
-        )}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   )

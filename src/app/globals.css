@@ -47,3 +47,4 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
 /* Hide scrollbar for horizontal carousels */
 .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
+
