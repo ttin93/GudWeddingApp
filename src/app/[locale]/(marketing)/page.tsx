@@ -223,6 +223,16 @@ const TMPL: TplDef[] = [
 const CAT_COUNTS = { all:20, editorial:5, botanical:5, modern:5, luxe:5 }
 type Cat = keyof typeof CAT_COUNTS
 
+// maps landing-page style → real /templates/[id] if page exists
+const STYLE_TO_ID: Record<string, string> = {
+  riviera: 'riviera',
+  botanical: 'toscana',
+  noir: 'noir',
+  scandi: 'scandi',
+  coastal: 'coastal',
+  romance: 'watercolor',
+}
+
 const FIG_NAMES: Record<Locale, string>[] = [
   { sl:'Riviera Edition', en:'Riviera Edition', hr:'Riviera Edition' },
   { sl:'Toscana Botanical', en:'Toscana Botanical', hr:'Toscana Botanical' },
@@ -296,8 +306,8 @@ export default function HomePage() {
         <div className="nav__links">
           <a href="#benefits">{tr.navBenefits}</a>
           <a href="#how">{tr.navHow}</a>
-          <a href="#templates">{tr.navTemplates}</a>
-          <a href="#pricing">{tr.navPricing}</a>
+          <Link href="/templates">{tr.navTemplates}</Link>
+          <Link href="/pricing">{tr.navPricing}</Link>
           <a href="#faq">{tr.navFaq}</a>
         </div>
         <div className="nav__right">
@@ -308,7 +318,7 @@ export default function HomePage() {
             <span>·</span>
             <Link href="/" locale={'hr' as any} className={locale === 'hr' ? 'active' : ''}>HR</Link>
           </div>
-          <a href="#contact" className="nav__cta">{tr.navCta}</a>
+          <Link href="/register" className="nav__cta">{tr.navCta}</Link>
         </div>
       </nav>
 
@@ -508,8 +518,11 @@ export default function HomePage() {
         </div>
 
         <div className="tpl-grid">
-          {filtered.map(tmpl => (
-            <Link key={tmpl.id} href={'/templates' as any} className="tpl-card">
+          {filtered.map(tmpl => {
+            const tplId = STYLE_TO_ID[tmpl.style]
+            const tplHref = tplId ? `/templates/${tplId}` : '/templates'
+            return (
+            <Link key={tmpl.id} href={tplHref as any} className="tpl-card">
               <div className="tpl-frame">
                 <div
                   className={`tpl-art ta-${tmpl.style}`}
@@ -524,7 +537,7 @@ export default function HomePage() {
                 <div className="tpl-price ital">{tmpl.price}</div>
               </div>
             </Link>
-          ))}
+          )})}
         </div>
 
         <div className="tpl-foot">
@@ -603,7 +616,7 @@ export default function HomePage() {
               <li>{tr.p1l1}</li><li>{tr.p1l2}</li><li>{tr.p1l3}</li><li>{tr.p1l4}</li>
               <li>{tr.p1l5}</li><li className="muted">{tr.p1l6}</li><li className="muted">{tr.p1l7}</li>
             </ul>
-            <Link href="/register" className="cta cta--ghost full">{tr.p1cta}</Link>
+            <Link href={`/register?plan=bronze` as any} className="cta cta--ghost full">{tr.p1cta}</Link>
             <p className="price-card__note ital">{tr.p1note}</p>
           </article>
 
@@ -625,7 +638,7 @@ export default function HomePage() {
               <li>{tr.p2l1}</li><li>{tr.p2l2}</li><li>{tr.p2l3}</li><li>{tr.p2l4}</li>
               <li>{tr.p2l5}</li><li>{tr.p2l6}</li><li>{tr.p2l7}</li><li>{tr.p2l8}</li>
             </ul>
-            <Link href="/register" className="cta cta--solid full">{tr.p2cta}</Link>
+            <Link href={`/register?plan=gold` as any} className="cta cta--solid full">{tr.p2cta}</Link>
             <p className="price-card__note ital">{tr.p2note}</p>
           </article>
 
@@ -745,17 +758,17 @@ export default function HomePage() {
         <div className="foot__grid">
           <div className="foot__col">
             <h5>{tr.footProduct}</h5>
-            <a href="#templates">{tr.footL1}</a>
-            <a href="#pricing">{tr.footL2}</a>
+            <Link href="/templates">{tr.footL1}</Link>
+            <Link href="/pricing">{tr.footL2}</Link>
             <a href="#how">{tr.footL3}</a>
             <a href="#faq">{tr.footL4}</a>
           </div>
           <div className="foot__col">
             <h5>{tr.footStudio}</h5>
             <a href="#contact">{tr.footL5}</a>
-            <a href="#">{tr.footL6}</a>
+            <a href="#contact">{tr.footL6}</a>
             <a href="#gallery">{tr.footL7}</a>
-            <a href="#">{tr.footL8}</a>
+            <a href="#contact">{tr.footL8}</a>
           </div>
           <div className="foot__col">
             <h5>{tr.footLegal}</h5>
