@@ -7,11 +7,17 @@ const BASE = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') ?? 'https://naj
 const LOCALES = ['sl', 'hr', 'en']
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const supabase = await createServiceClient()
-  const { data: invitations } = await supabase
-    .from('invitations')
-    .select('slug, updated_at')
-    .eq('is_active', true)
+  let invitations: { slug: string; updated_at: string }[] = []
+  try {
+    const supabase = await createServiceClient()
+    const { data } = await supabase
+      .from('invitations')
+      .select('slug, updated_at')
+      .eq('is_active', true)
+    invitations = data ?? []
+  } catch {
+    // Supabase not available at build time — skip invite routes
+  }
 
   const staticRoutes = ['', '/pricing', '/templates', '/demo'].flatMap(path =>
     LOCALES.map(locale => ({
@@ -22,7 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }))
   )
 
-  const inviteRoutes = (invitations ?? []).map(inv => ({
+  const inviteRoutes = invitations.map(inv => ({
     url: `${BASE}/invite/${inv.slug}`,
     lastModified: new Date(inv.updated_at),
     changeFrequency: 'monthly' as const,
