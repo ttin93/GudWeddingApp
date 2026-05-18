@@ -122,9 +122,8 @@ export function DashboardSidebar({ user, isAdmin = false }: { user: User; isAdmi
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '0 20px',
       }}>
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'var(--font-dm-serif)', fontSize: 16, color: INK, textDecoration: 'none' }}>
-          <span style={{ fontSize: 8, color: ACC }}>◉</span>
-          NajinDan
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+          <NajinDanWordmark size={18} />
         </Link>
         <Link href="/dashboard/invitation/new" style={{
           display: 'flex', alignItems: 'center', gap: 6,

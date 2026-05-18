@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { NajinDanWordmark } from './NajinDanLogo'
 
 export function Footer() {
   return (
@@ -6,7 +7,7 @@ export function Footer() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           <div className="col-span-2 md:col-span-1">
-            <span className="font-script text-3xl text-[#C4A882]">NajinDan</span>
+            <NajinDanWordmark size={26} dark />
             <p className="mt-3 text-sm leading-relaxed">
               Elegant digital wedding invitations that your guests will love.
             </p>
