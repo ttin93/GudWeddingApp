@@ -123,7 +123,7 @@ const STEPS = [
   { label: 'Program', icon: Clock },
   { label: 'Podrobnosti', icon: Hash },
   { label: 'Extras', icon: Gift },
-  { label: 'RSVP', icon: Users },
+  { label: 'Prijava', icon: Users },
   { label: 'Jezik', icon: null },
   { label: 'Pregled', icon: Check },
 ]
@@ -950,7 +950,7 @@ function Step6({ data, set }: { data: WizardData; set: (k: keyof WizardData, v: 
 
 // ─── STEP 7: RSVP ─────────────────────────────────────────────────────────────
 const RSVP_MODE_OPTIONS = [
-  { value: 'form', label: 'RSVP obrazec', desc: 'Gostje izpolnijo obrazec na povabilu', icon: '📝' },
+  { value: 'form', label: 'Prijavni obrazec', desc: 'Gostje izpolnijo obrazec na povabilu', icon: '📝' },
   { value: 'contact', label: 'Direkten kontakt', desc: 'Gostje vas pokličejo ali pišejo', icon: '📱' },
   { value: 'both', label: 'Oboje', desc: 'Obrazec in kontaktni podatki', icon: '✦' },
 ] as const
@@ -958,7 +958,7 @@ const RSVP_MODE_OPTIONS = [
 function Step7({ data, set }: { data: WizardData; set: (k: keyof WizardData, v: unknown) => void }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-      <SectionLabel icon={Users}>RSVP nastavitve</SectionLabel>
+      <SectionLabel icon={Users}>Nastavitve prijave gostov</SectionLabel>
 
       {/* RSVP mode */}
       <Field label="Način prijave">
@@ -1006,7 +1006,7 @@ function Step7({ data, set }: { data: WizardData; set: (k: keyof WizardData, v: 
       )}
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-        <Field label="Rok za RSVP">
+        <Field label="Rok za prijavo">
           <TextInput type="date" value={data.rsvp_deadline} onChange={v => set('rsvp_deadline', v)} />
         </Field>
         <Field label="Pričakovano število gostov">
@@ -1051,13 +1051,13 @@ function Step8({ data, set }: { data: WizardData; set: (k: keyof WizardData, v: 
     dress_code: 'Dress code', story_title: 'Naša zgodba',
     accommodation_title: 'Nastanitev', transport_title: 'Prevoz',
     gifts_title: 'Darila', faq_title: 'FAQ', contact_title: 'Kontakt',
-    rsvp_title: 'RSVP naslov', rsvp_deadline_prefix: 'Rok RSVP prefix',
+    rsvp_title: 'Naslov sekcije', rsvp_deadline_prefix: 'Predpona datuma',
     attending_yes: 'Pridem', attending_no: 'Ne pridem',
     your_name: 'Ime', your_email: 'Email',
     adults: 'Odrasli', children: 'Otroci',
     menu_choice: 'Meni izbira', menu_meat: 'Meso', menu_fish: 'Ribe',
     menu_vegetarian: 'Vegetarijansko', menu_vegan: 'Vegansko',
-    allergies: 'Alergije', message_label: 'Sporočilo', submit_rsvp: 'Pošlji RSVP',
+    allergies: 'Alergije', message_label: 'Sporočilo', submit_rsvp: 'Gumb za pošiljanje',
     thank_you: 'Hvala', thank_you_attending: 'Prideš — zahvala', thank_you_not_attending: 'Ne prideš — zahvala',
     footer_tagline: 'Footer izrek', google_maps: 'Google Maps', add_to_calendar: 'Dodaj v kalendar',
     hashtag_label: 'Hashtag', children_welcome: 'Otroci dobrodošli',

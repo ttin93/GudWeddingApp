@@ -502,7 +502,7 @@ function Step4({ data, set }: { data: EditorState; set: (p: Partial<EditorState>
 }
 
 const RSVP_OPTS = [
-  { value: 'form',    label: 'RSVP obrazec',     desc: 'Gostje izpolnijo obrazec na vabilu' },
+  { value: 'form',    label: 'Prijavni obrazec',  desc: 'Gostje izpolnijo obrazec na vabilu' },
   { value: 'contact', label: 'Direkten kontakt',  desc: 'Gostje vas pokličejo ali napišejo' },
   { value: 'both',    label: 'Oboje',             desc: 'Obrazec in kontaktni podatki' },
 ] as const

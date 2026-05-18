@@ -237,7 +237,7 @@ export const DEFAULT_LABELS: Record<string, InvitationLabels> = {
     menu_vegan: 'Vegan',
     allergies: 'Allergies / dietary requirements',
     message_label: 'Message for the couple',
-    submit_rsvp: 'Send RSVP',
+    submit_rsvp: 'Confirm Attendance',
     thank_you: 'Thank you!',
     thank_you_attending: "We can't wait to celebrate with you.",
     thank_you_not_attending: "We'll miss you on our special day.",
@@ -275,7 +275,7 @@ export const LABEL_FIELD_GROUPS: { group: string; fields: (keyof InvitationLabel
     fields: ['program', 'venue', 'ceremony', 'reception', 'dress_code', 'story_title', 'accommodation_title', 'transport_title', 'gifts_title', 'faq_title', 'contact_title'],
   },
   {
-    group: 'RSVP',
+    group: 'Prijava gostov',
     fields: ['rsvp_title', 'rsvp_deadline_prefix', 'attending_yes', 'attending_no', 'your_name', 'your_email', 'adults', 'children', 'menu_choice', 'menu_meat', 'menu_fish', 'menu_vegetarian', 'menu_vegan', 'allergies', 'message_label', 'submit_rsvp'],
   },
   {

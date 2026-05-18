@@ -194,7 +194,7 @@ export function InvitationManager({ invitation }: Props) {
                 ['Venue', invitation.venue_name || '—'],
                 ['Ceremony', invitation.ceremony_time || '—'],
                 ['Dress code', invitation.dress_code || '—'],
-                ['RSVP deadline', invitation.rsvp_deadline ? formatDate(invitation.rsvp_deadline) : '—'],
+                ['Rok za prijavo', invitation.rsvp_deadline ? formatDate(invitation.rsvp_deadline) : '—'],
                 ['Active until', invitation.active_until ? formatDate(invitation.active_until) : '—'],
               ].map(([label, value]) => (
                 <div key={label as string} style={{ display: 'flex', justifyContent: 'space-between', gap: 16 }}>
