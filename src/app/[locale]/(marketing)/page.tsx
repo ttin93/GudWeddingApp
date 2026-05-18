@@ -1,14 +1,14 @@
 'use client'
 
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { PACKAGES, TEMPLATES } from '@/types'
-import { CheckCircle2 } from 'lucide-react'
 import { SiteNav } from '@/components/ui/SiteNav'
 import { SiteFooter } from '@/components/ui/SiteFooter'
 import { useTranslations } from 'next-intl'
 import { TemplateArt } from '@/components/ui/TemplateArt'
+import { useIsMobile } from '@/hooks/useIsMobile'
 
 // ── Palette ──────────────────────────────────────────────────────────────────
 const BG    = '#F6F1E8'
@@ -261,24 +261,26 @@ function HeroCardDeck({ p1, p2 }: { p1: string; p2: string }) {
 }
 
 // ── Hero ──────────────────────────────────────────────────────────────────────
-function HeroSection({ p1, p2 }: { p1: string; p2: string }) {
+function HeroSection({ p1, p2, isMobile }: { p1: string; p2: string; isMobile: boolean }) {
   const t = useTranslations('home')
   const [mounted, setMounted] = useState(false)
   useEffect(() => { const id = setTimeout(() => setMounted(true), 60); return () => clearTimeout(id) }, [])
 
   return (
-    <section style={{ background: BG, position: 'relative', zIndex: 1, padding: '48px 56px 0', overflow: 'hidden' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '42px 1.05fr .95fr', gap: 48, alignItems: 'center', minHeight: 'calc(100vh - 84px)', maxWidth: 1440, margin: '0 auto' }}>
+    <section style={{ background: BG, position: 'relative', zIndex: 1, padding: isMobile ? '32px 20px 0' : '48px 56px 0', overflow: 'hidden' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '42px 1.05fr .95fr', gap: isMobile ? 32 : 48, alignItems: 'center', minHeight: isMobile ? 'auto' : 'calc(100vh - 84px)', maxWidth: 1440, margin: '0 auto' }}>
 
-        {/* Rail */}
+        {/* Rail — hidden on mobile */}
+        {!isMobile && (
         <aside style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, fontSize: 10, letterSpacing: '.32em', color: MUTE, textTransform: 'uppercase', height: '100%', justifyContent: 'center' }}>
           <span style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', fontFamily: fran, fontStyle: 'italic', fontSize: 13, letterSpacing: '.12em', color: INK }}>No. 001</span>
           <div style={{ flex: 1, width: 1, background: LINE, maxHeight: 160 }} />
           <span style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>A DIGITAL STUDIO</span>
         </aside>
+        )}
 
         {/* Copy */}
-        <div style={{ padding: '48px 0', display: 'flex', flexDirection: 'column', gap: 0 }}>
+        <div style={{ padding: isMobile ? '24px 0 0' : '48px 0', display: 'flex', flexDirection: 'column', gap: 0 }}>
           <motion.div
             style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 11, letterSpacing: '.32em', color: MUTE, textTransform: 'uppercase', marginBottom: 28 }}
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: mounted ? 1 : 0, y: mounted ? 0 : 10 }}
@@ -308,12 +310,12 @@ function HeroSection({ p1, p2 }: { p1: string; p2: string }) {
           </motion.p>
 
           <motion.div
-            style={{ display: 'flex', gap: 18, alignItems: 'center', flexWrap: 'wrap', marginBottom: 56 }}
+            style={{ display: 'flex', gap: isMobile ? 12 : 18, alignItems: 'center', flexWrap: 'wrap', marginBottom: isMobile ? 32 : 56, flexDirection: isMobile ? 'column' : 'row' }}
             initial={{ opacity: 0, y: 12 }} animate={{ opacity: mounted ? 1 : 0, y: mounted ? 0 : 12 }}
             transition={{ duration: 0.7, delay: 0.5 }}
           >
             <Link href="/register"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '16px 28px', background: INK, color: PAPER, fontFamily: sans, fontSize: 12.5, letterSpacing: '.06em', fontWeight: 500, borderRadius: 99, textDecoration: 'none', transition: 'background .3s' }}
+              style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '16px 28px', background: INK, color: PAPER, fontFamily: sans, fontSize: 12.5, letterSpacing: '.06em', fontWeight: 500, borderRadius: 99, textDecoration: 'none', transition: 'background .3s', width: isMobile ? '100%' : 'auto' }}
               onMouseEnter={e => ((e.target as HTMLElement).style.background = ACC)}
               onMouseLeave={e => ((e.target as HTMLElement).style.background = INK)}
             >
@@ -321,7 +323,7 @@ function HeroSection({ p1, p2 }: { p1: string; p2: string }) {
               <svg viewBox="0 0 14 10" fill="none" stroke="currentColor" strokeWidth="1.2" width="14" height="10"><path d="M0 5h13M9 1l4 4-4 4" /></svg>
             </Link>
             <Link href="/templates"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '16px 28px', background: 'transparent', color: INK, fontFamily: sans, fontSize: 12.5, letterSpacing: '.06em', fontWeight: 500, borderRadius: 99, border: `1px solid ${INK}`, textDecoration: 'none', transition: 'all .3s' }}
+              style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '16px 28px', background: 'transparent', color: INK, fontFamily: sans, fontSize: 12.5, letterSpacing: '.06em', fontWeight: 500, borderRadius: 99, border: `1px solid ${INK}`, textDecoration: 'none', transition: 'all .3s', width: isMobile ? '100%' : 'auto' }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = INK; (e.currentTarget as HTMLElement).style.color = PAPER }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = INK }}
             >
@@ -329,6 +331,7 @@ function HeroSection({ p1, p2 }: { p1: string; p2: string }) {
             </Link>
           </motion.div>
 
+          {!isMobile && (
           <motion.ul
             style={{ listStyle: 'none', display: 'flex', gap: 48, paddingTop: 32, borderTop: `1px solid ${LINE}`, maxWidth: 520 }}
             initial={{ opacity: 0 }} animate={{ opacity: mounted ? 1 : 0 }}
@@ -341,11 +344,12 @@ function HeroSection({ p1, p2 }: { p1: string; p2: string }) {
               </li>
             ))}
           </motion.ul>
+          )}
         </div>
 
         {/* Stage */}
         <motion.div
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', paddingBottom: isMobile ? 32 : 0 }}
           initial={{ opacity: 0 }} animate={{ opacity: mounted ? 1 : 0 }}
           transition={{ duration: 1.2, delay: 0.3 }}
         >
@@ -354,14 +358,14 @@ function HeroSection({ p1, p2 }: { p1: string; p2: string }) {
       </div>
 
       {/* Ticker strip */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', padding: '20px 56px', fontSize: 10.5, letterSpacing: '.28em', color: MUTE, textTransform: 'uppercase', borderTop: `1px solid ${LINE}`, marginTop: 28, maxWidth: 1440, margin: '28px auto 0', fontFamily: sans, gap: 0 }}>
+      {!isMobile && <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', padding: '20px 56px', fontSize: 10.5, letterSpacing: '.28em', color: MUTE, textTransform: 'uppercase', borderTop: `1px solid ${LINE}`, marginTop: 28, maxWidth: 1440, margin: '28px auto 0', fontFamily: sans, gap: 0 }}>
         {['Vse na enem mestu', 'RSVP v živo', 'Lastna domena', 'Brez naročnine', 'Slovenščina · English · Hrvatski', 'Online v 48 urah'].map((item, i) => (
           <span key={i} style={{ display: 'inline-flex', alignItems: 'center' }}>
             {item}
             {i < 5 && <span style={{ color: LINE, margin: '0 16px' }}>·</span>}
           </span>
         ))}
-      </div>
+      </div>}
     </section>
   )
 }
@@ -376,12 +380,12 @@ const BENEFITS = [
   { n: 'vi.',  t: 'Online v 10 minutah', p: 'Izbereta dizajn, vneseta podatke — takoj ko je plačano, je vabilo živo brez vodnih žigov. Spremembe kadarkoli, sami.' },
 ]
 
-function BenefitsSection() {
+function BenefitsSection({ isMobile }: { isMobile: boolean }) {
   return (
-    <section style={{ padding: '120px 56px', maxWidth: 1440, margin: '0 auto' }}>
-      <div style={{ maxWidth: 780, margin: '0 auto 64px', textAlign: 'center' }}>
+    <section style={{ padding: isMobile ? '60px 20px' : '120px 56px', maxWidth: 1440, margin: '0 auto' }}>
+      <div style={{ maxWidth: 780, margin: isMobile ? '0 0 40px' : '0 auto 64px', textAlign: isMobile ? 'left' : 'center' }}>
         <div style={{ fontSize: 11, letterSpacing: '.32em', textTransform: 'uppercase', color: ACC, fontWeight: 500, fontFamily: sans, marginBottom: 16 }}>— Zakaj digitalno —</div>
-        <h2 style={{ fontFamily: fran, fontWeight: 300, fontSize: 'clamp(40px,5.5vw,68px)', lineHeight: 1.02, letterSpacing: '-.022em', color: INK, marginBottom: 20 }}>
+        <h2 style={{ fontFamily: fran, fontWeight: 300, fontSize: 'clamp(36px,5.5vw,68px)', lineHeight: 1.02, letterSpacing: '-.022em', color: INK, marginBottom: 20 }}>
           Vse, kar lahko papir,<br />
           <em style={{ fontStyle: 'italic', color: ACC }}>in še mnogo več.</em>
         </h2>
@@ -390,7 +394,7 @@ function BenefitsSection() {
           odgovorijo z enim klikom — kjerkoli na svetu.
         </p>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1px', background: LINE, border: `1px solid ${LINE}` }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: '1px', background: LINE, border: `1px solid ${LINE}` }}>
         {BENEFITS.map(({ n, t, p }, i) => (
           <motion.div
             key={t}
@@ -417,18 +421,18 @@ const HOW = [
   { n: '03', t: 'Vabilo je živo',      p: 'Takoj po plačilu je vabilo online brez vodnih žigov — delite povezavo z gosti. Spremembe kadarkoli, brez doplačila.' },
 ]
 
-function HowSection() {
+function HowSection({ isMobile }: { isMobile: boolean }) {
   return (
-    <section style={{ padding: '120px 56px', background: BG2, maxWidth: 'none', margin: 0 }}>
+    <section style={{ padding: isMobile ? '60px 20px' : '120px 56px', background: BG2, maxWidth: 'none', margin: 0 }}>
       <div style={{ maxWidth: 1440, margin: '0 auto' }}>
-        <div style={{ maxWidth: 780, margin: '0 auto 64px', textAlign: 'center' }}>
+        <div style={{ maxWidth: 780, margin: isMobile ? '0 0 40px' : '0 auto 64px', textAlign: isMobile ? 'left' : 'center' }}>
           <div style={{ fontSize: 11, letterSpacing: '.32em', textTransform: 'uppercase', color: ACC, fontWeight: 500, fontFamily: sans, marginBottom: 16 }}>— Postopek —</div>
-          <h2 style={{ fontFamily: fran, fontWeight: 300, fontSize: 'clamp(40px,5.5vw,68px)', lineHeight: 1.02, letterSpacing: '-.022em', color: INK, margin: 0 }}>
+          <h2 style={{ fontFamily: fran, fontWeight: 300, fontSize: 'clamp(36px,5.5vw,68px)', lineHeight: 1.02, letterSpacing: '-.022em', color: INK, margin: 0 }}>
             Trije koraki<br />
             <em style={{ fontStyle: 'italic', color: ACC }}>do vajnega vabila.</em>
           </h2>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 32 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: isMobile ? 16 : 32 }}>
           {HOW.map(({ n, t, p }, i) => (
             <motion.div
               key={n}
@@ -486,34 +490,34 @@ function TemplateCard({ id, name, category, index, p1, p2 }: { id: string; name:
   )
 }
 
-function TemplatesSection({ p1, p2 }: { p1: string; p2: string }) {
-  const preview = TEMPLATES.slice(0, 8)
+function TemplatesSection({ p1, p2, isMobile }: { p1: string; p2: string; isMobile: boolean }) {
+  const preview = TEMPLATES.slice(0, isMobile ? 4 : 8)
   return (
-    <section style={{ padding: '120px 56px', maxWidth: 1440, margin: '0 auto' }} id="templates">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 48, flexWrap: 'wrap', marginBottom: 56 }}>
+    <section style={{ padding: isMobile ? '60px 20px' : '120px 56px', maxWidth: 1440, margin: '0 auto' }} id="templates">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 24, flexWrap: 'wrap', marginBottom: isMobile ? 32 : 56 }}>
         <div>
           <div style={{ fontSize: 11, letterSpacing: '.32em', textTransform: 'uppercase', color: ACC, fontWeight: 500, fontFamily: sans, marginBottom: 16 }}>— Naša kolekcija —</div>
-          <h2 style={{ fontFamily: fran, fontWeight: 300, fontSize: 'clamp(40px,5.5vw,68px)', lineHeight: 1.02, letterSpacing: '-.022em', color: INK, margin: 0 }}>
+          <h2 style={{ fontFamily: fran, fontWeight: 300, fontSize: 'clamp(36px,5.5vw,68px)', lineHeight: 1.02, letterSpacing: '-.022em', color: INK, margin: 0 }}>
             {TEMPLATES.length}+ dizajnov,<br />
             <em style={{ fontStyle: 'italic', color: ACC }}>en savšeni dan.</em>
           </h2>
         </div>
-        <p style={{ fontFamily: fran, fontStyle: 'italic', fontWeight: 300, fontSize: 18, color: INK2, maxWidth: 360, lineHeight: 1.55, textAlign: 'right' }}>
+        {!isMobile && <p style={{ fontFamily: fran, fontStyle: 'italic', fontWeight: 300, fontSize: 18, color: INK2, maxWidth: 360, lineHeight: 1.55, textAlign: 'right' }}>
           Skrbno izbrani templati — od minimalnih do razkošnih.
           Vsak dizajn prilagodita po svojih barvah in tipografiji.
-        </p>
+        </p>}
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '32px 22px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: isMobile ? '20px 12px' : '32px 22px' }}>
         {preview.map((tmpl, i) => (
           <TemplateCard key={tmpl.id} id={tmpl.id} name={tmpl.name} category={tmpl.category} index={i} p1={p1} p2={p2} />
         ))}
       </div>
-      <div style={{ marginTop: 56, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 24, paddingTop: 32, borderTop: `1px solid ${LINE}`, flexWrap: 'wrap' }}>
-        <p style={{ fontFamily: fran, fontStyle: 'italic', fontSize: 14, color: INK2, maxWidth: 520, lineHeight: 1.6, margin: 0 }}>
+      <div style={{ marginTop: isMobile ? 28 : 56, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 20, paddingTop: 28, borderTop: `1px solid ${LINE}`, flexWrap: 'wrap' }}>
+        {!isMobile && <p style={{ fontFamily: fran, fontStyle: 'italic', fontSize: 14, color: INK2, maxWidth: 520, lineHeight: 1.6, margin: 0 }}>
           Vse predloge so popolnoma personalizirane. Tipografija, barve, fotografije in besedila — vse prilagojeno vajini zgodbi.
-        </p>
+        </p>}
         <Link href="/templates"
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '16px 28px', background: INK, color: PAPER, fontFamily: sans, fontSize: 12.5, letterSpacing: '.06em', fontWeight: 500, borderRadius: 99, textDecoration: 'none', transition: 'background .3s', flexShrink: 0 }}
+          style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '16px 28px', background: INK, color: PAPER, fontFamily: sans, fontSize: 12.5, letterSpacing: '.06em', fontWeight: 500, borderRadius: 99, textDecoration: 'none', transition: 'background .3s', flexShrink: 0, width: isMobile ? '100%' : 'auto' }}
           onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = ACC)}
           onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = INK)}
         >
@@ -532,17 +536,17 @@ const TESTS = [
   { q: 'Teden pred poroko smo spremenili uro obreda. V petih minutah sem posodobila vabilo in vsi gostje so dobili obvestilo. Pri tiskanem bi bila katastrofa.', name: 'Ana & Marko', meta: 'Piran · 07.2025' },
 ]
 
-function TestimonialsSection() {
+function TestimonialsSection({ isMobile }: { isMobile: boolean }) {
   return (
-    <section style={{ padding: '120px 56px', background: BG2 }}>
+    <section style={{ padding: isMobile ? '60px 20px' : '120px 56px', background: BG2 }}>
       <div style={{ maxWidth: 1440, margin: '0 auto' }}>
-        <div style={{ maxWidth: 780, margin: '0 auto 64px', textAlign: 'center' }}>
+        <div style={{ maxWidth: 780, margin: isMobile ? '0 0 40px' : '0 auto 64px', textAlign: isMobile ? 'left' : 'center' }}>
           <div style={{ fontSize: 11, letterSpacing: '.32em', textTransform: 'uppercase', color: ACC, fontWeight: 500, fontFamily: sans, marginBottom: 16 }}>— Pari pravijo —</div>
-          <h2 style={{ fontFamily: fran, fontWeight: 300, fontSize: 'clamp(40px,5.5vw,68px)', lineHeight: 1.02, letterSpacing: '-.022em', color: INK, margin: 0 }}>
+          <h2 style={{ fontFamily: fran, fontWeight: 300, fontSize: 'clamp(36px,5.5vw,68px)', lineHeight: 1.02, letterSpacing: '-.022em', color: INK, margin: 0 }}>
             Najlepši<br /><em style={{ fontStyle: 'italic', color: ACC }}>odzivi.</em>
           </h2>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 32 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: isMobile ? 16 : 32 }}>
           {TESTS.map(({ q, name, meta }, i) => (
             <motion.figure
               key={name}
@@ -571,21 +575,21 @@ function TestimonialsSection() {
 }
 
 // ── Pricing ───────────────────────────────────────────────────────────────────
-function PricingSection() {
+function PricingSection({ isMobile }: { isMobile: boolean }) {
   const t = useTranslations('home')
   const pkgs = Object.values(PACKAGES)
   return (
-    <section style={{ padding: '120px 56px', maxWidth: 1440, margin: '0 auto' }} id="pricing">
-      <div style={{ maxWidth: 780, margin: '0 auto 64px', textAlign: 'center' }}>
+    <section style={{ padding: isMobile ? '60px 20px' : '120px 56px', maxWidth: 1440, margin: '0 auto' }} id="pricing">
+      <div style={{ maxWidth: 780, margin: isMobile ? '0 0 40px' : '0 auto 64px', textAlign: isMobile ? 'left' : 'center' }}>
         <div style={{ fontSize: 11, letterSpacing: '.32em', textTransform: 'uppercase', color: ACC, fontWeight: 500, fontFamily: sans, marginBottom: 16 }}>— Paketi —</div>
-        <h2 style={{ fontFamily: fran, fontWeight: 300, fontSize: 'clamp(40px,5.5vw,68px)', lineHeight: 1.02, letterSpacing: '-.022em', color: INK, marginBottom: 20, margin: '0 0 20px' }}>
+        <h2 style={{ fontFamily: fran, fontWeight: 300, fontSize: 'clamp(36px,5.5vw,68px)', lineHeight: 1.02, letterSpacing: '-.022em', color: INK, marginBottom: 20, margin: '0 0 20px' }}>
           Lepota,<br /><em style={{ fontStyle: 'italic', color: ACC }}>brez kompromisa.</em>
         </h2>
         <p style={{ fontFamily: fran, fontStyle: 'italic', fontSize: 18, color: INK2, lineHeight: 1.55 }}>
           {t('pricingDesc')}
         </p>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 24, marginBottom: 80, alignItems: 'stretch' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: isMobile ? 20 : 24, marginBottom: isMobile ? 40 : 80, alignItems: 'stretch' }}>
         {pkgs.map((pkg) => (
           <motion.article
             key={pkg.id}
@@ -640,7 +644,7 @@ function PricingSection() {
         ))}
       </div>
       {/* Custom banner */}
-      <div style={{ background: NOIR, color: PAPER, borderRadius: 8, padding: '72px 56px', display: 'grid', gridTemplateColumns: '1.2fr .8fr', gap: 48, alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ background: NOIR, color: PAPER, borderRadius: 8, padding: isMobile ? '40px 24px' : '72px 56px', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.2fr .8fr', gap: isMobile ? 28 : 48, alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(80% 100% at 100% 50%,rgba(201,149,99,.16),transparent 60%)', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', right: -30, bottom: -100, fontFamily: fran, fontStyle: 'italic', fontWeight: 300, fontSize: 340, lineHeight: 1, color: 'rgba(232,212,184,.05)', pointerEvents: 'none', userSelect: 'none' }}>&amp;</div>
         <div style={{ position: 'relative', zIndex: 2 }}>
@@ -690,12 +694,12 @@ const FAQS = [
   { q: 'Kako pošljeva vabilo gostom?', a: 'Preprosto delita povezavo — prek WhatsAppa, SMS-a, e-pošte ali kjerkoli. Vsak gost jo odpre na svojem telefonu, brez aplikacij in prijav.' },
 ]
 
-function FAQSection() {
+function FAQSection({ isMobile }: { isMobile: boolean }) {
   const [open, setOpen] = useState<number | null>(0)
   return (
-    <section style={{ padding: '120px 56px', background: BG2 }} id="faq">
+    <section style={{ padding: isMobile ? '60px 20px' : '120px 56px', background: BG2 }} id="faq">
       <div style={{ maxWidth: 1440, margin: '0 auto' }}>
-        <div style={{ maxWidth: 780, margin: '0 auto 64px', textAlign: 'center' }}>
+        <div style={{ maxWidth: 780, margin: isMobile ? '0 0 40px' : '0 auto 64px', textAlign: isMobile ? 'left' : 'center' }}>
           <div style={{ fontSize: 11, letterSpacing: '.32em', textTransform: 'uppercase', color: ACC, fontWeight: 500, fontFamily: sans, marginBottom: 16 }}>— Pogosta vprašanja —</div>
           <h2 style={{ fontFamily: fran, fontWeight: 300, fontSize: 'clamp(40px,5.5vw,68px)', lineHeight: 1.02, letterSpacing: '-.022em', color: INK, margin: 0 }}>
             Imate vprašanja?<br /><em style={{ fontStyle: 'italic', color: ACC }}>Imamo odgovore.</em>
@@ -730,11 +734,11 @@ function FAQSection() {
 }
 
 // ── Contact ───────────────────────────────────────────────────────────────────
-function ContactSection() {
+function ContactSection({ isMobile }: { isMobile: boolean }) {
   const [sent, setSent] = useState(false)
   return (
-    <section style={{ padding: '120px 56px', maxWidth: 1440, margin: '0 auto' }} id="contact">
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.1fr', gap: 64, alignItems: 'start' }}>
+    <section style={{ padding: isMobile ? '60px 20px' : '120px 56px', maxWidth: 1440, margin: '0 auto' }} id="contact">
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1.1fr', gap: isMobile ? 40 : 64, alignItems: 'start' }}>
         <div>
           <div style={{ fontSize: 11, letterSpacing: '.32em', textTransform: 'uppercase', color: ACC, fontWeight: 500, fontFamily: sans, marginBottom: 16 }}>— Pišita nama —</div>
           <h2 style={{ fontFamily: fran, fontWeight: 300, fontSize: 'clamp(40px,5vw,60px)', lineHeight: 1.02, letterSpacing: '-.022em', marginBottom: 24, color: INK }}>
@@ -805,6 +809,7 @@ export default function HomePage() {
   const [p2, setP2] = useState('Viktor')
   const [showPopup, setShowPopup] = useState(false)
   const [namesSet, setNamesSet] = useState(false)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     try {
@@ -860,10 +865,10 @@ export default function HomePage() {
             transition={{ delay: 1.8, duration: 0.5 }}
             onClick={() => setShowPopup(true)}
             style={{
-              position: 'fixed', bottom: 28, right: 28, zIndex: 400,
+              position: 'fixed', bottom: isMobile ? 16 : 28, right: isMobile ? 16 : 28, zIndex: 400,
               background: PAPER, border: `1px solid ${LINE}`, borderRadius: 99,
-              padding: '10px 18px', display: 'flex', alignItems: 'center', gap: 8,
-              fontFamily: sans, fontSize: 11, letterSpacing: '.14em', textTransform: 'uppercase',
+              padding: isMobile ? '8px 14px' : '10px 18px', display: 'flex', alignItems: 'center', gap: 8,
+              fontFamily: sans, fontSize: isMobile ? 10 : 11, letterSpacing: '.14em', textTransform: 'uppercase',
               color: ACC, cursor: 'pointer',
               boxShadow: '0 4px 20px -6px rgba(28,24,20,.16)',
             }}
@@ -877,14 +882,14 @@ export default function HomePage() {
       </AnimatePresence>
 
       <SiteNav transparent />
-      <HeroSection p1={p1} p2={p2} />
-      <BenefitsSection />
-      <HowSection />
-      <TemplatesSection p1={p1} p2={p2} />
-      <TestimonialsSection />
-      <PricingSection />
-      <FAQSection />
-      <ContactSection />
+      <HeroSection p1={p1} p2={p2} isMobile={isMobile} />
+      <BenefitsSection isMobile={isMobile} />
+      <HowSection isMobile={isMobile} />
+      <TemplatesSection p1={p1} p2={p2} isMobile={isMobile} />
+      <TestimonialsSection isMobile={isMobile} />
+      <PricingSection isMobile={isMobile} />
+      <FAQSection isMobile={isMobile} />
+      <ContactSection isMobile={isMobile} />
       <SiteFooter />
     </div>
   )

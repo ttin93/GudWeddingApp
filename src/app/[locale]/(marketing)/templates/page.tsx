@@ -1,7 +1,8 @@
 'use client'
 
-import Link from 'next/link'
 import { useState } from 'react'
+import { Link } from '@/i18n/navigation'
+import { useIsMobile } from '@/hooks/useIsMobile'
 import { motion } from 'framer-motion'
 import { TEMPLATES } from '@/types'
 import type { TemplateConfig } from '@/types'
@@ -100,6 +101,7 @@ function ComingSoonCard({ index }: { index: number }) {
 export default function TemplatesPage() {
   const t = useTranslations('templates')
   const [cat, setCat] = useState<Cat>('all')
+  const isMobile = useIsMobile()
   const filtered = cat === 'all' ? TEMPLATES : TEMPLATES.filter(tmpl => tmpl.category === cat)
   const counts = {
     all: TEMPLATES.length,
@@ -122,8 +124,8 @@ export default function TemplatesPage() {
       <SiteNav />
 
       {/* HERO */}
-      <section style={{ padding: '56px 48px 64px', position: 'relative', zIndex: 1 }}>
-        <div style={{ maxWidth: 1320, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.4fr .9fr', gap: 64, alignItems: 'end' }}>
+      <section style={{ padding: isMobile ? '32px 20px 40px' : '56px 48px 64px', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: 1320, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.4fr .9fr', gap: isMobile ? 24 : 64, alignItems: 'end' }}>
           <div>
             <div style={{ fontSize: 11, letterSpacing: '.32em', textTransform: 'uppercase', color: ACC, fontWeight: 500, marginBottom: 20 }}>— {t('label')} —</div>
             <h1 style={{ fontFamily: fraunces, fontWeight: 300, fontSize: 'clamp(52px,7.5vw,108px)', lineHeight: 1.0, letterSpacing: '-.022em', marginBottom: 24 }}>
@@ -148,8 +150,8 @@ export default function TemplatesPage() {
       </section>
 
       {/* FILTERS */}
-      <div style={{ borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`, padding: '0 48px', position: 'sticky', top: 68, background: BG, zIndex: 10 }}>
-        <div style={{ maxWidth: 1320, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0' }}>
+      <div style={{ borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`, padding: isMobile ? '0 20px' : '0 48px', position: 'sticky', top: isMobile ? 64 : 68, background: BG, zIndex: 10 }}>
+        <div style={{ maxWidth: 1320, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0' }}>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             {CATS.map(c => (
               <button key={c} onClick={() => setCat(c)}
@@ -165,17 +167,17 @@ export default function TemplatesPage() {
       </div>
 
       {/* GRID */}
-      <section style={{ padding: '56px 48px 100px', position: 'relative', zIndex: 1 }}>
-        <div style={{ maxWidth: 1320, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '36px 28px' }}>
+      <section style={{ padding: isMobile ? '32px 20px 60px' : '56px 48px 100px', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: 1320, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(3,1fr)', gap: isMobile ? '24px 12px' : '36px 28px' }}>
           {filtered.map((tmpl, i) => <TemplateCard key={tmpl.id} template={tmpl} index={i} />)}
           {cat === 'all' && <ComingSoonCard index={filtered.length} />}
         </div>
       </section>
 
       {/* CTA */}
-      <section style={{ padding: '0 48px 120px', position: 'relative', zIndex: 1 }}>
+      <section style={{ padding: isMobile ? '0 20px 60px' : '0 48px 120px', position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: 1320, margin: '0 auto' }}>
-          <div style={{ background: NOIR, color: PAPER, borderRadius: 8, padding: '80px 64px', display: 'grid', gridTemplateColumns: '1.3fr .9fr', alignItems: 'center', gap: 48, position: 'relative', overflow: 'hidden' }}>
+          <div style={{ background: NOIR, color: PAPER, borderRadius: 8, padding: isMobile ? '40px 24px' : '80px 64px', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.3fr .9fr', alignItems: 'center', gap: isMobile ? 28 : 48, position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(80% 100% at 100% 50%,rgba(201,149,99,.16),transparent 60%)', pointerEvents: 'none' }} />
             <div style={{ position: 'absolute', right: 60, bottom: -90, fontFamily: fraunces, fontStyle: 'italic', fontWeight: 300, fontSize: 320, color: 'rgba(232,212,184,.04)', lineHeight: 1, pointerEvents: 'none' }}>&amp;</div>
             <div style={{ position: 'relative', zIndex: 2 }}>

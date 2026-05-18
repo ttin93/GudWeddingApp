@@ -16,5 +16,6 @@ export default async function TemplateDemoPage({ params }: { params: Promise<{ i
 }
 
 export function generateStaticParams() {
-  return VALID.map(id => ({ id }))
+  const locales = ['sl', 'hr', 'en']
+  return locales.flatMap(locale => VALID.map(id => ({ locale, id })))
 }

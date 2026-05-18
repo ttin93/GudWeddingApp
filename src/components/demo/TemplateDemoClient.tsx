@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { TemplateRenderer } from '@/components/invitation/TemplateRenderer'
 import { PricingPanel } from './PricingPanel'

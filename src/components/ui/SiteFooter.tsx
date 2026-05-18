@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { NajinDanWordmark } from './NajinDanLogo'
+import { useIsMobile } from '@/hooks/useIsMobile'
 
 const INK  = '#1A1714'
 const ACC  = '#8C7B6B'
@@ -10,6 +11,7 @@ const RULE = '#E8E2D9'
 
 export function SiteFooter() {
   const t = useTranslations('footer')
+  const isMobile = useIsMobile()
 
   const NAV = [
     {
@@ -39,30 +41,35 @@ export function SiteFooter() {
   return (
     <>
       <div style={{ height: 1, background: RULE }} />
-      <footer style={{ background: INK, padding: '0 56px' }}>
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 20,
-          padding: '16px 0', borderBottom: '1px solid #3a342e',
-          fontSize: 10, letterSpacing: '0.24em', color: '#6e6359',
-          textTransform: 'uppercase', flexWrap: 'wrap',
-        }}>
-          <span>VOL. I</span>
-          <span style={{ color: '#3a342e' }}>·</span>
-          <span>ISSUE 26</span>
-          <span style={{ color: '#3a342e' }}>·</span>
-          <span>{t('spring')}</span>
-          <span style={{ flex: 1, height: 1, background: '#3a342e', display: 'inline-block', minWidth: 20 }} />
-          <span>{t('featuring')}</span>
-          <span style={{ flex: 1, height: 1, background: '#3a342e', display: 'inline-block', minWidth: 20 }} />
-          <span>{t('crafted')}</span>
-        </div>
+      <footer style={{ background: INK, padding: isMobile ? '0 20px' : '0 56px' }}>
+        {!isMobile && (
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 20,
+            padding: '16px 0', borderBottom: '1px solid #3a342e',
+            fontSize: 10, letterSpacing: '0.24em', color: '#6e6359',
+            textTransform: 'uppercase', flexWrap: 'wrap',
+          }}>
+            <span>VOL. I</span>
+            <span style={{ color: '#3a342e' }}>·</span>
+            <span>ISSUE 26</span>
+            <span style={{ color: '#3a342e' }}>·</span>
+            <span>{t('spring')}</span>
+            <span style={{ flex: 1, height: 1, background: '#3a342e', display: 'inline-block', minWidth: 20 }} />
+            <span>{t('featuring')}</span>
+            <span style={{ flex: 1, height: 1, background: '#3a342e', display: 'inline-block', minWidth: 20 }} />
+            <span>{t('crafted')}</span>
+          </div>
+        )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto', alignItems: 'start', gap: 64, padding: '48px 0' }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr' : 'auto 1fr auto',
+          alignItems: 'start',
+          gap: isMobile ? 32 : 64,
+          padding: isMobile ? '36px 0 28px' : '48px 0',
+        }}>
           <div>
-            <Link href="/" style={{
-              display: 'flex', alignItems: 'center', gap: 10,
-              textDecoration: 'none', marginBottom: 12,
-            }}>
+            <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', marginBottom: 12 }}>
               <NajinDanWordmark size={24} dark />
             </Link>
             <p style={{ fontSize: 12.5, lineHeight: 1.6, color: '#6e6359', maxWidth: 200 }}>
@@ -70,10 +77,10 @@ export function SiteFooter() {
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(3, 1fr)', gap: isMobile ? 24 : 32 }}>
             {NAV.map(({ title, links }) => (
               <div key={title}>
-                <div style={{ fontSize: 10, letterSpacing: '0.28em', textTransform: 'uppercase', color: '#6e6359', marginBottom: 16 }}>
+                <div style={{ fontSize: 10, letterSpacing: '0.28em', textTransform: 'uppercase', color: '#6e6359', marginBottom: 14 }}>
                   {title}
                 </div>
                 <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10, padding: 0, margin: 0 }}>
@@ -89,7 +96,7 @@ export function SiteFooter() {
             ))}
           </div>
 
-          <div style={{ textAlign: 'right' }}>
+          <div style={{ textAlign: isMobile ? 'left' : 'right' }}>
             <p style={{ fontSize: 11, color: '#6e6359' }}>© {new Date().getFullYear()} NajinDan</p>
             <p style={{ fontSize: 11, color: '#6e6359', marginTop: 4 }}>{t('madeWithCare')}</p>
           </div>
