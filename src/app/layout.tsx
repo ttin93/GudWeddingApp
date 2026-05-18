@@ -45,17 +45,18 @@ const fontVars = [
 ].join(' ')
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'https://invitia.app'),
-  title: { default: 'Invitia — One link. Everything your guests need.', template: '%s — Invitia' },
-  description: 'A single, beautifully composed page for the day — schedule, registry, RSVP, dress code, directions — wrapped in your typography, sent in a sentence.',
-  keywords: 'digital wedding invitation, online wedding invite, RSVP, wedding website',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'https://najindan.gudweb.si'),
+  title: { default: 'NajinDan — Digitalna poročna vabila', template: '%s — NajinDan' },
+  description: 'Ustvarite elegantno digitalno poročno vabilo v minutah. RSVP, lokacija, urnik, dress code — vse na eni strani, shranjeno na eni povezavi.',
+  keywords: 'digitalno poročno vabilo, online vabilo, poroka, RSVP, poročna stran, vabila za poroko',
   openGraph: {
-    title: 'Invitia — One link. Everything your guests need.',
-    description: 'Elegant digital wedding invitations. Create yours in minutes.',
+    title: 'NajinDan — Digitalna poročna vabila',
+    description: 'Elegantna digitalna poročna vabila. Ustvarite svoje v minutah.',
     type: 'website',
-    siteName: 'Invitia',
+    siteName: 'NajinDan',
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'NajinDan' }],
   },
-  twitter: { card: 'summary_large_image' },
+  twitter: { card: 'summary_large_image', images: ['/og.png'] },
   robots: { index: true, follow: true },
 }
 

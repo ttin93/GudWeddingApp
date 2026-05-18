@@ -19,7 +19,7 @@ export default async function AuthLayout({
       <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 56px', height: 72, borderBottom: '1px solid #E8E2D9' }}>
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, fontFamily: 'var(--font-dm-serif)', fontSize: 18, color: '#1A1714', textDecoration: 'none' }}>
           <span style={{ fontSize: 9, color: '#8C7B6B' }}>◉</span>
-          <span>Invitia</span>
+          <span>NajinDan</span>
         </Link>
         <div style={{ fontSize: 12, letterSpacing: '0.08em', color: '#6e6359' }}>
           The digital invitation house

@@ -3,7 +3,7 @@ import { createServiceClient } from '@/lib/supabase/server'
 
 export const dynamic = 'force-dynamic'
 
-const BASE = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') ?? 'https://invitia.app'
+const BASE = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') ?? 'https://najindan.gudweb.si'
 const LOCALES = ['sl', 'hr', 'en']
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

@@ -42,7 +42,7 @@ export function TemplateDemoClient({ templateId }: Props) {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 8, color: ACC }}>
           <span>◉</span>
-          <span style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 15, color: INK }}>Invitia</span>
+          <span style={{ fontFamily: 'var(--font-dm-serif)', fontSize: 15, color: INK }}>NajinDan</span>
         </div>
 
         <Link href={`/register?template=${templateId}&package=${plan}`} style={{

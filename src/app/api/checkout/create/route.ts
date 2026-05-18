@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { getStripe, STRIPE_PRICES } from '@/lib/stripe'
+import { createLSCheckout, LS_VARIANTS } from '@/lib/lemonsqueezy'
 import { rateLimit } from '@/lib/utils/ratelimit'
 import type { Package } from '@/types'
 
@@ -24,35 +24,27 @@ export async function POST(req: Request) {
       invitationId?: string
     }
 
-    const priceId = STRIPE_PRICES[packageId]
-    if (!priceId) {
+    const variantId = LS_VARIANTS[packageId]
+    if (!variantId) {
       return NextResponse.json({ error: 'Invalid package' }, { status: 400 })
     }
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL
 
-    const session = await getStripe().checkout.sessions.create({
-      mode: 'payment',
-      line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${appUrl}/dashboard?payment=success&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${appUrl}/pricing?payment=cancelled`,
-      customer_email: user.email,
-      metadata: {
-        userId: user.id,
-        packageId,
-        invitationId: invitationId ?? '',
+    const { url } = await createLSCheckout({
+      variantId,
+      email: user.email!,
+      customData: {
+        user_id: user.id,
+        package_id: packageId,
+        invitation_id: invitationId ?? '',
       },
-      payment_intent_data: {
-        metadata: {
-          userId: user.id,
-          packageId,
-        },
-      },
+      redirectUrl: `${appUrl}/dashboard?payment=success`,
     })
 
-    return NextResponse.json({ url: session.url })
+    return NextResponse.json({ url })
   } catch (err) {
-    console.error('Stripe checkout error:', err)
+    console.error('LS checkout error:', err)
     return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 })
   }
 }

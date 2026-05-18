@@ -9,7 +9,7 @@ const CREAM = '#F7F4EF'
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'terms' })
-  return { title: `${t('title')} — Invitia` }
+  return { title: `${t('title')} — NajinDan` }
 }
 
 export default async function TermsPage({ params }: { params: Promise<{ locale: string }> }) {

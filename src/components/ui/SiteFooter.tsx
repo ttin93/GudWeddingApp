@@ -64,7 +64,7 @@ export function SiteFooter() {
               textDecoration: 'none', marginBottom: 12,
             }}>
               <span style={{ fontSize: 9, color: ACC }}>◉</span>
-              Invitia
+              NajinDan
             </Link>
             <p style={{ fontSize: 12.5, lineHeight: 1.6, color: '#6e6359', maxWidth: 200 }}>
               {t('tagline')}
@@ -91,7 +91,7 @@ export function SiteFooter() {
           </div>
 
           <div style={{ textAlign: 'right' }}>
-            <p style={{ fontSize: 11, color: '#6e6359' }}>© {new Date().getFullYear()} Invitia</p>
+            <p style={{ fontSize: 11, color: '#6e6359' }}>© {new Date().getFullYear()} NajinDan</p>
             <p style={{ fontSize: 11, color: '#6e6359', marginTop: 4 }}>{t('madeWithCare')}</p>
           </div>
         </div>

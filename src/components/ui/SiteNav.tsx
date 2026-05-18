@@ -123,7 +123,7 @@ export function SiteNav({ transparent = false }: { transparent?: boolean }) {
           textDecoration: 'none',
         }}>
           <span style={{ fontSize: 9, color: ACC }}>◉</span>
-          <span>Invitia</span>
+          <span>NajinDan</span>
         </Link>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 40, fontSize: 12.5, letterSpacing: '0.04em' }}>

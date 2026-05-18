@@ -42,7 +42,7 @@ export function DashboardSidebar({ user, isAdmin = false }: { user: User; isAdmi
         <div style={{ padding: '28px 24px 20px', borderBottom: `1px solid ${RULE}` }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'var(--font-dm-serif)', fontSize: 16, color: INK, textDecoration: 'none' }}>
             <span style={{ fontSize: 8, color: ACC }}>◉</span>
-            Invitia
+            NajinDan
           </Link>
           <p style={{ fontSize: 11, color: MUTE, marginTop: 6, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.email}</p>
         </div>
@@ -124,7 +124,7 @@ export function DashboardSidebar({ user, isAdmin = false }: { user: User; isAdmi
       }}>
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'var(--font-dm-serif)', fontSize: 16, color: INK, textDecoration: 'none' }}>
           <span style={{ fontSize: 8, color: ACC }}>◉</span>
-          Invitia
+          NajinDan
         </Link>
         <Link href="/dashboard/invitation/new" style={{
           display: 'flex', alignItems: 'center', gap: 6,

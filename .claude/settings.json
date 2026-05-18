@@ -23,7 +23,17 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://localhost:3000/invite/tin-pia-2026\")",
       "Bash(node -e ' *)",
       "Bash(cat \"/c/Users/YouN/Documents/Ai Projekti/GudWeddingApp/next.config.ts\")",
-      "Bash(cat \"/c/Users/YouN/Documents/Ai Projekti/GudWeddingApp/next.config.js\")"
+      "Bash(cat \"/c/Users/YouN/Documents/Ai Projekti/GudWeddingApp/next.config.js\")",
+      "Bash(npx plugins *)",
+      "mcp__plugin_vercel_vercel__list_teams",
+      "mcp__plugin_vercel_vercel__list_projects",
+      "Bash(npm i *)",
+      "Bash(vercel --version)",
+      "mcp__plugin_vercel_vercel__list_deployments",
+      "mcp__plugin_vercel_vercel__get_deployment_build_logs",
+      "Bash(New-Item -ItemType Directory -Path \"c:\\\\Users\\\\YouN\\\\Documents\\\\Ai Projekti\\\\GudWeddingApp\\\\src\\\\lib\\\\lemonsqueezy\" -Force)",
+      "Bash(Write-Host \"done\")",
+      "Read(//c/Users/Users/YouN/Documents/Ai Projekti/GudWeddingApp/**)"
     ]
   }
 }

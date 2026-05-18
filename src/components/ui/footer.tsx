@@ -6,7 +6,7 @@ export function Footer() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           <div className="col-span-2 md:col-span-1">
-            <span className="font-script text-3xl text-[#C4A882]">Invitia</span>
+            <span className="font-script text-3xl text-[#C4A882]">NajinDan</span>
             <p className="mt-3 text-sm leading-relaxed">
               Elegant digital wedding invitations that your guests will love.
             </p>
@@ -35,7 +35,7 @@ export function Footer() {
           </div>
         </div>
         <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-xs">© {new Date().getFullYear()} Invitia. All rights reserved.</p>
+          <p className="text-xs">© {new Date().getFullYear()} NajinDan. All rights reserved.</p>
           <p className="text-xs">Made with love for every couple ♥</p>
         </div>
       </div>

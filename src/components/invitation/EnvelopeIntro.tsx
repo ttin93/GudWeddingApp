@@ -39,7 +39,7 @@ export function EnvelopeIntro({ partner1, partner2, forceShow = false, onComplet
   }
 
 
-  if (!mounted || gone) return null
+  if (!mounted || gone || desktop) return null
 
   // Mobile: inner fills entire overlay via absolute inset
   // Desktop: inner is portrait-sized + rotated to fill landscape screen

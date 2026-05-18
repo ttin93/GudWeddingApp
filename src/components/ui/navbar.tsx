@@ -15,7 +15,7 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <span className="font-script text-2xl text-[#8B6B4A]">Invitia</span>
+            <span className="font-script text-2xl text-[#8B6B4A]">NajinDan</span>
           </Link>
 
           {/* Desktop nav */}
