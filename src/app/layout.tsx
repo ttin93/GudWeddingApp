@@ -58,6 +58,7 @@ export const metadata: Metadata = {
   },
   twitter: { card: 'summary_large_image', images: ['/og.png'] },
   robots: { index: true, follow: true },
+  appleWebApp: { title: 'NajinDan', statusBarStyle: 'black-translucent' },
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { Menu, X } from 'lucide-react'
+import { NajinDanWordmark } from './NajinDanLogo'
 import { Button } from './button'
 import { cn } from '@/lib/utils/cn'
 
@@ -15,7 +16,7 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <span className="font-script text-2xl text-[#8B6B4A]">NajinDan</span>
+            <NajinDanWordmark size={22} />
           </Link>
 
           {/* Desktop nav */}

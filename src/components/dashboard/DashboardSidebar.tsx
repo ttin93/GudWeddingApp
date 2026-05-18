@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { logout } from '@/app/actions/auth'
 import { LayoutDashboard, Users, Settings, LogOut, Plus, Shield } from 'lucide-react'
 import type { User } from '@supabase/supabase-js'
+import { NajinDanWordmark } from '@/components/ui/NajinDanLogo'
 
 const INK   = '#1A1714'
 const MUTE  = '#6e6359'
@@ -40,9 +41,8 @@ export function DashboardSidebar({ user, isAdmin = false }: { user: User; isAdmi
 
         {/* Logo */}
         <div style={{ padding: '28px 24px 20px', borderBottom: `1px solid ${RULE}` }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'var(--font-dm-serif)', fontSize: 16, color: INK, textDecoration: 'none' }}>
-            <span style={{ fontSize: 8, color: ACC }}>◉</span>
-            NajinDan
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+            <NajinDanWordmark size={18} />
           </Link>
           <p style={{ fontSize: 11, color: MUTE, marginTop: 6, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.email}</p>
         </div>

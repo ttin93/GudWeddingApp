@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl'
 import { usePathname, useRouter, Link } from '@/i18n/navigation'
 import { useParams } from 'next/navigation'
 import { motion } from 'framer-motion'
+import { NajinDanWordmark } from './NajinDanLogo'
 
 const INK   = '#1A1714'
 const MUTE  = '#6e6359'
@@ -119,11 +120,9 @@ export function SiteNav({ transparent = false }: { transparent?: boolean }) {
       }}>
         <Link href="/" style={{
           display: 'flex', alignItems: 'center', gap: 10,
-          fontFamily: 'var(--font-dm-serif)', fontSize: 18, color: INK,
           textDecoration: 'none',
         }}>
-          <span style={{ fontSize: 9, color: ACC }}>◉</span>
-          <span>NajinDan</span>
+          <NajinDanWordmark size={22} />
         </Link>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 40, fontSize: 12.5, letterSpacing: '0.04em' }}>

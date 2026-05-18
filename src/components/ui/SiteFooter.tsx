@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
+import { NajinDanWordmark } from './NajinDanLogo'
 
 const INK  = '#1A1714'
 const ACC  = '#8C7B6B'
@@ -60,11 +61,9 @@ export function SiteFooter() {
           <div>
             <Link href="/" style={{
               display: 'flex', alignItems: 'center', gap: 10,
-              fontFamily: 'var(--font-dm-serif)', fontSize: 20, color: '#F7F4EF',
               textDecoration: 'none', marginBottom: 12,
             }}>
-              <span style={{ fontSize: 9, color: ACC }}>◉</span>
-              NajinDan
+              <NajinDanWordmark size={24} dark />
             </Link>
             <p style={{ fontSize: 12.5, lineHeight: 1.6, color: '#6e6359', maxWidth: 200 }}>
               {t('tagline')}

@@ -33,7 +33,10 @@
       "mcp__plugin_vercel_vercel__get_deployment_build_logs",
       "Bash(New-Item -ItemType Directory -Path \"c:\\\\Users\\\\YouN\\\\Documents\\\\Ai Projekti\\\\GudWeddingApp\\\\src\\\\lib\\\\lemonsqueezy\" -Force)",
       "Bash(Write-Host \"done\")",
-      "Read(//c/Users/Users/YouN/Documents/Ai Projekti/GudWeddingApp/**)"
+      "Read(//c/Users/Users/YouN/Documents/Ai Projekti/GudWeddingApp/**)",
+      "Bash(vercel --prod)",
+      "Bash(cp \"C:/Users/YouN/.claude/projects/c--Users-YouN-Documents-Ai-Projekti-GudWeddingApp/cea80312-c432-44e4-b57f-08bcbd871a0f/tool-results/webfetch-1779124384735-x5zt12.bin\" /tmp/logo_design.gz)",
+      "Bash(gunzip -f /tmp/logo_design.gz)"
     ]
   }
 }
