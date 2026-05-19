@@ -178,59 +178,56 @@ type ArtEl = { cls: string; txt: string }
 type TplDef = { id: number; cat: string; style: string; name: string; price: string; art: ArtEl[] }
 
 const TMPL: TplDef[] = [
+  // editorial
   { id:1, cat:'editorial', style:'riviera', name:'Riviera Edition', price:'Zlati',
-    art:[{cls:'top',txt:'— Save the Date —'},{cls:'nm',txt:'Lorena'},{cls:'amp',txt:'&'},{cls:'nm',txt:'Viktor'},{cls:'dt',txt:'12 · 06 · 2026'}]},
-  { id:2, cat:'editorial', style:'mono', name:'Atelier Mono', price:'Zlati',
-    art:[{cls:'top',txt:'VOLUME 02 · 2026'},{cls:'nm',txt:'Ana<br/>&amp;<br/>Marko'},{cls:'dt',txt:'piran · sedemnajsti junij'}]},
-  { id:3, cat:'editorial', style:'typo', name:'The Typographer', price:'Zlati',
-    art:[{cls:'top',txt:'Fig. 04 — Wedding'},{cls:'nm',txt:'Sara &amp; Tilen'},{cls:'dt',txt:'05 SEP 2026 · BLED'}]},
-  { id:4, cat:'editorial', style:'industrial', name:'Industrial No. 01', price:'Platinasti',
-    art:[{cls:'num',txt:'01'},{cls:'top',txt:'— Issue · 26 —'},{cls:'nm',txt:'Maja<br/>&amp; Luka'},{cls:'ft',txt:'05.09.26 · Brda'}]},
-  { id:5, cat:'editorial', style:'marble', name:'Carrara', price:'Zlati',
-    art:[{cls:'top',txt:'— Wedding · 2026 —'},{cls:'nm',txt:'Eva &amp; Žan'},{cls:'dt',txt:'22. avgust 2026'}]},
-  { id:6, cat:'botanical', style:'botanical', name:'Toscana', price:'Brončani',
+    art:[{cls:'top',txt:'— Save the Date —'},{cls:'nm',txt:'Lorena &amp; Viktor'},{cls:'dt',txt:'12 · 06 · 2026'}]},
+  { id:2, cat:'editorial', style:'heritage', name:'Heritage', price:'Zlati',
+    art:[{cls:'top',txt:'— Wedding 2026 —'},{cls:'nm',txt:'Ana'},{cls:'amp',txt:'&'},{cls:'nm',txt:'Marko'},{cls:'dt',txt:'18. junij 2026'}]},
+  { id:3, cat:'editorial', style:'eliarose', name:'Elia Rose', price:'Zlati',
+    art:[{cls:'top',txt:'— Save the Date —'},{cls:'nm',txt:'Maja'},{cls:'amp',txt:'&'},{cls:'nm',txt:'Luka'},{cls:'dt',txt:'julij 2026'}]},
+  // botanical
+  { id:4, cat:'botanical', style:'toscana', name:'Toscana', price:'Brončani',
     art:[{cls:'top',txt:'— Wedding —'},{cls:'nm',txt:'Ema &amp; Tim'},{cls:'yr',txt:'2026'}]},
-  { id:7, cat:'botanical', style:'sage', name:'Wild Sage', price:'Zlati',
-    art:[{cls:'top',txt:'— Save the Date —'},{cls:'nm',txt:'Nika &amp; Rok'},{cls:'dt',txt:'14 MAJ 2026'}]},
-  { id:8, cat:'botanical', style:'meadow', name:'Meadow Lane', price:'Brončani',
-    art:[{cls:'top',txt:'— SLOVENIA · 2026 —'},{cls:'nm',txt:'Tia &amp; Bor'},{cls:'dt',txt:'junij'}]},
-  { id:9, cat:'botanical', style:'blossom', name:'Cherry Blossom', price:'Zlati',
-    art:[{cls:'top',txt:'— Save the Date —'},{cls:'nm',txt:'Tina &amp; Jure'},{cls:'dt',txt:'april 2026'}]},
-  { id:10, cat:'botanical', style:'coastal', name:'Coastal', price:'Brončani',
-    art:[{cls:'top',txt:'— SEASIDE · 2026 —'},{cls:'nm',txt:'Eva &amp; Mark'},{cls:'dt',txt:'piran'}]},
-  { id:11, cat:'modern', style:'scandi', name:'Scandi Light', price:'Brončani',
+  { id:5, cat:'botanical', style:'botanica', name:'Botanica', price:'Brončani',
+    art:[{cls:'top',txt:'— Save the Date —'},{cls:'nm',txt:'Nika &amp; Rok'},{cls:'dt',txt:'14 · MAJ · 2026'}]},
+  { id:6, cat:'botanical', style:'rosewood', name:'Rosewood', price:'Zlati',
+    art:[{cls:'top',txt:'— Wedding —'},{cls:'nm',txt:'Eva'},{cls:'amp',txt:'&'},{cls:'nm',txt:'Jan'},{cls:'dt',txt:'september 2026'}]},
+  // modern
+  { id:7, cat:'modern', style:'scandi', name:'Scandi Light', price:'Brončani',
     art:[{cls:'top',txt:'2026'},{cls:'nm',txt:'Mia &amp; Luka'},{cls:'div',txt:''},{cls:'dt',txt:'05 · 09 · 26'}]},
-  { id:12, cat:'modern', style:'pastel', name:'Soft Pastel', price:'Brončani',
-    art:[{cls:'nm',txt:'Maja &amp; Jan'},{cls:'dt',txt:'junij · 2026'}]},
-  { id:13, cat:'modern', style:'tile', name:'Tile Pattern', price:'Zlati',
-    art:[{cls:'top',txt:'— Wedding —'},{cls:'nm',txt:'Lara &amp; Žan'},{cls:'dt',txt:'05 · 09 · 26'}]},
-  { id:14, cat:'modern', style:'romance', name:'Aquarelle', price:'Zlati',
-    art:[{cls:'top',txt:'— Save the Date —'},{cls:'nm',txt:'Iva &amp; Tim'},{cls:'dt',txt:'junij 2026'}]},
-  { id:15, cat:'modern', style:'sage', name:'Olive Branch', price:'Brončani',
-    art:[{cls:'top',txt:'— Save the Date —'},{cls:'nm',txt:'Pia &amp; Tim'},{cls:'dt',txt:'september'}]},
-  { id:16, cat:'luxe', style:'noir', name:'Noir Velvet', price:'Platinasti',
-    art:[{cls:'top',txt:'WEDDING · 2026'},{cls:'nms',txt:'KAJA<br/>&amp;<br/>BOR'},{cls:'ft',txt:'12 · 06 · 26 · LJUBLJANA'}]},
-  { id:17, cat:'luxe', style:'gatsby', name:'Gatsby', price:'Platinasti',
-    art:[{cls:'nm',txt:'MAJA'},{cls:'amp',txt:'&'},{cls:'nm',txt:'TIM'},{cls:'yr',txt:'MMXXVI'}]},
-  { id:18, cat:'luxe', style:'bronze', name:'Bronze Luxe', price:'Platinasti',
-    art:[{cls:'top',txt:'— THE WEDDING —'},{cls:'nm',txt:'NELA'},{cls:'amp',txt:'&amp;'},{cls:'nm',txt:'DINO'},{cls:'dt',txt:'06 · 09 · 2026'}]},
-  { id:19, cat:'luxe', style:'emerald', name:'Emerald', price:'Platinasti',
-    art:[{cls:'top',txt:'— SAVE THE DATE —'},{cls:'nm',txt:'Lana &amp; Vid'},{cls:'dt',txt:'05.09.2026'}]},
-  { id:20, cat:'luxe', style:'claret', name:'Claret', price:'Platinasti',
-    art:[{cls:'top',txt:'— Wedding —'},{cls:'nm',txt:'Sara<br/>&amp; Žan'},{cls:'dt',txt:'05 · 09 · 26'}]},
+  { id:8, cat:'modern', style:'coastal', name:'Coastal', price:'Brončani',
+    art:[{cls:'top',txt:'— SEASIDE · 2026 —'},{cls:'nm',txt:'Eva &amp; Mark'},{cls:'dt',txt:'piran'}]},
+  { id:9, cat:'modern', style:'watercolor', name:'Aquarelle', price:'Zlati',
+    art:[{cls:'top',txt:'— Save the date —'},{cls:'nm',txt:'Iva &amp; Tim'},{cls:'dt',txt:'junij 2026'}]},
+  { id:10, cat:'modern', style:'promesse', name:'Promesse', price:'Zlati',
+    art:[{cls:'top',txt:'— Mariage —'},{cls:'nm',txt:'Sara'},{cls:'amp',txt:'&'},{cls:'nm',txt:'Tilen'},{cls:'dt',txt:'05 · 09 · 2026'}]},
+  // luxe
+  { id:11, cat:'luxe', style:'noir', name:'Noir Velvet', price:'Platinasti',
+    art:[{cls:'top',txt:'WEDDING · 2026'},{cls:'nms',txt:'KAJA<br/>&amp;<br/>BOR'},{cls:'ft',txt:'12 · 06 · LJUBLJANA'}]},
+  { id:12, cat:'luxe', style:'nocturne', name:'Nocturne', price:'Platinasti',
+    art:[{cls:'top',txt:'— Nocturne —'},{cls:'nm',txt:'Lana'},{cls:'amp',txt:'&'},{cls:'nm',txt:'Vid'},{cls:'dt',txt:'05 · 09 · 2026'}]},
+  { id:13, cat:'luxe', style:'venezia', name:'Venezia', price:'Platinasti',
+    art:[{cls:'top',txt:'— La Serenissima —'},{cls:'nm',txt:'Irena'},{cls:'amp',txt:'&'},{cls:'nm',txt:'Matic'},{cls:'dt',txt:'settembre 2026'}]},
 ]
 
-const CAT_COUNTS = { all:20, editorial:5, botanical:5, modern:5, luxe:5 }
+const CAT_COUNTS = { all:13, editorial:3, botanical:3, modern:4, luxe:3 }
 type Cat = keyof typeof CAT_COUNTS
 
-// maps landing-page style → real /templates/[id] if page exists
+// all 13 templates map directly to real /templates/[id] pages
 const STYLE_TO_ID: Record<string, string> = {
   riviera: 'riviera',
-  botanical: 'toscana',
-  noir: 'noir',
+  heritage: 'heritage',
+  eliarose: 'eliarose',
+  toscana: 'toscana',
+  botanica: 'botanica',
+  rosewood: 'rosewood',
   scandi: 'scandi',
   coastal: 'coastal',
-  romance: 'watercolor',
+  watercolor: 'watercolor',
+  promesse: 'promesse',
+  noir: 'noir',
+  nocturne: 'nocturne',
+  venezia: 'venezia',
 }
 
 const FIG_NAMES: Record<Locale, string>[] = [
@@ -268,6 +265,7 @@ export default function HomePage() {
   const [turningIdx, setTurningIdx] = useState<number | null>(null)
   const [cat, setCat] = useState<Cat>('all')
   const [formSent, setFormSent] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   const advance = useCallback(() => {
     setTopIdx(prev => {
@@ -318,9 +316,38 @@ export default function HomePage() {
             <span>·</span>
             <Link href="/" locale={'hr' as any} className={locale === 'hr' ? 'active' : ''}>HR</Link>
           </div>
-          <Link href="/register" className="nav__cta">{tr.navCta}</Link>
+          <Link href="/register" className="nav__cta nav__cta--desk">{tr.navCta}</Link>
+          <button className={`nav__burger${menuOpen ? ' open' : ''}`} onClick={() => setMenuOpen(v => !v)} aria-label="Menu">
+            <span /><span /><span />
+          </button>
         </div>
       </nav>
+
+      {/* ── MOBILE MENU ── */}
+      {menuOpen && (
+        <div className="mob-overlay" onClick={() => setMenuOpen(false)}>
+          <div className="mob-panel" onClick={e => e.stopPropagation()}>
+            <button className="mob-close" onClick={() => setMenuOpen(false)} aria-label="Zapri">✕</button>
+            <div className="mob-links">
+              <a href="#benefits" onClick={() => setMenuOpen(false)}>{tr.navBenefits}</a>
+              <a href="#how" onClick={() => setMenuOpen(false)}>{tr.navHow}</a>
+              <Link href="/templates" onClick={() => setMenuOpen(false)}>{tr.navTemplates}</Link>
+              <Link href="/pricing" onClick={() => setMenuOpen(false)}>{tr.navPricing}</Link>
+              <a href="#faq" onClick={() => setMenuOpen(false)}>{tr.navFaq}</a>
+            </div>
+            <div className="mob-lang">
+              <Link href="/" locale={'sl' as any} className={locale === 'sl' ? 'active' : ''} onClick={() => setMenuOpen(false)}>SL</Link>
+              <span>·</span>
+              <Link href="/" locale={'en' as any} className={locale === 'en' ? 'active' : ''} onClick={() => setMenuOpen(false)}>EN</Link>
+              <span>·</span>
+              <Link href="/" locale={'hr' as any} className={locale === 'hr' ? 'active' : ''} onClick={() => setMenuOpen(false)}>HR</Link>
+            </div>
+            <Link href="/register" className="cta cta--solid full" onClick={() => setMenuOpen(false)}>
+              <span>{tr.navCta}</span>
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* ── HERO ── */}
       <header className="hero" id="top">
@@ -616,7 +643,7 @@ export default function HomePage() {
               <li>{tr.p1l1}</li><li>{tr.p1l2}</li><li>{tr.p1l3}</li><li>{tr.p1l4}</li>
               <li>{tr.p1l5}</li><li className="muted">{tr.p1l6}</li><li className="muted">{tr.p1l7}</li>
             </ul>
-            <Link href={`/register?plan=bronze` as any} className="cta cta--ghost full">{tr.p1cta}</Link>
+            <Link href={`/register?package=bronze` as any} className="cta cta--ghost full">{tr.p1cta}</Link>
             <p className="price-card__note ital">{tr.p1note}</p>
           </article>
 
@@ -638,7 +665,7 @@ export default function HomePage() {
               <li>{tr.p2l1}</li><li>{tr.p2l2}</li><li>{tr.p2l3}</li><li>{tr.p2l4}</li>
               <li>{tr.p2l5}</li><li>{tr.p2l6}</li><li>{tr.p2l7}</li><li>{tr.p2l8}</li>
             </ul>
-            <Link href={`/register?plan=gold` as any} className="cta cta--solid full">{tr.p2cta}</Link>
+            <Link href={`/register?package=gold` as any} className="cta cta--solid full">{tr.p2cta}</Link>
             <p className="price-card__note ital">{tr.p2note}</p>
           </article>
 
@@ -706,8 +733,8 @@ export default function HomePage() {
             <h2 className="contact__t">{tr.ctT1}<br/><em className="ital">{tr.ctT2}</em></h2>
             <p className="contact__p">{tr.ctP}</p>
             <div className="contact__lines">
-              <div className="contact-row"><span className="contact-row__k">{tr.ctEmail}</span><span className="contact-row__v ital">studio@najindan.si</span></div>
-              <div className="contact-row"><span className="contact-row__k">{tr.ctPhone}</span><span className="contact-row__v ital">+386 41 234 567</span></div>
+              <div className="contact-row"><span className="contact-row__k">{tr.ctEmail}</span><span className="contact-row__v ital">info@gudweb.si</span></div>
+              <div className="contact-row"><span className="contact-row__k">{tr.ctPhone}</span><span className="contact-row__v ital">+386 40 259 309</span></div>
               <div className="contact-row"><span className="contact-row__k">{tr.ctStudio}</span><span className="contact-row__v ital">Ljubljana · Zagreb · Rovinj</span></div>
               <div className="contact-row"><span className="contact-row__k">{tr.ctHours}</span><span className="contact-row__v ital">{tr.ctHoursVal}</span></div>
             </div>
@@ -779,8 +806,8 @@ export default function HomePage() {
           </div>
           <div className="foot__col">
             <h5>{tr.footContact}</h5>
-            <a href="mailto:studio@najindan.si">studio@najindan.si</a>
-            <a href="tel:+38641234567">+386 41 234 567</a>
+            <a href="mailto:info@gudweb.si">info@gudweb.si</a>
+            <a href="tel:+38640259309">+386 40 259 309</a>
             <span style={{opacity:.7}}>Ljubljana · Zagreb</span>
           </div>
         </div>

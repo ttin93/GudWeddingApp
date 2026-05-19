@@ -60,8 +60,12 @@ function RegisterForm() {
 
   const schema = z.object({
     email: z.string().email(t('emailError')),
+    confirmEmail: z.string().email(t('emailError')),
     password: z.string().min(8, t('passwordMin8Error')),
     confirmPassword: z.string(),
+  }).refine(d => d.email === d.confirmEmail, {
+    message: t('confirmEmailError'),
+    path: ['confirmEmail'],
   }).refine(d => d.password === d.confirmPassword, {
     message: t('confirmPasswordError'),
     path: ['confirmPassword'],
@@ -130,6 +134,7 @@ function RegisterForm() {
 
         <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           <FieldInput label={t('email')} id="email" type="email" placeholder={t('emailPlaceholder')} error={errors.email?.message} registration={register('email')} />
+          <FieldInput label={t('confirmEmail')} id="confirmEmail" type="email" placeholder={t('confirmEmailPlaceholder')} error={errors.confirmEmail?.message} registration={register('confirmEmail')} />
           <FieldInput label={t('password')} id="password" type="password" placeholder={t('passwordPlaceholder')} error={errors.password?.message} registration={register('password')} />
           <FieldInput label={t('confirmPassword')} id="confirmPassword" type="password" placeholder={t('confirmPasswordPlaceholder')} error={errors.confirmPassword?.message} registration={register('confirmPassword')} />
 

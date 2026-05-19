@@ -1,7 +1,7 @@
 'use client'
 
 import { Link } from '@/i18n/navigation'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -50,6 +50,12 @@ export default function LoginPage() {
   const t = useTranslations('auth.login')
   const [serverError, setServerError] = useState('')
   const [hoveredBtn, setHoveredBtn] = useState(false)
+  const [cooldown, setCooldown] = useState(0)
+  const cooldownRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  useEffect(() => {
+    return () => { if (cooldownRef.current) clearInterval(cooldownRef.current) }
+  }, [])
 
   const schema = z.object({
     email: z.string().email(t('emailError')),
@@ -61,13 +67,35 @@ export default function LoginPage() {
     resolver: zodResolver(schema),
   })
 
+  function startCooldown(secs: number) {
+    setCooldown(secs)
+    cooldownRef.current = setInterval(() => {
+      setCooldown(prev => {
+        if (prev <= 1) { clearInterval(cooldownRef.current!); return 0 }
+        return prev - 1
+      })
+    }, 1000)
+  }
+
   async function onSubmit(data: FormData) {
     setServerError('')
     const fd = new FormData()
     fd.set('email', data.email)
     fd.set('password', data.password)
     const result = await login(fd)
-    if (result?.error) setServerError(result.error)
+    if (result?.error) {
+      const msg = result.error.toLowerCase()
+      if (msg.includes('rate') || msg.includes('too many') || msg.includes('limit')) {
+        setServerError('Preveč poskusov prijave. Počakajte 60 sekund in poskusite znova.')
+        startCooldown(60)
+      } else if (msg.includes('invalid') || msg.includes('credentials') || msg.includes('wrong')) {
+        setServerError('Napačen e-poštni naslov ali geslo.')
+        startCooldown(3)
+      } else {
+        setServerError(result.error)
+        startCooldown(3)
+      }
+    }
   }
 
   return (
@@ -106,7 +134,7 @@ export default function LoginPage() {
           <div style={{ paddingTop: 8 }}>
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || cooldown > 0}
               onMouseEnter={() => setHoveredBtn(true)}
               onMouseLeave={() => setHoveredBtn(false)}
               style={{
@@ -115,11 +143,11 @@ export default function LoginPage() {
                 background: hoveredBtn ? ACC : INK, color: CREAM,
                 fontFamily: 'var(--font-instrument)', fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase',
                 border: 'none', cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                opacity: isSubmitting ? 0.7 : 1,
+                opacity: isSubmitting || cooldown > 0 ? 0.6 : 1,
                 transition: 'background .3s ease',
               }}
             >
-              {isSubmitting ? t('submitting') : t('submit')}
+              {isSubmitting ? t('submitting') : cooldown > 0 ? `Počakajte ${cooldown}s` : t('submit')}
               {!isSubmitting && (
                 <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
                   <path d="M0 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" strokeWidth="1" />
