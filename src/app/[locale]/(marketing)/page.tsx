@@ -5,8 +5,15 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useLocale } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 import { SiteNav } from '@/components/ui/SiteNav'
 import { SiteFooter } from '@/components/ui/SiteFooter'
+import imgBled from './gallery/bled-lake.jpg'
+import imgCeremony from './gallery/ceremony-bw.jpg'
+import imgIstria from './gallery/istria-street.jpg'
+import imgRovinj from './gallery/rovinj-sunset.jpg'
+import imgTable from './gallery/table-flowers.jpg'
+import imgVineyard from './gallery/vineyard-sunset.jpg'
 
 /* ─── translations ─── */
 const T = {
@@ -705,27 +712,27 @@ export default function HomePage() {
         </div>
         <div className="gal-grid">
           <figure className="gal gal--tall">
-            <img src="/gallery/bled-lake.jpg" alt="Sara & Tilen · Bled" style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover' }} />
+            <Image src={imgBled} alt="Sara & Tilen · Bled" fill style={{ objectFit:'cover' }} sizes="(max-width:768px) 50vw, 25vw" />
             <figcaption>S &amp; T · Bled · 09.2025</figcaption>
           </figure>
           <figure className="gal">
-            <img src="/gallery/ceremony-bw.jpg" alt="Obredi" style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover' }} />
+            <Image src={imgCeremony} alt="Obredi" fill style={{ objectFit:'cover' }} sizes="(max-width:768px) 50vw, 25vw" />
             <figcaption>Obredi · 05.2025</figcaption>
           </figure>
           <figure className="gal">
-            <img src="/gallery/istria-street.jpg" alt="Ana & Marko · Istra" style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover' }} />
+            <Image src={imgIstria} alt="Ana & Marko · Istra" fill style={{ objectFit:'cover' }} sizes="(max-width:768px) 50vw, 25vw" />
             <figcaption>A &amp; M · Istra · 06.2026</figcaption>
           </figure>
           <figure className="gal gal--wide">
-            <img src="/gallery/rovinj-sunset.jpg" alt="Lorena & Viktor · Rovinj" style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 30%' }} />
+            <Image src={imgRovinj} alt="Lorena & Viktor · Rovinj" fill style={{ objectFit:'cover', objectPosition:'center 30%' }} sizes="(max-width:768px) 100vw, 50vw" />
             <figcaption>L &amp; V · Rovinj · 06.2026</figcaption>
           </figure>
           <figure className="gal">
-            <img src="/gallery/table-flowers.jpg" alt="Detajli" style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover' }} />
+            <Image src={imgTable} alt="Detajli" fill style={{ objectFit:'cover' }} sizes="(max-width:768px) 50vw, 25vw" />
             <figcaption>Detajli · 08.2025</figcaption>
           </figure>
           <figure className="gal gal--tall">
-            <img src="/gallery/vineyard-sunset.jpg" alt="Maja & Luka · Brda" style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center top' }} />
+            <Image src={imgVineyard} alt="Maja & Luka · Brda" fill style={{ objectFit:'cover', objectPosition:'center top' }} sizes="(max-width:768px) 50vw, 25vw" />
             <figcaption>M &amp; L · Brda · 09.2025</figcaption>
           </figure>
         </div>
