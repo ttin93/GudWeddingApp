@@ -14,6 +14,7 @@ import imgIstria from './gallery/istria-street.jpg'
 import imgRovinj from './gallery/rovinj-sunset.jpg'
 import imgTable from './gallery/table-flowers.jpg'
 import imgVineyard from './gallery/vineyard-sunset.jpg'
+import imgFirstDance from './gallery/first-dance-bw.jpg'
 
 /* ─── translations ─── */
 const T = {
@@ -711,29 +712,33 @@ export default function HomePage() {
           <p className="sec__sub">{tr.galSub}</p>
         </div>
         <div className="gal-grid">
-          <figure className="gal gal--tall">
-            <Image src={imgBled} alt="Sara & Tilen · Bled" fill style={{ objectFit:'cover' }} sizes="(max-width:768px) 50vw, 25vw" />
+          <figure className="gal" style={{ gridArea: 'bled' }}>
+            <Image src={imgBled} alt="Sara & Tilen · Bled" fill style={{ objectFit:'cover', objectPosition:'center 40%' }} sizes="(max-width:768px) 50vw, 25vw" />
             <figcaption>S &amp; T · Bled · 09.2025</figcaption>
           </figure>
-          <figure className="gal">
+          <figure className="gal" style={{ gridArea: 'ceremony' }}>
             <Image src={imgCeremony} alt="Obredi" fill style={{ objectFit:'cover' }} sizes="(max-width:768px) 50vw, 25vw" />
             <figcaption>Obredi · 05.2025</figcaption>
           </figure>
-          <figure className="gal">
-            <Image src={imgIstria} alt="Ana & Marko · Istra" fill style={{ objectFit:'cover' }} sizes="(max-width:768px) 50vw, 25vw" />
+          <figure className="gal" style={{ gridArea: 'istria' }}>
+            <Image src={imgIstria} alt="Ana & Marko · Istra" fill style={{ objectFit:'cover', objectPosition:'center 35%' }} sizes="(max-width:768px) 100vw, 50vw" />
             <figcaption>A &amp; M · Istra · 06.2026</figcaption>
           </figure>
-          <figure className="gal gal--wide">
+          <figure className="gal" style={{ gridArea: 'rovinj' }}>
             <Image src={imgRovinj} alt="Lorena & Viktor · Rovinj" fill style={{ objectFit:'cover', objectPosition:'center 30%' }} sizes="(max-width:768px) 100vw, 50vw" />
             <figcaption>L &amp; V · Rovinj · 06.2026</figcaption>
           </figure>
-          <figure className="gal">
+          <figure className="gal" style={{ gridArea: 'table' }}>
             <Image src={imgTable} alt="Detajli" fill style={{ objectFit:'cover' }} sizes="(max-width:768px) 50vw, 25vw" />
             <figcaption>Detajli · 08.2025</figcaption>
           </figure>
-          <figure className="gal gal--tall">
-            <Image src={imgVineyard} alt="Maja & Luka · Brda" fill style={{ objectFit:'cover', objectPosition:'center top' }} sizes="(max-width:768px) 50vw, 25vw" />
+          <figure className="gal" style={{ gridArea: 'vineyard' }}>
+            <Image src={imgVineyard} alt="Maja & Luka · Brda" fill style={{ objectFit:'cover', objectPosition:'center 20%' }} sizes="(max-width:768px) 100vw, 50vw" />
             <figcaption>M &amp; L · Brda · 09.2025</figcaption>
+          </figure>
+          <figure className="gal" style={{ gridArea: 'dance' }}>
+            <Image src={imgFirstDance} alt="Prvi ples" fill style={{ objectFit:'cover', objectPosition:'center top' }} sizes="(max-width:768px) 50vw, 25vw" />
+            <figcaption>Prvi ples · 2025</figcaption>
           </figure>
         </div>
       </section>
